@@ -96,6 +96,20 @@ CREATE TABLE inquiries (
   KEY idx_inq_horse (horse_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Replies sent from the inbox and internal notes, oldest first
+CREATE TABLE inquiry_messages (
+  id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  inquiry_id   INT UNSIGNED NOT NULL,
+  kind         ENUM('reply','note') NOT NULL,
+  body         TEXT NOT NULL,
+  sent_to      VARCHAR(150) NULL,
+  sent_ok      TINYINT(1) NULL,
+  created_by   INT UNSIGNED NULL,
+  created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_im (inquiry_id, created_at),
+  CONSTRAINT fk_im_inq FOREIGN KEY (inquiry_id) REFERENCES inquiries(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE migration_report (
   id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   run_id       VARCHAR(20) NOT NULL,

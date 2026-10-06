@@ -150,10 +150,14 @@ class StudioController extends Controller
         $this->redirect('/portal/studio/' . $id);
     }
 
-    private function doc(string $id): array
+    private function doc(string $id, bool $ownOk = false): array
     {
-        Auth::requirePerm('studio', 'view');
+        Auth::requireLogin();
         $d = DB::row('SELECT d.*, u.name AS author FROM documents d LEFT JOIN users u ON u.id = d.created_by WHERE d.id = ? AND d.deleted_at IS NULL', [(int) $id]);
+        if ($d && $ownOk && Studio::isOwnDoc($d)) {
+            return $d;
+        }
+        Auth::requirePerm('studio', 'view');
         if (!$d) {
             Response::notFound();
         }
@@ -191,14 +195,14 @@ class StudioController extends Controller
     /** Print view: only the pages; opens the print dialog. */
     public function print(string $id): void
     {
-        $d = $this->doc($id);
+        $d = $this->doc($id, true);
         $this->view('portal/studio/print', ['title' => $d['ref_no'] . ' — ' . $d['title'], 'cfg' => $this->viewCfg($d, 'print'), 'doc' => $d], 'bare');
     }
 
     /** Print / PDF download / share events are recorded in the Activity Log. */
     public function log(string $id): void
     {
-        $d = $this->doc($id);
+        $d = $this->doc($id, true);
         $action = (string) Request::post('action');
         if (in_array($action, ['print', 'download', 'share'], true)) {
             Audit::log($action, 'studio', 'document', $d['id'], null, ['via' => mb_substr((string) Request::post('via'), 0, 20)], $d['ref_no'] . ' — ' . $d['title']);

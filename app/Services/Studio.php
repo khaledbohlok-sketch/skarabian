@@ -72,8 +72,24 @@ final class Studio
 
     public static function canView(array $doc): bool
     {
-        return Auth::isOwner() || (Auth::can('studio', 'view') && Auth::can(StudioDocs::TYPES[$doc['doc_type']]['module'] ?? 'studio', 'view'));
+        return Auth::isOwner() || self::isOwnDoc($doc) || (Auth::can('studio', 'view') && Auth::can(StudioDocs::TYPES[$doc['doc_type']]['module'] ?? 'studio', 'view'));
     }
+
+    /** Staff may always open their own payslips and HR letters (My HR page), even without Studio access. */
+    public static function isOwnDoc(array $doc): bool
+    {
+        $emp = (int) (Auth::user()['employee_id'] ?? 0);
+        if (!$emp || $doc['is_void'] || !$doc['record_id']) {
+            return false;
+        }
+        if ($doc['doc_type'] === 'pay' && $doc['record_type'] === 'payroll_line') {
+            return (int) DB::value("SELECT l.employee_id FROM payroll_lines l JOIN payroll_runs r ON r.id = l.payroll_run_id
+                WHERE l.id = ? AND r.status IN ('approved','paid')", [$doc['record_id']]) === $emp;
+        }
+        return in_array($doc['doc_type'], self::OWN_TYPES, true) && $doc['record_type'] === 'employee' && (int) $doc['record_id'] === $emp;
+    }
+
+    public const OWN_TYPES = ['sal', 'letters', 'offer'];
 
     // ------------------------------------------------------------------ filling from records
 

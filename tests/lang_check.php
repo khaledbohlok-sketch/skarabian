@@ -13,7 +13,9 @@ foreach ($it as $f) {
     }
     $src = file_get_contents($f->getPathname());
     // settings / config keys are not translations
-    $src = preg_replace("/(setting|config|Settings::get|Settings::set|Config::get|Settings::float)\\(\\s*'[^']+'/", '$1(', $src);
+    $src = preg_replace("/'[a-z_]+\\.[a-z0-9_.]+'(?=\\s*=>\\s*\\[)/", "''", $src); // settings definitions keyed by setting name
+    $src = preg_replace("/'prefix' => '[^']+'/", '', $src); // enum prefixes, the full keys are checked below
+    $src = preg_replace("/(setting|config|saveOne|Settings::get|Settings::set|Config::get|Settings::float)\\(\\s*'[^']+'/", '$1(', $src);
     preg_match_all("/(?:__|Lang::get|ValidationException::one\\([^,]+,)\\s*\\(?\\s*'([a-z_]+\\.[a-z0-9_]+)'/", $src, $m);
     foreach ($m[1] as $k) {
         if (!str_ends_with($k, '_')) {
@@ -21,7 +23,7 @@ foreach ($it as $f) {
         }
     }
     // keys passed as 'label' => 'x.y', options, nav entries etc.
-    preg_match_all("/'((?:common|nav|auth|site|horse|horses|health|diet|training|shows|breeding|embryos|hr|employees|attendance|leave|loans|finance|bills|accounts|parties|invoices|po|payroll|budgets|inventory|items|studio|cms|inbox|users|roles|settings|activity|approvals|validation|files|status|notify|timeline|ownership|account|app|verify|dashboard|reports|lookups|categories|news|gallery|currencies|trash|notes|security|backups|search|migration)\\.[a-z0-9_]+)'/", $src, $m2);
+    preg_match_all("/'((?:common|nav|auth|site|horse|horses|health|diet|training|shows|breeding|embryos|hr|employees|attendance|leave|loans|finance|bills|accounts|parties|invoices|po|payroll|budgets|inventory|items|studio|cms|inbox|users|roles|settings|activity|approvals|validation|files|status|notify|timeline|ownership|account|app|verify|dashboard|reports|lookups|categories|news|gallery|currencies|trash|notes|security|backups|search|migration|my_hr|sessions|lookups)\\.[a-z0-9_]+)'/", $src, $m2);
     foreach ($m2[1] as $k) {
         if (!str_ends_with($k, '_')) {
             $keys[$k] = true;

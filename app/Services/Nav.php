@@ -15,6 +15,7 @@ final class Nav
         $groups = [
             ['nav.dashboard', 'home', '/portal', true, []],
             ['nav.approvals', 'check', '/portal/approvals', $approver, []],
+            ['nav.my_hr', 'user', '/portal/my-hr', !empty(Auth::user()['employee_id']), []],
             ['nav.my_horses', 'horse', '/portal/my-horses', Auth::horseScopeAssigned(), []],
             ['nav.horses', 'horse', '/portal/horses', Auth::can('horses') && !Auth::horseScopeAssigned(), [
                 ['nav.all_horses', '/portal/horses', Auth::can('horses')],

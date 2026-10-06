@@ -40,6 +40,9 @@ $r->any('/portal/account/2fa', [P\AccountController::class, 'twofa']);
 $r->post('/portal/account/lang', [P\AccountController::class, 'lang']);
 $r->post('/portal/account/logout-all', [P\AccountController::class, 'logoutAll']);
 $r->post('/portal/account/sessions/{id}/end', [P\AccountController::class, 'endSession']);
+$r->get('/portal/my-hr', [P\MyHrController::class, 'index']);
+$r->post('/portal/my-hr/leave', [P\MyHrController::class, 'requestLeave']);
+$r->post('/portal/my-hr/leave/{id}/cancel', [P\MyHrController::class, 'cancelLeave']);
 
 // ----------------------------------------------------------------- Portal: core
 $r->get('/portal', [P\DashboardController::class, 'index']);
@@ -133,6 +136,7 @@ $r->post('/portal/users/{id}/sessions/end', [P\AdminController::class, 'endUserS
 $r->post('/portal/users/{id}/reset-password', [P\AdminController::class, 'resetPassword']);
 $r->post('/portal/users/{id}/reset-2fa', [P\AdminController::class, 'reset2fa']);
 $r->post('/portal/users/{id}/unlock', [P\AdminController::class, 'unlock']);
+$r->post('/portal/users/{id}/status', [P\AdminController::class, 'toggleStatus']);
 $r->post('/portal/users/{id}/grant', [P\AdminController::class, 'grant']);
 $r->post('/portal/users/{id}/grant/{id2}/revoke', [P\AdminController::class, 'revokeGrant']);
 $r->get('/portal/sessions', [P\AdminController::class, 'sessions']);
