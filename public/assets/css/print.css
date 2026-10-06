@@ -35,3 +35,8 @@ html, body { margin: 0; background: #e9edf3; }
   .print-body .lh-foot { position: fixed; bottom: 4mm; }
   .print-body .lh-watermark { position: fixed; }
 }
+/* Studio print view */
+.studio-print { padding: 16px 0; }
+.studio-print .pages { width: max-content; margin: 0 auto; }
+.studio-print .page { margin: 0 auto 16px; box-shadow: 0 2px 12px rgba(20, 30, 60, .12); }
+@media print { .studio-print { padding: 0; } .studio-print .page { margin: 0; box-shadow: none; } }

@@ -45,7 +45,8 @@ final class Mailer
             return match ($c['driver'] ?? 'log') {
                 'smtp'  => self::smtp($c, $from, $to, implode("\r\n", $headers) . "\r\n\r\n" . $body),
                 'mail'  => mail($to, self::encodeHeader($subject), $body, implode("\r\n", array_filter($headers, fn ($h) => !str_starts_with($h, 'To:') && !str_starts_with($h, 'Subject:')))),
-                default => (bool) file_put_contents(Config::storagePath('logs/mail.log'), '[' . date('c') . "] TO $to | $subject\n" . strip_tags($htmlBody) . "\n\n", FILE_APPEND),
+                default => (bool) file_put_contents(Config::storagePath('logs/mail.log'), '[' . date('c') . "] TO $to | $subject\n" . strip_tags($htmlBody) . "\n"
+                    . ($attachments ? 'Attachments: ' . implode(', ', array_map(fn ($a) => $a['name'] . ' (' . $a['mime'] . ', ' . strlen($a['content']) . ' bytes)', $attachments)) . "\n" : '') . "\n", FILE_APPEND),
             };
         } catch (\Throwable $e) {
             ErrorHandler::log($e, ['mail_to' => $to]);

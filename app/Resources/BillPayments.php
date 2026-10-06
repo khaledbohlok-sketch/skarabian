@@ -104,6 +104,13 @@ class BillPayments extends Resource
         return $data;
     }
 
+    public function actions(array $row): array
+    {
+        $income = DB::value('SELECT type FROM bills WHERE id = ?', [$row['bill_id']]) === 'income';
+        return $income && \App\Services\Studio::canCreate('inv')
+            ? [['label' => 'payments.print_receipt', 'url' => '/portal/studio/new/inv?record_type=bill_payment&record_id=' . $row['id'], 'class' => 'btn-primary']] : [];
+    }
+
     public function afterSave(int $id, array $data, ?array $old, bool $created): void
     {
         FinanceService::recalc((int) ($data['bill_id'] ?? $old['bill_id']));

@@ -7,6 +7,8 @@ use App\Services\Studio;
 $files = FileStore::forOwner($recordType, $recordId, $categories);
 $canUpload = $canUpload ?? FileStore::canUpload($recordType);
 $cats = $categories ?? (FileStore::OWNERS[$recordType][2] ?? ['document']);
+// Studio documents are filled from this record ("breeding" is the Studio name for a breeding record)
+$kind = ['breeding_record' => 'breeding', 'breeding' => 'breeding'][$recordType] ?? $recordType;
 $docs = Auth::can('studio') ? DB::all('SELECT id, ref_no, doc_type, lang, title, doc_date, is_void FROM documents WHERE record_type = ? AND record_id = ? AND deleted_at IS NULL ORDER BY id DESC', [$recordType, $recordId]) : [];
 ?>
 <?php if ($studio && Auth::can('studio')): ?>
@@ -14,7 +16,7 @@ $docs = Auth::can('studio') ? DB::all('SELECT id, ref_no, doc_type, lang, title,
   <div class="card-head"><h2><?= e(__('nav.studio')) ?></h2>
     <div class="actions">
       <?php foreach ($studio as $docType): if (Studio::canCreate($docType)): ?>
-        <a class="btn btn-sm" href="<?= e(url('/portal/studio/new/' . $docType . '?record_id=' . $recordId)) ?>">+ <?= e(__('studio.type_' . $docType)) ?></a>
+        <a class="btn btn-sm" href="<?= e(url('/portal/studio/new/' . $docType . '?record_type=' . $kind . '&record_id=' . $recordId)) ?>">+ <?= e(__('studio.type_' . $docType)) ?></a>
       <?php endif; endforeach; ?>
     </div>
   </div>
@@ -22,7 +24,7 @@ $docs = Auth::can('studio') ? DB::all('SELECT id, ref_no, doc_type, lang, title,
   <table class="table compact"><thead><tr><th><?= e(__('studio.ref')) ?></th><th><?= e(__('studio.type')) ?></th><th><?= e(__('common.date')) ?></th><th></th></tr></thead><tbody>
   <?php foreach ($docs as $d): ?>
     <tr class="<?= $d['is_void'] ? 'void' : '' ?>"><td><a href="<?= e(url('/portal/studio/' . $d['id'])) ?>"><?= e($d['ref_no']) ?></a></td><td><?= e(__('studio.type_' . $d['doc_type'])) ?> (<?= e(strtoupper($d['lang'])) ?>)</td><td><?= e(fmt_date($d['doc_date'])) ?></td>
-    <td><a class="btn btn-sm" href="<?= e(url('/portal/studio/' . $d['id'] . '/print')) ?>" target="_blank"><?= e(__('common.print')) ?></a></td></tr>
+    <td><?php if ($d['is_void']): ?><span class="badge badge-cancelled"><?= e(__('studio.void')) ?></span><?php else: ?><a class="btn btn-sm" href="<?= e(url('/portal/studio/' . $d['id'] . '/print')) ?>" target="_blank"><?= e(__('common.print')) ?></a><?php endif; ?></td></tr>
   <?php endforeach; ?>
   </tbody></table>
   <?php else: ?><p class="muted"><?= e(__('studio.no_documents')) ?></p><?php endif; ?>

@@ -23,8 +23,10 @@ $flashes = Session::takeFlash();
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= e(asset('css/portal.css')) ?>">
+<?php foreach (($styles ?? []) as $css): ?><link rel="stylesheet" href="<?= e(asset($css)) ?>">
+<?php endforeach; ?>
 </head>
-<body class="portal" data-base="<?= e(url('/')) ?>">
+<body class="portal<?= !empty($bodyClass) ? ' ' . e($bodyClass) : '' ?>" data-base="<?= e(url('/')) ?>">
 <a class="skip" href="#main"><?= e(__('common.skip_to_content')) ?></a>
 <header class="topbar">
   <button class="icon-btn nav-toggle" type="button" data-toggle="nav" aria-label="<?= e(__('common.menu')) ?>"><?= icon('menu') ?></button>
@@ -86,5 +88,7 @@ $flashes = Session::takeFlash();
   <div class="modal-box"><button class="modal-close icon-btn" type="button" data-close-modal aria-label="<?= e(__('common.close')) ?>"><?= icon('x') ?></button><iframe title="form"></iframe></div>
 </div>
 <script src="<?= e(asset('js/portal.js')) ?>" defer></script>
+<?php foreach (($scripts ?? []) as $js): ?><script src="<?= e(asset($js)) ?>" defer></script>
+<?php endforeach; ?>
 </body>
 </html>

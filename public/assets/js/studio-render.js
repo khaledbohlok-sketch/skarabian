@@ -438,7 +438,7 @@ R.letters=d=>{
   return{dir:ar?"rtl":"ltr",blocks:B};
 };
 const PLANST={planned:["Planned","مخطط"],booked:["Booked","محجوز"],covered:["Covered","تمت التغطية"],infoal:["In foal","عشار"],notinfoal:["Not in foal","غير عشار"],foaled:["Foaled","وَلدت"],cancelled:["Cancelled","ملغى"]};
-const EMBST={frozen:["Frozen","مجمّد"],transferred:["Transferred","منقول"],pregnant:["Recipient in foal","المستقبِلة عشار"],born:["Foal born","وُلد"],lost:["Lost","فُقد"],sold:["Sold","مُباع"]};
+const EMBST={frozen:["Frozen","مجمّد"],transferred:["Transferred","منقول"],pregnant:["Recipient in foal","المستقبِلة عشار"],born:["Foal born","وُلد"],lost:["Lost","فُقد"]};
 const PEDGEN=[["s","d"],["ss","sd","ds","dd"],["sss","ssd","sds","sdd","dss","dsd","dds","ddd"],["ssss","sssd","ssds","ssdd","sdss","sdsd","sdds","sddd","dsss","dssd","dsds","dsdd","ddss","ddsd","ddds","dddd"]];
 const AR=(o,k,ar)=>ar&&String(o[k+"Ar"]||"").trim()?o[k+"Ar"]:o[k];
 function pedLabel(p,ar){if(ar&&p.length===2){const w=c=>c==="s"?"أب":"أم",a=c=>c==="s"?"الأب":"الأم";return `${w(p[1])} ${a(p[0])}`}const w=ar?{s:"الأب",d:"الأم"}:{s:"Sire",d:"Dam"};if(ar){const parts=[...p].map(c=>c==="s"?"أب":"أم");return parts.length===1?w[p]:parts.reverse().join(" ").replace(/^/,"")}const words=[...p].map(c=>c==="s"?"sire":"dam");return words.length===1?w[p]:words.slice(0,-1).map(x=>x.charAt(0).toUpperCase()+x.slice(1)+"'s").join(" ").replace(/'s (\w)/g,(m,c)=>"'s "+c.toLowerCase())+" "+words[words.length-1]}

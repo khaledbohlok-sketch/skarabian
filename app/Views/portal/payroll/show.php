@@ -19,6 +19,9 @@ $numIn = fn ($l, $k) => '<input type="text" inputmode="decimal" dir="ltr" class=
     <?php if ($draft && $canEdit && $lines): ?>
       <form method="post" action="<?= e(url('/portal/payroll/' . $run['id'] . '/submit')) ?>" class="inline"><?= csrf_field() ?><button class="btn btn-primary" type="submit"><?= e(__('payroll.submit')) ?></button></form>
     <?php endif; ?>
+    <?php if (in_array($run['status'], ['approved', 'paid'], true) && $sens && \App\Services\Studio::canCreate('pay')): ?>
+      <a class="btn" href="<?= e(url('/portal/studio/new/pay?run_id=' . $run['id'])) ?>"><?= icon('print') ?> <?= e(__('payroll.print_all')) ?></a>
+    <?php endif; ?>
     <?php if (in_array($run['status'], ['draft', 'pending'], true) && Auth::can('payroll', 'delete')): ?>
       <form method="post" action="<?= e(url('/portal/payroll/' . $run['id'] . '/delete')) ?>" class="inline" data-confirm="<?= e(__('payroll.confirm_delete')) ?>"><?= csrf_field() ?><button class="btn btn-danger" type="submit"><?= icon('trash') ?> <?= e(__('common.delete')) ?></button></form>
     <?php endif; ?>

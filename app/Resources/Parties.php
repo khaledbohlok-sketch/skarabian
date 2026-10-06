@@ -92,6 +92,6 @@ class Parties extends Resource
         if ($row['type'] !== 'client') {
             $t['purchase-orders'] = ['label' => 'nav.purchase_orders', 'related' => 'purchase-orders', 'filter' => ['supplier_id' => $id]];
         }
-        return $t + $this->standardTabs($row, ['categories' => ['document']]);
+        return $t + $this->standardTabs($row, ['categories' => ['document'], 'studio' => $row['type'] !== 'supplier' ? ['board'] : []]);
     }
 }

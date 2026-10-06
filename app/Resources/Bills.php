@@ -276,6 +276,6 @@ class Bills extends Resource
     {
         $n = (int) DB::value('SELECT COUNT(*) FROM bill_payments WHERE bill_id = ? AND deleted_at IS NULL', [$row['id']]);
         return ['bill-payments' => ['label' => 'nav.payments', 'related' => 'bill-payments', 'filter' => ['bill_id' => (int) $row['id']], 'count' => $n ?: null]]
-             + $this->standardTabs($row, ['categories' => ['receipt', 'document'], 'studio' => ['inv', 'fin']]);
+             + $this->standardTabs($row, ['categories' => ['receipt', 'document']]);
     }
 }

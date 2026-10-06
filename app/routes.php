@@ -108,12 +108,14 @@ $r->any('/portal/items/{id}/stock', [P\InventoryController::class, 'stock']);
 $r->get('/portal/studio', [P\StudioController::class, 'index']);
 $r->any('/portal/studio/new/{type}', [P\StudioController::class, 'create']);
 $r->get('/portal/studio/templates', [P\StudioController::class, 'templates']);
-$r->any('/portal/studio/templates/{type}/{lang}', [P\StudioController::class, 'editTemplate']);
+$r->any('/portal/studio/templates/{type}', [P\StudioController::class, 'editTemplate']);
+$r->post('/portal/studio/log', [P\StudioController::class, 'logUnsaved']);
 $r->any('/portal/studio/permissions', [P\StudioController::class, 'permissions']);
 $r->get('/portal/studio/{id}', [P\StudioController::class, 'show']);
 $r->get('/portal/studio/{id}/print', [P\StudioController::class, 'print']);
 $r->post('/portal/studio/{id}/share', [P\StudioController::class, 'share']);
 $r->post('/portal/studio/{id}/void', [P\StudioController::class, 'void']);
+$r->post('/portal/studio/{id}/log', [P\StudioController::class, 'log']);
 
 // Website CMS & inbox
 $r->any('/portal/cms', [P\CmsController::class, 'index']);
