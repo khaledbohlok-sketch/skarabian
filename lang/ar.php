@@ -1638,6 +1638,7 @@ return [
     'site.no_horses' => 'لا توجد خيول مطابقة.',
     'site.no_news' => 'سيتم نشر الأخبار هنا قريباً.',
     'site.no_results' => 'ستظهر نتائج البطولات هنا قريباً.',
+    'site.not_found_title' => 'الصفحة غير موجودة',
     'site.offspring' => 'النتاج',
     'site.our_breeding' => 'برنامج التربية',
     'site.our_experts' => 'خبراؤنا',

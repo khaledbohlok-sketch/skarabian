@@ -18,6 +18,11 @@ for ($g = 0; $g < $gens; $g++) {
     }
     $level = $next;
 }
+// Stop at the last generation that has a known horse, so unknown lines don't fill the page with empty boxes
+while (count($cols) > 1 && !array_filter(end($cols), fn ($x) => $x[0] !== null)) {
+    array_pop($cols);
+}
+$gens = count($cols);
 $labelFor = function (string $p) {
     if (strlen($p) === 1) { return __($p === 's' ? 'horse.sire' : 'horse.dam'); }
     return __(substr($p, -1) === 's' ? 'horse.sire' : 'horse.dam');

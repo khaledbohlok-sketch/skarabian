@@ -1638,6 +1638,7 @@ return [
     'site.no_horses' => 'No horses match these filters.',
     'site.no_news' => 'News will be published here soon.',
     'site.no_results' => 'Show results will appear here soon.',
+    'site.not_found_title' => 'Page not found',
     'site.offspring' => 'Offspring',
     'site.our_breeding' => 'Our Breeding',
     'site.our_experts' => 'Our Experts',
