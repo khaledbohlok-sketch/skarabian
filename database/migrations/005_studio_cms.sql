@@ -75,14 +75,13 @@ CREATE TABLE gallery_items (
 
 CREATE TABLE inquiries (
   id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  type         ENUM('general','horse','breeding','embryo','sale') NOT NULL DEFAULT 'general',
+  type         ENUM('general','horse','visit','media') NOT NULL DEFAULT 'general',
   name         VARCHAR(120) NOT NULL,
   email        VARCHAR(150) NULL,
   phone        VARCHAR(40) NULL,
   country      VARCHAR(80) NULL,
   message      TEXT NOT NULL,
   horse_id     INT UNSIGNED NULL,
-  embryo_id    INT UNSIGNED NULL,
   party_id     INT UNSIGNED NULL,
   lang         CHAR(2) NOT NULL DEFAULT 'en',
   status       ENUM('new','read','replied','closed') NOT NULL DEFAULT 'new',
@@ -94,8 +93,7 @@ CREATE TABLE inquiries (
   updated_at   DATETIME NULL,
   deleted_at   DATETIME NULL,
   KEY idx_inq_status (status, created_at),
-  KEY idx_inq_horse (horse_id),
-  KEY idx_inq_embryo (embryo_id)
+  KEY idx_inq_horse (horse_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE migration_report (

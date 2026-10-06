@@ -45,9 +45,7 @@ class SiteController extends Controller
             'sires' => $sires,
             'dams' => $dams,
             'pedigree' => $featured ? SiteData::pedigree($featured['sire_id'] ? (int) $featured['sire_id'] : null, $featured['dam_id'] ? (int) $featured['dam_id'] : null, 2) : null,
-            'stud' => (int) DB::value("SELECT COUNT(*) FROM horses WHERE at_stud = 1 AND sex = 'male' AND show_on_website = 1 AND deleted_at IS NULL"),
-            'embryos' => count(SiteData::embryosForSale()),
-            'forSale' => (int) DB::value("SELECT COUNT(*) FROM horses WHERE for_sale = 1 AND show_on_website = 1 AND deleted_at IS NULL AND status IN ('active','in_shelter')"),
+            'programme' => SiteData::programme(),
             'gallery' => SiteData::gallery(8),
             'experts' => SiteData::experts(),
             'jsonLd' => [
@@ -95,16 +93,14 @@ class SiteController extends Controller
         $this->page('champions', ['title' => __('site.nav_champions'), 'byYear' => $byYear, 'counters' => SiteData::counters()]);
     }
 
+    /** Our breeding programme — a showcase only: SK Arabians does not sell horses, embryos or stud services. */
     public function breeding(string $lang): void
     {
+        [$sires, $mares] = SiteData::programme();
         $this->page('breeding', [
-            'title' => __('site.nav_breeding'), 'stallions' => SiteData::horses(['at_stud' => 1]), 'embryos' => SiteData::embryosForSale(),
+            'title' => __('site.nav_breeding'), 'description' => __('site.breeding_intro'),
+            'sires' => $sires, 'mares' => $mares, 'foals' => SiteData::latestFoals(8), 'counters' => SiteData::counters(),
         ]);
-    }
-
-    public function forSale(string $lang): void
-    {
-        $this->page('for_sale', ['title' => __('site.nav_for_sale'), 'horses' => SiteData::horses(['for_sale' => 1]), 'embryos' => SiteData::embryosForSale()]);
     }
 
     public function news(string $lang): void
@@ -131,7 +127,7 @@ class SiteController extends Controller
         $this->page('contact', ['title' => __('site.nav_contact')]);
     }
 
-    /** Inquiry form: saved to the portal inbox, linked to the horse or embryo, Owner and Manager notified. */
+    /** Contact form: saved to the portal inbox (linked to the horse it is about), Owner and Manager notified. */
     public function inquiry(string $lang): void
     {
         $back = (string) Request::post('back', site_url('contact'));
@@ -154,22 +150,18 @@ class SiteController extends Controller
             Response::redirect($back . '#inquiry');
         }
         $horseId = (int) Request::post('horse_id') ?: null;
-        $embryoId = (int) Request::post('embryo_id') ?: null;
         if ($horseId && !DB::value('SELECT 1 FROM horses WHERE id = ? AND show_on_website = 1 AND deleted_at IS NULL', [$horseId])) {
             $horseId = null;
         }
-        if ($embryoId && !DB::value('SELECT 1 FROM embryos WHERE id = ? AND for_sale = 1 AND deleted_at IS NULL', [$embryoId])) {
-            $embryoId = null;
-        }
-        $type = in_array(Request::post('type'), ['general', 'horse', 'breeding', 'embryo', 'sale'], true) ? Request::post('type') : ($horseId ? 'horse' : ($embryoId ? 'embryo' : 'general'));
+        $type = $horseId ? 'horse' : (in_array(Request::post('type'), ['general', 'visit', 'media'], true) ? Request::post('type') : 'general');
         $id = DB::insert('inquiries', [
             'type' => $type, 'name' => $name, 'email' => $email ?: null, 'phone' => $phone ?: null,
             'country' => mb_substr((string) Request::post('country'), 0, 80) ?: null, 'message' => $msg,
-            'horse_id' => $horseId, 'embryo_id' => $embryoId, 'lang' => Lang::current(), 'ip' => $ip,
+            'horse_id' => $horseId, 'lang' => Lang::current(), 'ip' => $ip,
         ]);
-        $about = $horseId ? (string) DB::value('SELECT name_en FROM horses WHERE id = ?', [$horseId]) : ($embryoId ? (string) DB::value('SELECT code FROM embryos WHERE id = ?', [$embryoId]) : '');
+        $about = $horseId ? (string) DB::value('SELECT name_en FROM horses WHERE id = ?', [$horseId]) : '';
         Notifier::roles(['owner', 'general_manager'], 'inquiry', __('notify.new_inquiry', ['name' => $name]), ($about ? $about . ' — ' : '') . mb_substr($msg, 0, 200), '/portal/inbox/' . $id, true);
-        Audit::log('inquiry_received', 'inbox', 'inquiry', $id, null, ['type' => $type, 'horse_id' => $horseId, 'embryo_id' => $embryoId], 'Website inquiry', ['id' => null, 'name' => 'website']);
+        Audit::log('inquiry_received', 'inbox', 'inquiry', $id, null, ['type' => $type, 'horse_id' => $horseId], 'Website inquiry', ['id' => null, 'name' => 'website']);
         Session::flash('success', __('site.inquiry_thanks'));
         Response::redirect($back . '#inquiry');
     }
@@ -213,7 +205,7 @@ class SiteController extends Controller
     public function sitemap(): void
     {
         header('Content-Type: application/xml; charset=utf-8');
-        $paths = ['', 'horses', 'champions', 'breeding', 'for-sale', 'news', 'about', 'contact'];
+        $paths = ['', 'horses', 'champions', 'breeding', 'news', 'about', 'contact'];
         foreach (DB::column("SELECT slug FROM horses WHERE show_on_website = 1 AND deleted_at IS NULL AND status IN ('active','in_shelter')") as $s) {
             $paths[] = 'horses/' . $s;
         }

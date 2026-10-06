@@ -20,7 +20,6 @@ $r->get('/{lang}/horses', [S\SiteController::class, 'horses']);
 $r->get('/{lang}/horses/{slug}', [S\SiteController::class, 'horse']);
 $r->get('/{lang}/champions', [S\SiteController::class, 'champions']);
 $r->get('/{lang}/breeding', [S\SiteController::class, 'breeding']);
-$r->get('/{lang}/for-sale', [S\SiteController::class, 'forSale']);
 $r->get('/{lang}/news', [S\SiteController::class, 'news']);
 $r->get('/{lang}/news/{slug}', [S\SiteController::class, 'newsItem']);
 $r->get('/{lang}/about', [S\SiteController::class, 'about']);

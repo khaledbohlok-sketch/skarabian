@@ -28,7 +28,6 @@ if ($h['video_url'] && preg_match('#(?:youtube\.com/watch\?v=|youtu\.be/)([A-Za-
         <?php if ($h['breeder']): ?><div><dt><?= e(__('horse.breeder')) ?></dt><dd><?= e($h['breeder']) ?></dd></div><?php endif; ?>
       </dl>
       <?php if ($story = loc($h, 'story')): ?><div class="prose"><?php foreach (preg_split('/\R{2,}/', $story) as $p): ?><p><?= nl2br(e($p)) ?></p><?php endforeach; ?></div><?php endif; ?>
-      <?php if ($h['for_sale']): ?><p><span class="chip on"><?= e(__('site.for_sale_flag')) ?> · <?= e(__('site.price_on_request')) ?></span></p><?php endif; ?>
       <a class="btn btn-gold" href="#inquiry"><?= e(__('site.inquire_horse')) ?></a>
     </div>
   </div>
@@ -56,6 +55,6 @@ if ($h['video_url'] && preg_match('#(?:youtube\.com/watch\?v=|youtu\.be/)([A-Za-
 
   <div class="contact" style="margin-top:60px">
     <div><h2 style="font-size:40px"><?= e(__('site.inquire_horse')) ?></h2><p><?= e(__('site.inquire_horse_text', ['name' => loc($h)])) ?></p><?= View::partial('site/partials/contact_list') ?></div>
-    <?= View::partial('site/partials/inquiry_form', ['horseId' => $h['id'], 'type' => $h['for_sale'] ? 'sale' : 'horse', 'prefill' => __('site.inquiry_prefill', ['name' => loc($h)])]) ?>
+    <?= View::partial('site/partials/inquiry_form', ['horseId' => $h['id'], 'type' => 'horse', 'prefill' => __('site.inquiry_prefill', ['name' => loc($h)])]) ?>
   </div>
 </div></section>

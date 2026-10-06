@@ -1,12 +1,11 @@
 <?php
-$horseId = $horseId ?? null; $embryoId = $embryoId ?? null; $type = $type ?? 'general';
+$horseId = $horseId ?? null; $type = $type ?? 'general';
 ?>
 <form class="form" method="post" action="<?= e(site_url('inquiry')) ?>" id="inquiry">
   <?= csrf_field() ?>
   <input type="hidden" name="back" value="<?= e(current_path()) ?>">
   <input type="hidden" name="type" value="<?= e($type) ?>">
   <?php if ($horseId): ?><input type="hidden" name="horse_id" value="<?= (int) $horseId ?>"><?php endif; ?>
-  <?php if ($embryoId): ?><input type="hidden" name="embryo_id" value="<?= (int) $embryoId ?>"><?php endif; ?>
   <label class="hp" aria-hidden="true">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
   <?php if (!empty($heading)): ?><h3><?= e($heading) ?></h3><?php endif; ?>
   <div class="row2">
@@ -19,7 +18,7 @@ $horseId = $horseId ?? null; $embryoId = $embryoId ?? null; $type = $type ?? 'ge
   </div>
   <?php if ($type === 'general'): ?>
   <label><?= e(__('site.f_topic')) ?>
-    <select name="type"><option value="general"><?= e(__('site.topic_general')) ?></option><option value="breeding"><?= e(__('site.topic_breeding')) ?></option><option value="embryo"><?= e(__('site.topic_embryo')) ?></option><option value="sale"><?= e(__('site.topic_sale')) ?></option></select>
+    <select name="type"><option value="general"><?= e(__('site.topic_general')) ?></option><option value="visit"><?= e(__('site.topic_visit')) ?></option><option value="media"><?= e(__('site.topic_media')) ?></option></select>
   </label>
   <?php endif; ?>
   <label><?= e(__('site.f_message')) ?><textarea name="message" rows="5" required maxlength="4000"><?= e(old('message', $prefill ?? '')) ?></textarea></label>

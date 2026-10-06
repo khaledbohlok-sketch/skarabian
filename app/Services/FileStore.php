@@ -75,7 +75,6 @@ final class FileStore
             'horse'  => (bool) DB::value('SELECT show_on_website FROM horses WHERE id = ? AND deleted_at IS NULL', [$file['owner_id']]),
             'employee' => (bool) DB::value('SELECT show_on_website FROM employees WHERE id = ? AND deleted_at IS NULL', [$file['owner_id']]) && $file['category'] === 'photo',
             'news', 'cms', 'show' => true,
-            'embryo' => (bool) DB::value('SELECT for_sale FROM embryos WHERE id = ? AND deleted_at IS NULL', [$file['owner_id']]),
             default  => false,
         };
     }

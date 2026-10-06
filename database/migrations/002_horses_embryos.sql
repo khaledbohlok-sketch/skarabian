@@ -53,8 +53,7 @@ CREATE TABLE horses (
   dam_id               INT UNSIGNED NULL,
   is_favorite          TINYINT(1) NOT NULL DEFAULT 0,
   show_on_website      TINYINT(1) NOT NULL DEFAULT 0,
-  for_sale             TINYINT(1) NOT NULL DEFAULT 0,
-  at_stud              TINYINT(1) NOT NULL DEFAULT 0,
+  breeding_stallion    TINYINT(1) NOT NULL DEFAULT 0,   -- stallion used in SK's own breeding programme (shown on the Breeding page)
   website_approved_at  DATETIME NULL,                   -- foals appear in "Latest Foals" only after Owner approval
   story_en             TEXT NULL,
   story_ar             TEXT NULL,
@@ -71,7 +70,6 @@ CREATE TABLE horses (
   deleted_at           DATETIME NULL,
   KEY idx_h_cat (category, status, deleted_at),
   KEY idx_h_web (show_on_website, deleted_at),
-  KEY idx_h_sale (for_sale),
   KEY idx_h_sire (sire_id),
   KEY idx_h_dam (dam_id),
   KEY idx_h_name (name_en),
@@ -217,8 +215,6 @@ CREATE TABLE embryos (
   transfer_date          DATE NULL,
   expected_foaling_date  DATE NULL,
   foal_id                INT UNSIGNED NULL,
-  for_sale               TINYINT(1) NOT NULL DEFAULT 0,
-  sale_price_qar         DECIMAL(14,2) NULL,                  -- sensitive
   notes                  TEXT NULL,
   created_by             INT UNSIGNED NULL,
   created_at             DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

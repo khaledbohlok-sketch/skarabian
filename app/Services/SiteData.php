@@ -11,7 +11,7 @@ use App\Core\DB;
  */
 final class SiteData
 {
-    private const HORSE_COLS = 'h.id, h.name_en, h.name_ar, h.slug, h.sex, h.category, h.dob, h.bloodline, h.main_photo_id, h.for_sale, h.at_stud,
+    private const HORSE_COLS = 'h.id, h.name_en, h.name_ar, h.slug, h.sex, h.category, h.dob, h.bloodline, h.main_photo_id, h.breeding_stallion,
         h.story_en, h.story_ar, h.video_url, h.born_at_sk, h.sire_id, h.dam_id, h.is_favorite,
         c.value_en AS color_en, c.value_ar AS color_ar, b.value_en AS breed_en, b.value_ar AS breed_ar,
         s.name_en AS sire_en, s.name_ar AS sire_ar, s.slug AS sire_slug, s.show_on_website AS sire_public,
@@ -52,11 +52,8 @@ final class SiteData
             $params['amin'] = $min;
             $params['amax'] = $max;
         }
-        if (!empty($filters['for_sale'])) {
-            $where[] = 'h.for_sale = 1';
-        }
-        if (!empty($filters['at_stud'])) {
-            $where[] = "h.at_stud = 1 AND h.sex = 'male'";
+        if (!empty($filters['breeding_stallion'])) {
+            $where[] = "h.breeding_stallion = 1 AND h.sex = 'male'";
         }
         $sql = 'SELECT ' . self::HORSE_COLS . ' FROM ' . self::horseFrom() . ' WHERE ' . implode(' AND ', $where)
              . " ORDER BY h.is_favorite DESC, FIELD(h.category,'stallion','mare','colt','filly','foal','gelding'), h.name_en";
@@ -121,9 +118,9 @@ final class SiteData
     public static function bloodlines(): array
     {
         $sires = DB::all('SELECT ' . self::HORSE_COLS . ', (SELECT COUNT(*) FROM horses o WHERE o.sire_id = h.id AND o.deleted_at IS NULL) AS offspring FROM '
-            . self::horseFrom() . " WHERE h.sex = 'male' AND h.show_on_website = 1 AND h.deleted_at IS NULL ORDER BY h.at_stud DESC, offspring DESC LIMIT 4");
+            . self::horseFrom() . " WHERE h.sex = 'male' AND (h.category = 'stallion' OR h.breeding_stallion = 1) AND h.show_on_website = 1 AND h.deleted_at IS NULL ORDER BY h.breeding_stallion DESC, offspring DESC LIMIT 4");
         $dams = DB::all('SELECT ' . self::HORSE_COLS . ', (SELECT COUNT(*) FROM horses o WHERE o.dam_id = h.id AND o.deleted_at IS NULL) AS offspring FROM '
-            . self::horseFrom() . " WHERE h.sex = 'female' AND h.show_on_website = 1 AND h.deleted_at IS NULL ORDER BY offspring DESC, h.is_favorite DESC LIMIT 4");
+            . self::horseFrom() . " WHERE h.sex = 'female' AND h.category = 'mare' AND h.show_on_website = 1 AND h.deleted_at IS NULL HAVING offspring > 0 ORDER BY offspring DESC, h.is_favorite DESC LIMIT 4");
         return [$sires, $dams];
     }
 
@@ -162,12 +159,14 @@ final class SiteData
         return DB::all("SELECT id, title, width, height, mime FROM files WHERE owner_type = 'horse' AND owner_id = ? AND is_public = 1 AND deleted_at IS NULL AND category IN ('photo','video') ORDER BY (id = (SELECT main_photo_id FROM horses WHERE id = ?)) DESC, sort_order, id DESC", [$horseId, $horseId]);
     }
 
-    public static function embryosForSale(): array
+    /** Our breeding programme: stallions we breed with, broodmares, and how many foals each has produced. */
+    public static function programme(): array
     {
-        return DB::all("SELECT e.id, e.code, e.name, e.status, e.expected_foaling_date, s.name_en AS sire_en, s.name_ar AS sire_ar, s.slug AS sire_slug, s.show_on_website AS sire_public,
-                d.name_en AS dam_en, d.name_ar AS dam_ar, d.slug AS dam_slug, d.show_on_website AS dam_public
-            FROM embryos e JOIN horses s ON s.id = e.sire_id JOIN horses d ON d.id = e.donor_mare_id
-            WHERE e.for_sale = 1 AND e.deleted_at IS NULL AND e.archived_at IS NULL AND e.status IN ('fresh','frozen','transferred','pregnant') ORDER BY e.id DESC");
+        $sires = DB::all('SELECT ' . self::HORSE_COLS . ', (SELECT COUNT(*) FROM horses o WHERE o.sire_id = h.id AND o.deleted_at IS NULL) AS offspring FROM '
+            . self::horseFrom() . " WHERE h.sex = 'male' AND " . self::publicWhere() . ' AND (h.breeding_stallion = 1 OR EXISTS (SELECT 1 FROM horses o WHERE o.sire_id = h.id AND o.born_at_sk = 1 AND o.deleted_at IS NULL)) ORDER BY offspring DESC, h.name_en');
+        $mares = DB::all('SELECT ' . self::HORSE_COLS . ', (SELECT COUNT(*) FROM horses o WHERE o.dam_id = h.id AND o.deleted_at IS NULL) AS offspring FROM '
+            . self::horseFrom() . " WHERE h.sex = 'female' AND h.category = 'mare' AND " . self::publicWhere() . ' ORDER BY offspring DESC, h.is_favorite DESC, h.name_en');
+        return [$sires, $mares];
     }
 
     public static function gallery(int $limit = 12): array

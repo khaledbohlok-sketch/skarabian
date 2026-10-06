@@ -25,7 +25,7 @@ $medalCls = ['gold' => 'medal-gold', 'silver' => 'medal-silver', 'bronze' => 'me
     <p class="lead"><?= e(setting('site.hero_sub_' . lang(), '')) ?></p>
     <div class="hero-actions">
       <a class="btn btn-gold" href="<?= e(site_url('horses')) ?>"><?= e(__('site.meet_horses')) ?></a>
-      <a class="btn btn-outline" href="<?= e(site_url('breeding')) ?>"><?= e(__('site.breeding_sales')) ?></a>
+      <a class="btn btn-outline" href="<?= e(site_url('breeding')) ?>"><?= e(__('site.our_breeding')) ?></a>
     </div>
   </div>
   <a class="hero-scroll" href="#featured" aria-label="<?= e(__('site.scroll')) ?>"></a>
@@ -147,15 +147,16 @@ case 'bloodlines': if (!$sires && !$dams) { break; } ?>
 </section>
 <?php break;
 
-case 'breeding': ?>
+case 'breeding': [$progSires, $progMares] = $programme; if (!$progSires && !$progMares) { break; } ?>
 <section class="section" id="breeding">
   <div class="container">
-    <div class="section-head reveal"><div><span class="eyebrow" style="color:var(--gold)"><?= e(__('site.opportunities')) ?></span><h2><?= e(__('site.breeding_sales')) ?></h2></div></div>
+    <div class="section-head reveal"><div><span class="eyebrow" style="color:var(--gold)"><?= e(__('site.programme_eyebrow')) ?></span><h2><?= e(__('site.our_breeding')) ?></h2><p><?= e(__('site.breeding_intro')) ?></p></div></div>
     <div class="teaser-grid">
-      <div class="teaser reveal"><div class="count"><?= (int) $stud ?></div><h3><?= e(__('site.stallions_at_stud')) ?></h3><p><?= e(__('site.stud_teaser')) ?></p><a class="btn btn-gold" href="<?= e(site_url('breeding')) ?>"><?= e(__('site.inquire')) ?></a></div>
-      <div class="teaser reveal"><div class="count"><?= (int) $embryos ?></div><h3><?= e(__('site.embryos_available')) ?></h3><p><?= e(__('site.embryo_teaser')) ?></p><a class="btn btn-gold" href="<?= e(site_url('breeding') . '#embryos') ?>"><?= e(__('site.inquire')) ?></a></div>
-      <div class="teaser reveal"><div class="count"><?= (int) $forSale ?></div><h3><?= e(__('site.horses_for_sale')) ?></h3><p><?= e(__('site.sale_teaser')) ?></p><a class="btn btn-gold" href="<?= e(site_url('for-sale')) ?>"><?= e(__('site.inquire')) ?></a></div>
+      <div class="teaser reveal"><div class="count"><?= count($progSires) ?></div><h3><?= e(__('site.breeding_stallions')) ?></h3><p><?= e(__('site.sires_teaser')) ?></p></div>
+      <div class="teaser reveal"><div class="count"><?= count($progMares) ?></div><h3><?= e(__('site.broodmares')) ?></h3><p><?= e(__('site.mares_teaser')) ?></p></div>
+      <div class="teaser reveal"><div class="count"><?= (int) $counters['foals'] ?></div><h3><?= e(__('site.c_foals')) ?></h3><p><?= e(__('site.foals_teaser')) ?></p></div>
     </div>
+    <p style="margin-top:22px"><a class="btn btn-line" href="<?= e(site_url('breeding')) ?>"><?= e(__('site.discover_programme')) ?></a></p>
   </div>
 </section>
 <?php break;

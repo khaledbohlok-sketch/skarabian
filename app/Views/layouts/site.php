@@ -12,7 +12,7 @@ $ogImage = $ogImage ?? absolute_url('/assets/img/og-default.jpg');
 $solidHeader = $solidHeader ?? true;
 $nav = [
     ['site.nav_horses', 'horses'], ['site.nav_champions', 'champions'], ['site.nav_breeding', 'breeding'],
-    ['site.nav_for_sale', 'for-sale'], ['site.nav_news', 'news'], ['site.nav_about', 'about'], ['site.nav_contact', 'contact'],
+    ['site.nav_news', 'news'], ['site.nav_about', 'about'], ['site.nav_contact', 'contact'],
 ];
 $wa = preg_replace('/\D/', '', (string) setting('company.whatsapp', ''));
 $flashes = Session::takeFlash();
