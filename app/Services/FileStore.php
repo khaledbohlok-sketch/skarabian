@@ -31,6 +31,7 @@ final class FileStore
         'news'     => ['cms', ['cms.edit', 'cms.create'], ['photo'], []],
         'cms'      => ['cms', ['cms.edit'], ['photo', 'video'], []],
         'show'     => ['horse_training', ['horse_training.edit', 'cms.edit'], ['photo', 'document'], []],
+        'breeding' => ['horse_breeding', ['horse_breeding.edit', 'horse_breeding.create'], ['document', 'photo'], []],
     ];
 
     public static function canUpload(string $ownerType): bool

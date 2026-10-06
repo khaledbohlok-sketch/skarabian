@@ -58,6 +58,10 @@ final class Approvals
         if ($module === null) {
             return false;
         }
+        // Foals are shown in "Latest Foals" only after the Owner approves
+        if ($approval['type'] === 'foal_website') {
+            return Auth::isOwner();
+        }
         // Money-related approvals are reserved to Owner and General Manager
         if (in_array($approval['type'], ['bill', 'payroll', 'horse_sale', 'delete_financial', 'new_user', 'purchase_order'], true)
             && !in_array(Auth::roleSlug(), ['owner', 'general_manager'], true)) {

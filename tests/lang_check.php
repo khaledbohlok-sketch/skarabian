@@ -29,7 +29,8 @@ foreach ($it as $f) {
     }
 }
 // Permission strings and cache keys that look like translation keys
-$ignore = '/^(?:[a-z_]+\.(?:view|create|edit|delete|approve|export|print|sensitive|main|upload|public)|site\.counters)$/';
+$ignore = '/^(?:[a-z_]+\.(?:view|create|edit|delete|approve|export|print|sensitive|main|upload|public|scope)|site\.counters|(?:approvals|horse|ownership|payroll|breeding|po|invoices|inbox|leave|attendance|embryos)\.(?:status|cat|result)|health\.type|shows\.medal_prefix)$/';
+// Prefix strings passed to status_badge()/enum columns (e.g. 'horse.status') are families, not keys
 $keys = array_filter($keys, fn ($v, $k) => !preg_match($ignore, $k), ARRAY_FILTER_USE_BOTH);
 ksort($keys);
 if (in_array('--keys', $argv, true)) {

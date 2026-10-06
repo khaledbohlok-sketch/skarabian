@@ -28,7 +28,7 @@ CREATE TABLE documents (
   doc_date      DATE NOT NULL,
   letterhead_version TINYINT UNSIGNED NOT NULL DEFAULT 1,
   data          JSON NULL,                        -- field values used
-  body_html     MEDIUMTEXT NOT NULL,              -- rendered snapshot (re-printable exactly as issued)
+  body_html     MEDIUMTEXT NULL,                  -- optional rendered snapshot; documents re-render from data with the Studio renderer
   verify_token  CHAR(32) NOT NULL UNIQUE,
   is_void       TINYINT(1) NOT NULL DEFAULT 0,
   created_by    INT UNSIGNED NULL,

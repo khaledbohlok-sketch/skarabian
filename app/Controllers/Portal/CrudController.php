@@ -40,6 +40,11 @@ class CrudController extends Controller
     {
         $row = $res->find($id);
         if (!$row) {
+            // Exists but outside the user's record scope (e.g. a horse not assigned to this groom): deny and log
+            $raw = $res->find($id, true);
+            if ($raw && ($raw['deleted_at'] ?? null) === null) {
+                Auth::deny($res->module . '.scope');
+            }
             Response::notFound();
         }
         if (!$res->canView($row)) {
@@ -115,7 +120,7 @@ class CrudController extends Controller
             }
         }
         $tabs = $res->tabs($row);
-        $tab = (string) Request::query('tab', array_key_first($tabs) ?? 'details');
+        $tab = (string) Request::query('tab', 'details');
         $this->view($res->showView ?? 'portal/crud/show', [
             'res' => $res, 'row' => $row, 'tabs' => $tabs, 'tab' => $tab, 'title' => $res->label($row),
         ]);

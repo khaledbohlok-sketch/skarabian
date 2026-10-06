@@ -42,7 +42,7 @@ final class Registry
 
     public static function get(string $key): ?Resource
     {
-        if (!isset(self::MAP[$key])) {
+        if (!isset(self::MAP[$key]) || !class_exists(self::MAP[$key])) {
             return null;
         }
         return self::$instances[$key] ??= new (self::MAP[$key])();
@@ -57,7 +57,7 @@ final class Registry
     {
         foreach (self::keys() as $k) {
             $r = self::get($k);
-            if ($r->recordType === $type) {
+            if ($r && $r->recordType === $type) {
                 return $r;
             }
         }
