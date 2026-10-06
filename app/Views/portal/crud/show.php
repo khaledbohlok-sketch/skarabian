@@ -5,7 +5,7 @@ use App\Core\View;
 $fields = $res->visibleFields(false);
 $bySection = [];
 foreach ($fields as $name => $f) {
-    if (($f['type'] ?? '') === 'display' || !empty($f['hide_on_show'])) { continue; }
+    if (($f['type'] ?? '') === 'display' || !empty($f['hide_on_show']) || !empty($f['virtual'])) { continue; }
     $bySection[$f['section'] ?? 'main'][$name] = $f;
 }
 $sections = $res->sections();

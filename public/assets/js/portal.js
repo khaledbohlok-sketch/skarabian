@@ -17,6 +17,27 @@
     var f = e.target.closest('form[data-confirm]');
     if (f && !window.confirm(f.dataset.confirm)) e.preventDefault();
   }, true);
+  // Confirmation for one button of a form (e.g. "Pay all")
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-confirm-click]');
+    if (b && !window.confirm(b.dataset.confirmClick)) e.preventDefault();
+  }, true);
+  // Report period: choosing dates switches the preset to "Custom dates"
+  document.addEventListener('change', function (e) {
+    var f = e.target.closest('.report-filters'); if (!f || !e.target.matches('input[type="date"]')) return;
+    var sel = f.querySelector('select[name="period"]'); if (sel) sel.value = 'custom';
+  });
+  // Filters fold away on phones; the button opens them
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-toggle-filters]'); if (!b) return;
+    var f = b.closest('form'); f.classList.toggle('open'); b.setAttribute('aria-expanded', f.classList.contains('open') ? 'true' : 'false');
+  });
+  // "Select all" checkbox for a list of checkboxes
+  document.addEventListener('change', function (e) {
+    var all = e.target.closest('input[data-check-all]'); if (!all) return;
+    var form = all.form || document;
+    form.querySelectorAll('input[type="checkbox"][name="' + all.dataset.checkAll + '"]').forEach(function (c) { c.checked = all.checked; });
+  });
 
   // Auto-submit file pickers (photo upload from phone)
   document.addEventListener('change', function (e) {
@@ -80,7 +101,7 @@
       list.hidden = false; input.setAttribute('aria-expanded', 'true');
     }
     function search() {
-      var url = base + 'portal/api/picker/' + encodeURIComponent(source) + '?q=' + encodeURIComponent(input.value) + (params ? '&' + params : '');
+      var url = base + 'portal/api/picker/' + encodeURIComponent(source) + '?q=' + encodeURIComponent(input.value) + (params ? '&' + params : '') + depParams();
       fetch(url, { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, credentials: 'same-origin' })
         .then(function (r) { return r.ok ? r.json() : { results: [] }; })
         .then(function (d) { items = d.results || []; active = -1; render(); }).catch(function () {});
@@ -98,6 +119,20 @@
     input.addEventListener('blur', function () { setTimeout(function () { close(); var c = sel.selectedOptions[0]; input.value = c && c.value ? c.text : ''; }, 150); });
     clear.addEventListener('click', function () { setValue('', ''); input.focus(); });
     sel._pickerSet = setValue;
+    // Dependent pickers (e.g. sub-category follows category): filter by the other field and clear when it changes
+    function depParams() {
+      if (!sel.dataset.depends || !sel.form) return '';
+      return sel.dataset.depends.split(',').map(function (pair) {
+        var p = pair.split(':'), other = sel.form.elements[p[1]];
+        return other && other.value ? '&' + encodeURIComponent(p[0]) + '=' + encodeURIComponent(other.value) : '';
+      }).join('');
+    }
+    if (sel.dataset.depends && sel.form) {
+      sel.dataset.depends.split(',').forEach(function (pair) {
+        var other = sel.form.elements[pair.split(':')[1]];
+        if (other) other.addEventListener('change', function () { if (sel.value) setValue('', ''); });
+      });
+    }
   }
   document.querySelectorAll('select[data-picker]').forEach(enhancePicker);
 

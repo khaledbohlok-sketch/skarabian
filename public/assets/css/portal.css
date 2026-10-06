@@ -112,11 +112,11 @@ body.nav-open::after { content: ""; position: fixed; inset: 58px 0 0; background
 .alert-info { background: var(--info-bg); color: var(--navy); border-color: #c9d8f2; }
 .alert-warning { background: var(--warn-bg); color: var(--warn); border-color: #f2dca3; }
 .badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--line-2); color: var(--muted); white-space: nowrap; }
-.badge-paid, .badge-active, .badge-approved, .badge-completed, .badge-received, .badge-present, .badge-positive, .badge-pregnant, .badge-foaled, .badge-replied { background: var(--ok-bg); color: var(--ok); }
-.badge-pending, .badge-partially_paid, .badge-draft, .badge-scheduled, .badge-new, .badge-open, .badge-issued, .badge-in_shelter, .badge-on_leave { background: var(--warn-bg); color: var(--warn); }
-.badge-overdue, .badge-rejected, .badge-cancelled, .badge-failed, .badge-deceased, .badge-absent, .badge-negative, .badge-lost, .badge-left, .badge-inactive, .badge-suspended { background: var(--bad-bg); color: var(--bad); }
-.badge-archived, .badge-sold, .badge-transferred { background: #ececf1; color: #555c6e; }
-.badge-fresh, .badge-frozen, .badge-transferred { background: var(--info-bg); color: var(--navy); }
+.badge-ok, .badge-in, .badge-paid, .badge-active, .badge-approved, .badge-completed, .badge-received, .badge-present, .badge-positive, .badge-pregnant, .badge-foaled, .badge-replied { background: var(--ok-bg); color: var(--ok); }
+.badge-warn, .badge-out, .badge-pending, .badge-partially_paid, .badge-draft, .badge-scheduled, .badge-new, .badge-open, .badge-issued, .badge-in_shelter, .badge-on_leave { background: var(--warn-bg); color: var(--warn); }
+.badge-bad, .badge-overdue, .badge-rejected, .badge-cancelled, .badge-failed, .badge-deceased, .badge-absent, .badge-negative, .badge-lost, .badge-left, .badge-inactive, .badge-suspended { background: var(--bad-bg); color: var(--bad); }
+.badge-archived { background: #ececf1; color: #555c6e; }
+.badge-fresh, .badge-frozen, .badge-transferred, .badge-adjust { background: var(--info-bg); color: var(--navy); }
 .tick { color: var(--ok); font-weight: 700; }
 .money { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .money.neg, .neg { color: var(--bad); }
@@ -338,4 +338,37 @@ body.popup .content { padding: 16px; max-width: none; }
   .topbar, .sidebar, .page-head .actions, .filters, .pagination, .tabs, .no-print { display: none !important; }
   .shell { display: block; } .content { padding: 0; }
   body { background: #fff; }
+}
+
+/* Finance, payroll, inventory */
+.table tr.row-alert td { background: var(--bad-bg); }
+.table tr.row-pending td { background: #fffbeb; }
+.table tr.row-muted td { color: var(--muted); }
+.table tr.row-muted td a { color: var(--muted); }
+.qar-preview { display: block; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 8px; font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; min-height: 42px; }
+.lines-table td { vertical-align: top; }
+.lines-table input, .lines-table .picker { width: 100%; }
+.num-input { width: 100px; text-align: end; font-variant-numeric: tabular-nums; }
+.payroll-table td input[type="text"]:not(.num-input) { min-width: 160px; }
+.pay-box { margin-top: 16px; }
+.segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+.segmented label { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; background: #fff; font-weight: 500; }
+.segmented label:has(input:checked) { border-color: var(--navy); background: var(--info-bg); }
+.report-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .report-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .report-grid { grid-template-columns: repeat(3, 1fr); } }
+.report-card { display: block; text-decoration: none; color: var(--ink); transition: border-color .15s, transform .15s; }
+.report-card:hover { border-color: var(--navy); transform: translateY(-1px); }
+.report-card h2 { margin: 8px 0 4px; font-size: 18px; }
+.report-card svg { width: 26px; height: 26px; color: var(--gold); }
+.report-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.report-filters .field { margin: 0; }
+.table tfoot th { background: var(--bg); }
+
+/* Filters fold away on phones (search stays visible) */
+.f-toggle { display: none; }
+@media (max-width: 720px) {
+  .f-toggle { display: inline-flex; }
+  .filters:not(.open) .f-item { display: none; }
+  .filters .f-search { flex: 1 1 100%; }
 }

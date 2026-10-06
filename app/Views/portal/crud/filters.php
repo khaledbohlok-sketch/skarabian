@@ -3,8 +3,9 @@ use App\Core\DB;
 use App\Services\Pickers;
 
 $filters = $res->filters();
+$active = count(array_intersect_key(array_filter($_GET, fn ($v) => $v !== '' && $v !== null), $filters));
 ?>
-<form class="filters card" method="get" action="<?= e(url(current_path())) ?>">
+<form class="filters card<?= $active ? ' open' : '' ?>" method="get" action="<?= e(url(current_path())) ?>">
   <?php if ($res->search): ?>
     <label class="f-search"><span class="sr-only"><?= e(__('common.search')) ?></span>
       <input type="search" name="q" value="<?= e($_GET['q'] ?? '') ?>" placeholder="<?= e(__('common.search')) ?>…">
@@ -36,6 +37,7 @@ $filters = $res->filters();
   <?php endforeach; ?>
   <?php foreach (['sort', 'dir', 'per'] as $keep): if (!empty($_GET[$keep])): ?><input type="hidden" name="<?= $keep ?>" value="<?= e($_GET[$keep]) ?>"><?php endif; endforeach; ?>
   <div class="f-buttons">
+    <?php if ($filters): ?><button class="btn f-toggle" type="button" data-toggle-filters aria-expanded="<?= $active ? 'true' : 'false' ?>"><?= icon('search') ?> <?= e(__('common.filters')) ?><?= $active ? ' (' . $active . ')' : '' ?></button><?php endif; ?>
     <button class="btn btn-primary" type="submit"><?= e(__('common.apply')) ?></button>
     <?php if (array_diff_key($_GET, ['sort' => 1, 'dir' => 1, 'per' => 1, 'page' => 1])): ?><a class="btn ghost" href="<?= e(url(current_path())) ?>"><?= e(__('common.reset')) ?></a><?php endif; ?>
   </div>

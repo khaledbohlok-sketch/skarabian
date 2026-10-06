@@ -12,7 +12,7 @@ $qs = $_GET ? '?' . http_build_query(array_intersect_key($_GET, ['popup' => 1]))
   <h1><?= e($title) ?></h1>
   <div class="actions"><a class="btn ghost" href="<?= e(url($row ? $res->url((int) $row['id']) : $res->url())) ?>"><?= e(__('common.cancel')) ?></a></div>
 </div>
-<form method="post" action="<?= e(url($action) . $qs) ?>" class="record-form" novalidate>
+<form method="post" action="<?= e(url($action) . $qs) ?>" class="record-form" novalidate<?= array_filter($fields, fn ($f) => ($f['type'] ?? '') === 'file') ? ' enctype="multipart/form-data"' : '' ?>>
   <?= csrf_field() ?>
   <?php foreach ($bySection as $sec => $secFields): ?>
     <fieldset class="card">

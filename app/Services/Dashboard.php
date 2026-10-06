@@ -98,16 +98,10 @@ final class Dashboard
         ];
     }
 
-    /** Cash position = opening balances + income received − expenses paid ± transfers. */
+    /** Cash position per active account = opening balance + money received − money paid ± transfers. */
     public static function cash(): array
     {
-        return DB::all("SELECT a.id, a.name, a.type,
-            a.opening_balance_qar
-            + COALESCE((SELECT SUM(CASE WHEN b.type = 'income' THEN p.amount_qar ELSE -p.amount_qar END) FROM bill_payments p JOIN bills b ON b.id = p.bill_id WHERE p.account_id = a.id AND p.deleted_at IS NULL AND b.deleted_at IS NULL), 0)
-            + COALESCE((SELECT SUM(CASE WHEN b.type = 'income' THEN b.amount_qar ELSE -b.amount_qar END) FROM bills b WHERE b.account_id = a.id AND b.status = 'paid' AND b.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM bill_payments p WHERE p.bill_id = b.id AND p.deleted_at IS NULL)), 0)
-            + COALESCE((SELECT SUM(amount_qar) FROM account_transfers t WHERE t.to_account_id = a.id AND t.deleted_at IS NULL), 0)
-            - COALESCE((SELECT SUM(amount_qar) FROM account_transfers t WHERE t.from_account_id = a.id AND t.deleted_at IS NULL), 0) AS balance
-            FROM accounts a WHERE a.active = 1 AND a.deleted_at IS NULL ORDER BY a.type, a.name");
+        return FinanceService::accountBalances(null, true);
     }
 
     public static function inventory(): array

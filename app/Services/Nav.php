@@ -34,7 +34,8 @@ final class Nav
             ]],
             ['nav.finance', 'wallet', '/portal/bills', Auth::can('finance'), [
                 ['nav.bills', '/portal/bills', true],
-                ['nav.accounts', '/portal/accounts-overview', true],
+                ['nav.payments', '/portal/bill-payments', true],
+                ['nav.accounts', '/portal/accounts', true],
                 ['nav.parties', '/portal/parties', true],
                 ['nav.invoices', '/portal/invoices', true],
                 ['nav.purchase_orders', '/portal/purchase-orders', true],
@@ -46,6 +47,7 @@ final class Nav
                 ['nav.items', '/portal/items', true],
                 ['nav.inventories', '/portal/inventories', true],
                 ['nav.movements', '/portal/stock-movements', true],
+                ['nav.purchase_orders', '/portal/purchase-orders', !Auth::can('finance')],
             ]],
             ['nav.reports', 'chart', '/portal/reports', Auth::can('reports'), []],
             ['nav.studio', 'doc', '/portal/studio', Auth::can('studio'), []],

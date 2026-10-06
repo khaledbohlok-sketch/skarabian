@@ -119,12 +119,17 @@ DB::transaction(function () use ($lk, $cat) {
     DB::insert('inventory_items', ['inventory_id' => $inv['grooming'], 'name_en' => 'Wood shavings bedding', 'unit' => 'bale', 'quantity' => 60, 'unit_price_qar' => 80, 'min_quantity' => 30]);
 
     // ---- bills (last 6 months, mixed statuses and currencies)
-    $mk = function (array $d) {
+    $mk = function (array $d) use (&$bank) {
         $d += ['currency' => 'QAR', 'exchange_rate' => 1, 'status' => 'approved'];
         $d['amount_qar'] = round($d['amount_original'] * $d['exchange_rate'], 2);
         $d['number'] = Sequence::bill($d['bill_date']);
-        if ($d['status'] === 'paid') { $d['paid_qar'] = $d['amount_qar']; }
-        return DB::insert('bills', $d);
+        $paid = $d['status'] === 'paid';
+        if ($paid) { $d['paid_qar'] = $d['amount_qar']; }
+        $id = DB::insert('bills', $d);
+        if ($paid) {
+            DB::insert('bill_payments', ['bill_id' => $id, 'payment_date' => $d['bill_date'], 'amount_qar' => $d['amount_qar'], 'account_id' => $d['account_id'] ?? $bank]);
+        }
+        return $id;
     };
     for ($m = 5; $m >= 0; $m--) {
         $d = date('Y-m-', strtotime("-$m months"));
@@ -156,6 +161,11 @@ foreach ($users as [$role, $name, $username]) {
         'twofa_method' => $roleRow['require_2fa'] ? 'totp' : 'none', 'totp_secret' => $roleRow['require_2fa'] ? Crypto::encrypt($ownerSecret) : null,
         'employee_id' => $username === 'groom' ? DB::value("SELECT id FROM employees WHERE name_en = 'Mohammed Rafiq'") : null,
     ]);
+}
+// Pending demo bills wait for approval like real ones
+$accId = (int) DB::value("SELECT id FROM users WHERE username = 'accountant'");
+foreach (DB::all("SELECT id, number, description, amount_qar FROM bills WHERE status = 'pending'") as $b) {
+    DB::insert('approvals', ['type' => 'bill', 'record_type' => 'bill', 'record_id' => $b['id'], 'title' => $b['number'] . ' — ' . $b['description'], 'amount_qar' => $b['amount_qar'], 'requested_by' => $accId]);
 }
 echo "Demo data loaded.\nUsers: owner, manager, accountant, hr, vet, trainer, groom, editor, support\nPassword: $pw\n";
 echo "Authenticator secret for the 2FA demo users (owner, manager, accountant, hr): $ownerSecret\n";

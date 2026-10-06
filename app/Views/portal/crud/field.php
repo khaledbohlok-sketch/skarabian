@@ -41,7 +41,7 @@ foreach (($f['attrs'] ?? []) as $ak => $av) { $attrs .= ' ' . e($ak) . '="' . e(
       $canAdd = !empty($src['create']) && Auth::can($src['create'][1], 'create') && empty($f['no_add']);
       $params = http_build_query($f['filter'] ?? []); ?>
       <div class="picker-row">
-        <select id="<?= e($id) ?>" name="<?= e($name) ?>" data-picker="<?= e($f['source']) ?>" data-params="<?= e($params) ?>"<?= $attrs ?>>
+        <select id="<?= e($id) ?>" name="<?= e($name) ?>" data-picker="<?= e($f['source']) ?>" data-params="<?= e($params) ?>"<?php if (!empty($f['depends'])): ?> data-depends="<?= e(implode(',', array_map(fn ($p, $o) => $p . ':' . $o, array_keys($f['depends']), $f['depends']))) ?>"<?php endif; ?><?= $attrs ?>>
           <option value=""><?= e(__('common.search_choose')) ?></option>
           <?php if ($val !== null && $val !== ''): ?><option value="<?= e($val) ?>" selected><?= e(Pickers::label($f['source'], $val) ?? ('#' . $val)) ?></option><?php endif; ?>
         </select>
@@ -55,6 +55,8 @@ foreach (($f['attrs'] ?? []) as $ak => $av) { $attrs .= ' ' . e($ak) . '="' . e(
       <input id="<?= e($id) ?>" type="<?= e($type) ?>" name="<?= e($name) ?>" value="<?= e($val) ?>"<?= $attrs ?><?= in_array($type, ['email', 'url'], true) ? ' dir="ltr"' : '' ?>>
     <?php break; case 'phone': ?>
       <input id="<?= e($id) ?>" type="tel" name="<?= e($name) ?>" value="<?= e($val) ?>" dir="ltr" placeholder="+974 5555 5555"<?= $attrs ?>>
+    <?php break; case 'file': ?>
+      <input id="<?= e($id) ?>" type="file" name="<?= e($name) ?>" accept="<?= e($f['accept'] ?? 'image/*,application/pdf') ?>"<?= $attrs ?>>
     <?php break; case 'display': ?>
       <div class="display-value"><?= $f['render']($row) ?></div>
     <?php break; default: ?>

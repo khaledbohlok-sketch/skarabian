@@ -59,6 +59,7 @@ class CrudController extends Controller
         if (!$res->canList()) {
             Auth::deny($res->module . '.view');
         }
+        $res->beforeList();
         $q = new ListQuery($res, $_GET);
         $export = Request::query('export');
         if ($export === 'xlsx' || $export === 'pdf') {
@@ -199,7 +200,7 @@ class CrudController extends Controller
         $layout = Request::query('popup') ? 'popup' : 'portal';
         Response::html(View::render($res->formView ?? 'portal/crud/form', [
             'res' => $res, 'row' => $row,
-            'title' => $row ? __('common.edit') . ': ' . $res->label($row) : __('common.new') . ' ' . __($res->singular),
+            'title' => $row ? __('common.edit') . ': ' . $res->label($row) : __('common.new_x', ['name' => __($res->singular)]),
         ], $layout));
     }
 

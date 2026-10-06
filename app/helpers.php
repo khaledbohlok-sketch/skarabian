@@ -116,7 +116,8 @@ function money(mixed $amount, string $currency = 'QAR', bool $html = true): stri
     $n = round((float) $amount, 2);
     $txt = ($n < 0 ? '-' : '') . number_format(abs($n), 2) . ' ' . $currency;
     if (!$html) {
-        return $txt;
+        // Inside Arabic sentences keep "1,234.00 QAR" in reading order (left-to-right isolate)
+        return \App\Core\Lang::isRtl() ? "\u{2066}" . $txt . "\u{2069}" : $txt;
     }
     return '<span class="money' . ($n < 0 ? ' neg' : '') . '" dir="ltr">' . e($txt) . '</span>';
 }

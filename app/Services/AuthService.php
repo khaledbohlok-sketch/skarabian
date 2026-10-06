@@ -139,7 +139,12 @@ final class AuthService
         }
         $ok = false;
         if ($user['twofa_method'] === 'totp') {
-            $ok = Totp::verify((string) Crypto::decrypt($user['totp_secret']), $code);
+            // A code is accepted once: a code seen by someone else (shoulder, screenshot) cannot be replayed
+            $step = Totp::matchStep((string) Crypto::decrypt($user['totp_secret']), $code);
+            $ok = $step !== null && $step > (int) $user['totp_last_step'];
+            if ($ok) {
+                DB::run('UPDATE users SET totp_last_step = ? WHERE id = ?', [$step, $uid]);
+            }
         } elseif ($user['twofa_method'] === 'email') {
             $ok = self::checkEmailCode($uid, 'login', $code);
         }

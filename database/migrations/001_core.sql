@@ -51,6 +51,7 @@ CREATE TABLE users (
   password_changed_at  DATETIME NULL,
   twofa_method         ENUM('none','totp','email') NOT NULL DEFAULT 'none',
   totp_secret          VARCHAR(255) NULL,        -- encrypted
+  totp_last_step       INT UNSIGNED NULL,        -- last accepted time step (a code cannot be used twice)
   failed_attempts      INT UNSIGNED NOT NULL DEFAULT 0,
   locked_until         DATETIME NULL,
   last_login_at        DATETIME NULL,

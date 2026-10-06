@@ -49,7 +49,7 @@ final class Pickers
                 'create' => ['/portal/parties/create?type=supplier', 'finance'],
             ],
             'parties' => [
-                'table' => 'parties', 'label' => "CONCAT(t.name_en, ' (', t.type, ')')", 'search' => ['t.name_en', 't.name_ar', 't.phone', 't.email'],
+                'table' => 'parties', 'label' => 't.name_en', 'search' => ['t.name_en', 't.name_ar', 't.phone', 't.email'],
                 'grantedBy' => ['finance'], 'create' => ['/portal/parties/create', 'finance'],
             ],
             'items' => [
@@ -72,6 +72,10 @@ final class Pickers
                 'table' => 'bills', 'label' => "CONCAT(t.number, ' — ', COALESCE(t.description, ''), ' — ', t.amount_qar, ' QAR')",
                 'search' => ['t.number', 't.description', 't.reference_no'], 'grantedBy' => ['finance'], 'order' => 't.id DESC',
             ],
+            'open_bills' => [
+                'table' => 'bills', 'label' => "CONCAT(t.number, ' — ', COALESCE(t.description, ''), ' — ', FORMAT(t.amount_qar - t.paid_qar, 2), ' QAR')",
+                'search' => ['t.number', 't.description', 't.reference_no'], 'where' => "t.status IN ('approved','partially_paid','overdue')", 'grantedBy' => ['finance'], 'order' => 't.bill_date DESC, t.id DESC',
+            ],
             'users' => [
                 'table' => 'users', 'label' => "CONCAT(t.name, ' (', t.username, ')')", 'search' => ['t.name', 't.username', 't.email'],
                 'where' => "t.status = 'active'", 'grantedBy' => ['users', 'inbox'],
@@ -83,7 +87,17 @@ final class Pickers
             'categories' => [
                 'table' => 'finance_categories', 'label' => "CONCAT(IF(t.parent_id IS NULL, '', '   › '), t.name_en)", 'search' => ['t.name_en', 't.name_ar'],
                 'where' => 't.active = 1', 'grantedBy' => ['finance'], 'filters' => ['parent_id' => 't.parent_id'],
-                'order' => 'COALESCE(t.parent_id, t.id), t.parent_id IS NOT NULL, t.sort, t.name_en', 'noDeleted' => true,
+                'order' => 'COALESCE(t.parent_id, t.id), t.parent_id IS NOT NULL, t.sort, t.name_en',
+            ],
+            'top_categories' => [
+                'table' => 'finance_categories', 'label' => 't.name_en', 'search' => ['t.name_en', 't.name_ar'],
+                'where' => 't.active = 1 AND t.parent_id IS NULL', 'grantedBy' => ['finance'], 'order' => 't.sort, t.name_en',
+                'joinFilters' => ['type' => "t.type IN (:f_type, 'any')"],
+            ],
+            'subcategories' => [
+                'table' => 'finance_categories', 'label' => "CONCAT((SELECT p.name_en FROM finance_categories p WHERE p.id = t.parent_id), ' › ', t.name_en)",
+                'search' => ['t.name_en', 't.name_ar'], 'where' => 't.active = 1 AND t.parent_id IS NOT NULL', 'grantedBy' => ['finance'],
+                'filters' => ['parent_id' => 't.parent_id'], 'order' => 't.sort, t.name_en',
             ],
             'inventories' => [
                 'table' => 'inventories', 'label' => 't.name_en', 'search' => ['t.name_en', 't.name_ar'], 'grantedBy' => ['inventory', 'finance'],

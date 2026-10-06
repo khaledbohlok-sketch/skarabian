@@ -25,6 +25,22 @@ final class Totp
     }
 
     /** Accepts the current code and one step either side (clock drift). */
+    /** The time step (30-second counter) the code belongs to, or null when the code is wrong. */
+    public static function matchStep(string $secret, string $code, int $window = 1): ?int
+    {
+        $code = preg_replace('/\D/', '', $code);
+        if (strlen($code) !== 6) {
+            return null;
+        }
+        for ($i = -$window; $i <= $window; $i++) {
+            $t = time() + $i * 30;
+            if (hash_equals(self::code($secret, $t), $code)) {
+                return intdiv($t, 30);
+            }
+        }
+        return null;
+    }
+
     public static function verify(string $secret, string $code, int $window = 1): bool
     {
         $code = preg_replace('/\D/', '', $code);

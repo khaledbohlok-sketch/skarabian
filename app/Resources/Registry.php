@@ -26,6 +26,7 @@ final class Registry
         'account-transfers'=> AccountTransfers::class,
         'categories'       => Categories::class,
         'bills'            => Bills::class,
+        'bill-payments'    => BillPayments::class,
         'invoices'         => Invoices::class,
         'purchase-orders'  => PurchaseOrders::class,
         'budgets'          => Budgets::class,

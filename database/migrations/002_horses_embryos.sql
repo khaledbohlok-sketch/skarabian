@@ -7,7 +7,7 @@ CREATE TABLE parties (
   name_en         VARCHAR(150) NOT NULL,
   name_ar         VARCHAR(150) NULL,
   contact_person  VARCHAR(120) NULL,
-  id_number       VARCHAR(60) NULL,            -- ID / C.R. no. (transfer certificates)
+  id_number       VARCHAR(60) NULL,            -- ID / C.R. no.
   nationality     VARCHAR(60) NULL,
   phone           VARCHAR(40) NULL,
   email           VARCHAR(150) NULL,

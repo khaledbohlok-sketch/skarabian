@@ -28,6 +28,7 @@ CREATE TABLE account_transfers (
   notes            VARCHAR(255) NULL,
   created_by       INT UNSIGNED NULL,
   created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at       DATETIME NULL,
   deleted_at       DATETIME NULL,
   CONSTRAINT fk_at_from FOREIGN KEY (from_account_id) REFERENCES accounts(id),
   CONSTRAINT fk_at_to FOREIGN KEY (to_account_id) REFERENCES accounts(id)
@@ -41,6 +42,10 @@ CREATE TABLE finance_categories (
   name_ar     VARCHAR(100) NULL,
   sort        INT NOT NULL DEFAULT 0,
   active      TINYINT(1) NOT NULL DEFAULT 1,
+  created_by  INT UNSIGNED NULL,
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  DATETIME NULL,
+  deleted_at  DATETIME NULL,
   UNIQUE KEY uq_fc (parent_id, name_en),
   CONSTRAINT fk_fc_parent FOREIGN KEY (parent_id) REFERENCES finance_categories(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -155,6 +160,7 @@ CREATE TABLE invoices (
   number        VARCHAR(20) NOT NULL UNIQUE,               -- INV-YYYYMM-0001
   party_id      INT UNSIGNED NOT NULL,
   invoice_type  ENUM('boarding','other') NOT NULL DEFAULT 'other',
+  category_id   INT UNSIGNED NULL,                         -- income category used for the income record
   invoice_date  DATE NOT NULL,
   due_date      DATE NULL,
   currency      CHAR(3) NOT NULL DEFAULT 'QAR',
@@ -242,8 +248,10 @@ CREATE TABLE bill_payments (
   payment_method_id INT UNSIGNED NULL,
   reference_no  VARCHAR(80) NULL,
   notes         VARCHAR(255) NULL,
+  payroll_line_id INT UNSIGNED NULL,
   created_by    INT UNSIGNED NULL,
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    DATETIME NULL,
   deleted_at    DATETIME NULL,
   KEY idx_bp (bill_id),
   KEY idx_bp_date (payment_date, account_id),

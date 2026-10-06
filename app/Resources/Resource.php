@@ -21,6 +21,9 @@ use App\Services\Pickers;
  *   source    picker source (Pickers)    filter   picker filter  sensitive  hidden without "view sensitive"
  *   section   form section key           default  default value  readonly  never written from the form
  *   create_only / edit_only, help, col (grid width 3|4|6|12), no_phone (reject phone numbers)
+ *   file      upload input (not stored in the row; the resource stores it in afterSave), accept = allowed types
+ *   virtual   validated like any field but not stored (read it from $this->extra in prepare/afterSave)
+ *   depends   picker filters taken from other fields of the form, e.g. ['parent_id' => 'category_id']
  */
 abstract class Resource
 {
@@ -38,6 +41,8 @@ abstract class Resource
     public bool $archivable = false;
     public bool $financial = false;  // deleting needs Owner/GM approval
     public bool $hasCreatedBy = true;
+    public bool $softDelete = true;   // false for append-only tables without deleted_at (e.g. stock movements)
+    public array $extra = [];         // submitted values of virtual fields
     public ?string $showView = null;
     public ?string $formView = null;
     public int $perPage = 25;
@@ -98,6 +103,11 @@ abstract class Resource
     public function actions(array $row): array
     {
         return [];
+    }
+
+    /** Runs before a list is shown (e.g. bills past their due date become overdue). */
+    public function beforeList(): void
+    {
     }
 
     /** Extra buttons on the list page: [label key, url, css class]. */
@@ -203,7 +213,7 @@ abstract class Resource
 
     public function baseWhere(array &$params): array
     {
-        $where = ['t.deleted_at IS NULL'];
+        $where = $this->softDelete ? ['t.deleted_at IS NULL'] : ['1=1'];
         $this->scope($where, $params);
         return $where;
     }
@@ -245,27 +255,41 @@ abstract class Resource
         $data = [];
         $errors = [];
         foreach ($this->visibleFields($old === null) as $name => $f) {
-            if (!empty($f['readonly']) || ($f['type'] ?? '') === 'display') {
-                continue;
+            if (!empty($f['readonly']) || in_array($f['type'] ?? '', ['display', 'file'], true)) {
+                continue; // file inputs are handled by the resource's afterSave()
             }
             $type = $f['type'] ?? 'text';
             $raw = $input[$name] ?? null;
             if (is_string($raw)) {
                 $raw = trim($raw);
             }
+            $virtual = !empty($f['virtual']);
             if ($type === 'checkbox') {
-                $data[$name] = !empty($raw) ? 1 : 0;
+                if ($virtual) {
+                    $this->extra[$name] = !empty($raw);
+                } else {
+                    $data[$name] = !empty($raw) ? 1 : 0;
+                }
                 continue;
             }
             if ($raw === '' || $raw === null) {
                 if (!empty($f['required'])) {
                     $errors[$name] = __('validation.required');
                 }
-                $data[$name] = array_key_exists('empty', $f) ? $f['empty'] : DB::emptyValue($this->table, $name);
+                if ($virtual) {
+                    $this->extra[$name] = null;
+                } else {
+                    $data[$name] = array_key_exists('empty', $f) ? $f['empty'] : DB::emptyValue($this->table, $name);
+                }
                 continue;
             }
             try {
-                $data[$name] = $this->normalize($name, $f, $raw);
+                $v = $this->normalize($name, $f, $raw);
+                if ($virtual) {
+                    $this->extra[$name] = $v;
+                } else {
+                    $data[$name] = $v;
+                }
             } catch (ValidationException $e) {
                 $errors += $e->errors;
             }
@@ -350,7 +374,13 @@ abstract class Resource
                 }
                 return (int) $raw;
             case 'picker':
-                if (!Pickers::valid($f['source'], $raw, $f['filter'] ?? [])) {
+                $pf = $f['filter'] ?? [];
+                foreach ($f['depends'] ?? [] as $param => $other) {
+                    if (isset($_POST[$other]) && is_string($_POST[$other]) && $_POST[$other] !== '') {
+                        $pf[$param] = $_POST[$other];
+                    }
+                }
+                if (!Pickers::valid($f['source'], $raw, $pf)) {
                     $fail('validation.pick_from_list');
                 }
                 return (int) $raw;
@@ -404,7 +434,7 @@ abstract class Resource
         }
         return match ($type) {
             'checkbox' => $v ? '✓ ' . e(__('common.yes')) : e(__('common.no')),
-            'money'    => money($v),
+            'money'    => money($v, !empty($f['currency_field']) ? (string) ($row[$f['currency_field']] ?? 'QAR') : 'QAR'),
             'decimal'  => e(rtrim(rtrim(number_format((float) $v, 3, '.', ','), '0'), '.')),
             'date'     => '<span class="' . e(!empty($f['expiry']) ? expiry_class($v) : '') . '">' . e(fmt_date($v)) . '</span>',
             'select'   => e(__((is_callable($f['options']) ? ($f['options'])() : $f['options'])[$v] ?? (string) $v)),

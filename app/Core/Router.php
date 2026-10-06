@@ -47,6 +47,9 @@ final class Router
                 $params = array_filter($m, 'is_string', ARRAY_FILTER_USE_KEY);
                 Request::$routeParams = $params;
                 [$class, $action] = $handler;
+                if (!class_exists($class) || !method_exists($class, $action)) {
+                    Response::notFound(); // a section that is not installed yet
+                }
                 $controller = new $class();
                 $controller->$action(...array_values($params));
                 return;

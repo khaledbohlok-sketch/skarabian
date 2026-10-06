@@ -84,20 +84,20 @@ $r->any('/portal/attendance/sheet', [P\HrController::class, 'sheet']);
 // Finance
 $r->post('/portal/bills/{id}/submit', [P\FinanceController::class, 'submit']);
 $r->post('/portal/bills/{id}/cancel', [P\FinanceController::class, 'cancel']);
-$r->post('/portal/bills/{id}/payment', [P\FinanceController::class, 'payment']);
-$r->post('/portal/bill-payments/{id}/delete', [P\FinanceController::class, 'deletePayment']);
 $r->post('/portal/purchase-orders/{id}/submit', [P\FinanceController::class, 'submitPo']);
 $r->post('/portal/purchase-orders/{id}/receive', [P\FinanceController::class, 'receivePo']);
+$r->post('/portal/purchase-orders/{id}/cancel', [P\FinanceController::class, 'cancelPo']);
 $r->any('/portal/purchase-orders/{id}/lines', [P\FinanceController::class, 'poLines']);
 $r->any('/portal/invoices/{id}/lines', [P\FinanceController::class, 'invoiceLines']);
 $r->post('/portal/invoices/{id}/issue', [P\FinanceController::class, 'issueInvoice']);
-$r->get('/portal/accounts-overview', [P\FinanceController::class, 'accounts']);
+$r->post('/portal/invoices/{id}/cancel', [P\FinanceController::class, 'cancelInvoice']);
 $r->get('/portal/payroll', [P\PayrollController::class, 'index']);
 $r->post('/portal/payroll', [P\PayrollController::class, 'create']);
 $r->get('/portal/payroll/{id}', [P\PayrollController::class, 'show']);
 $r->post('/portal/payroll/{id}/lines', [P\PayrollController::class, 'saveLines']);
 $r->post('/portal/payroll/{id}/submit', [P\PayrollController::class, 'submit']);
 $r->post('/portal/payroll/{id}/pay', [P\PayrollController::class, 'pay']);
+$r->post('/portal/payroll/{id}/delete', [P\PayrollController::class, 'delete']);
 $r->get('/portal/reports', [P\ReportsController::class, 'index']);
 $r->get('/portal/reports/{type}', [P\ReportsController::class, 'show']);
 
