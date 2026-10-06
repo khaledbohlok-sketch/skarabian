@@ -1,0 +1,1 @@
+<div class="error-page"><h1><?= e(__('common.access_denied')) ?></h1><p><?= e(__('common.access_denied_text')) ?></p><p><a class="btn" href="<?= e(url('/portal')) ?>"><?= e(__('common.go_home')) ?></a></p></div>

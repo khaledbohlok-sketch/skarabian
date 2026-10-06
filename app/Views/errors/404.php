@@ -1,0 +1,1 @@
+<div class="error-page"><h1>404</h1><p><?= e(__('common.not_found')) ?></p><p><a class="btn" href="<?= e(url(str_starts_with(current_path(), '/portal') ? '/portal' : site_url())) ?>"><?= e(__('common.go_home')) ?></a></p></div>

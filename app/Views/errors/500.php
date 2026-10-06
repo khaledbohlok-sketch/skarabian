@@ -1,0 +1,1 @@
+<div class="error-page"><h1><?= e(__('common.error_title')) ?></h1><p><?= e(__('common.error_text')) ?></p><p class="muted"><?= e(__('common.reference')) ?>: <?= e($ref ?? '') ?></p><p><a class="btn" href="<?= e(url('/')) ?>"><?= e(__('common.go_home')) ?></a></p></div>

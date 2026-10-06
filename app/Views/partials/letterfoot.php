@@ -1,0 +1,1 @@
+<footer class="lh-foot">C.R.: <?= e(setting('company.cr', '231961')) ?> &nbsp;|&nbsp; Mob.: <?= e(setting('company.mobile', '5536 6699')) ?> &nbsp;|&nbsp; Email: <?= e(setting('company.email', 'sk.qa@hotmail.com')) ?> &nbsp;|&nbsp; P.O.Box: <?= e(setting('company.po_box', '6657')) ?>, <?= e(setting('company.city_en', 'Doha - Qatar')) ?></footer>
