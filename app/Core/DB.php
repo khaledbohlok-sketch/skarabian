@@ -133,10 +133,27 @@ final class DB
     public static function hasColumn(string $table, string $column): bool
     {
         self::assertIdent($table);
+        return isset(self::columns($table)[$column]);
+    }
+
+    /** Column definitions (SHOW COLUMNS rows) keyed by column name, cached per request. */
+    public static function columns(string $table): array
+    {
+        self::assertIdent($table);
         if (!isset(self::$columns[$table])) {
-            self::$columns[$table] = array_column(self::all("SHOW COLUMNS FROM `$table`"), 'Field');
+            self::$columns[$table] = array_column(self::all("SHOW COLUMNS FROM `$table`"), null, 'Field');
         }
-        return in_array($column, self::$columns[$table], true);
+        return self::$columns[$table];
+    }
+
+    /** Value to store when a form field is left empty: NULL, or the column default when the column is NOT NULL. */
+    public static function emptyValue(string $table, string $column): mixed
+    {
+        $c = self::columns($table)[$column] ?? null;
+        if (!$c || $c['Null'] !== 'NO' || $c['Default'] === null || preg_match('/^(current_timestamp|now)\b|\(/i', (string) $c['Default'])) {
+            return null;
+        }
+        return trim((string) $c['Default'], "'");
     }
 
     /** Guard for identifiers that are interpolated into SQL (tables/columns come from code, never from users). */

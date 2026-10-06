@@ -24,7 +24,7 @@ if (!isset($allTabs[$tab])) { $tab = 'details'; }
   <div class="actions">
     <?php foreach ($res->actions($row) as $a): ?>
       <?php if (($a['method'] ?? 'get') === 'post'): ?>
-        <form method="post" action="<?= e(url($a['url'])) ?>" class="inline"<?= !empty($a['confirm']) ? ' data-confirm="' . e(__($a['confirm'])) . '"' : '' ?>><?= csrf_field() ?><button class="btn <?= e($a['class'] ?? '') ?>" type="submit"><?= e(__($a['label'])) ?></button></form>
+        <form method="post" action="<?= e(url($a['url'])) ?>" class="inline"<?= !empty($a['confirm']) ? ' data-confirm="' . e(__($a['confirm'])) . '"' : '' ?>><?= csrf_field() ?><?php foreach ($a['fields'] ?? [] as $fk => $fv): ?><input type="hidden" name="<?= e($fk) ?>" value="<?= e($fv) ?>"><?php endforeach; ?><button class="btn <?= e($a['class'] ?? '') ?>" type="submit"><?= e(__($a['label'])) ?></button></form>
       <?php else: ?>
         <a class="btn <?= e($a['class'] ?? '') ?>" href="<?= e(url($a['url'])) ?>"<?= !empty($a['blank']) ? ' target="_blank"' : '' ?>><?= e(__($a['label'])) ?></a>
       <?php endif; ?>

@@ -87,6 +87,7 @@ DB::transaction(function () use ($lk, $cat) {
 
     // ---- employees
     $emp = function (array $d) use ($lk) {
+        $d += ['leave_balance' => 21];
         foreach (['qid_no', 'passport_no', 'bank_iban', 'bank_name'] as $k) {
             if (isset($d[$k])) { $d[$k] = Crypto::encrypt($d[$k]); }
         }
@@ -99,7 +100,7 @@ DB::transaction(function () use ($lk, $cat) {
     $e['vet'] = $emp(['emp_no' => 'SK-003', 'name_en' => 'Dr. Ahmed Samir', 'name_ar' => 'د. أحمد سمير', 'nationality_id' => $eg, 'position_id' => $lk('position', 'Veterinarian'), 'department_id' => $lk('department', 'Veterinary'), 'hire_date' => '2025-03-01', 'basic_salary_qar' => 11000, 'qid_expiry' => date('Y-m-d', strtotime('-12 days')), 'show_on_website' => 1, 'public_title_en' => 'Stud Veterinarian', 'public_title_ar' => 'طبيب المربط البيطري', 'specialties_en' => 'Reproduction · Embryo transfer', 'specialties_ar' => 'التناسل · نقل الأجنة']);
     $e['nutri'] = $emp(['emp_no' => 'SK-004', 'name_en' => 'Jennifer Hale', 'name_ar' => 'جينيفر هيل', 'gender' => 'f', 'nationality_id' => $uk, 'position_id' => $lk('position', 'Nutritionist'), 'department_id' => $lk('department', 'Veterinary'), 'hire_date' => '2025-06-01', 'basic_salary_qar' => 9000, 'qid_expiry' => '2027-03-01', 'show_on_website' => 1, 'public_title_en' => 'Equine Nutritionist', 'public_title_ar' => 'أخصائية تغذية الخيل', 'specialties_en' => 'Diet plans · Growth', 'specialties_ar' => 'خطط التغذية · النمو']);
     foreach (['Mohammed Rafiq' => $pk, 'Suresh Kumar' => $in, 'Imran Ali' => $pk, 'Bahaa Saleh' => $eg] as $n => $nat) {
-        $e[$n] = $emp(['emp_no' => Sequence::monthly('EMP'), 'name_en' => $n, 'nationality_id' => $nat, 'position_id' => $lk('position', 'Groom'), 'department_id' => $lk('department', 'Stable'), 'hire_date' => '2025-09-01', 'basic_salary_qar' => 1500, 'housing_allowance' => 300, 'qid_expiry' => $n === 'Imran Ali' ? date('Y-m-d', strtotime('-40 days')) : date('Y-m-d', strtotime('+200 days'))]);
+        $e[$n] = $emp(['emp_no' => App\Services\HrService::nextEmpNo(), 'name_en' => $n, 'nationality_id' => $nat, 'position_id' => $lk('position', 'Groom'), 'department_id' => $lk('department', 'Stable'), 'hire_date' => '2025-09-01', 'basic_salary_qar' => 1500, 'housing_allowance' => 300, 'qid_expiry' => $n === 'Imran Ali' ? date('Y-m-d', strtotime('-40 days')) : date('Y-m-d', strtotime('+200 days'))]);
     }
     foreach ([$tumooh, $samed, $meera] as $hid) { DB::insert('horse_assignments', ['horse_id' => $hid, 'employee_id' => $e['Mohammed Rafiq']]); }
 

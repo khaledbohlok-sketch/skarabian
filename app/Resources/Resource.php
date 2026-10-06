@@ -261,7 +261,7 @@ abstract class Resource
                 if (!empty($f['required'])) {
                     $errors[$name] = __('validation.required');
                 }
-                $data[$name] = array_key_exists('empty', $f) ? $f['empty'] : null;
+                $data[$name] = array_key_exists('empty', $f) ? $f['empty'] : DB::emptyValue($this->table, $name);
                 continue;
             }
             try {
