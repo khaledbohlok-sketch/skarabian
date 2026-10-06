@@ -6,6 +6,7 @@ CREATE TABLE employees (
   emp_no             VARCHAR(20) NULL UNIQUE,
   name_en            VARCHAR(120) NOT NULL,
   name_ar            VARCHAR(120) NULL,
+  gender             ENUM('m','f') NOT NULL DEFAULT 'm',
   photo_id           INT UNSIGNED NULL,
   nationality_id     INT UNSIGNED NULL,
   position_id        INT UNSIGNED NULL,       -- from list only: a phone number can never land here
@@ -27,6 +28,8 @@ CREATE TABLE employees (
   passport_expiry    DATE NULL,
   visa_expiry        DATE NULL,
   health_card_expiry DATE NULL,
+  blood_group        VARCHAR(5) NULL,
+  emergency_contact  VARCHAR(150) NULL,
   annual_leave_days  DECIMAL(5,1) NOT NULL DEFAULT 30,
   leave_balance      DECIMAL(6,1) NOT NULL DEFAULT 0,
   show_on_website    TINYINT(1) NOT NULL DEFAULT 0,

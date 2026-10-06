@@ -12,7 +12,7 @@
   <button type="button" class="pbtn ghost" data-back><?= e(__('common.back')) ?></button>
 </div>
 <div class="page">
-  <?= \App\Core\View::partial('partials/letterhead', ['version' => $letterhead ?? (($docLang ?? lang()) === 'ar' ? 2 : 1)]) ?>
+  <?= \App\Core\View::partial('partials/letterhead', ['version' => $letterhead ?? 2]) ?>
   <main class="page-body"><?= $content ?></main>
   <?= \App\Core\View::partial('partials/letterfoot') ?>
 </div>

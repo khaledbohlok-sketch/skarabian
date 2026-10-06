@@ -1,10 +1,10 @@
 /* SK Arabians — public website. Mobile-first, RTL-aware (logical properties). */
 :root {
-  --navy: #0f1f45;
-  --navy-2: #172a57;
-  --navy-deep: #08122b;
-  --gold: #b8955a;
-  --gold-soft: #d9c39a;
+  --navy: #213562;
+  --navy-2: #2c4478;
+  --navy-deep: #111d38;
+  --gold: #b08d57;
+  --gold-soft: #e3cfa8;
   --ink: #13213f;
   --muted: #5c6782;
   --line: #e3e7ef;
@@ -31,13 +31,12 @@ html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3 { letter-spacing: 0; 
 
 /* Header */
 .site-header { position: fixed; inset-inline: 0; top: 0; z-index: 50; transition: background .3s, box-shadow .3s; }
-.site-header.solid, .site-header.scrolled { background: rgba(8, 18, 43, .94); backdrop-filter: blur(8px); box-shadow: 0 6px 24px rgba(0, 0, 0, .18); }
+.site-header.solid, .site-header.scrolled { background: rgba(17, 29, 56, .94); backdrop-filter: blur(8px); box-shadow: 0 6px 24px rgba(0, 0, 0, .18); }
 .nav-bar { display: flex; align-items: center; gap: 16px; height: 74px; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; }
-.logo img { width: 46px; height: 46px; background: #fff; border-radius: 50%; padding: 3px; }
-.logo span { display: flex; flex-direction: column; line-height: 1.1; }
-.logo strong { font-family: "Cormorant Garamond", serif; font-size: 22px; letter-spacing: .04em; }
-.logo small { font-family: "Tajawal", sans-serif; font-size: 12px; color: var(--gold-soft); }
+.logo img { height: 48px; width: auto; }
+.site-footer .logo img { height: 70px; }
+.hero-logo { width: clamp(180px, 22vw, 260px); height: auto; margin-bottom: 26px; filter: drop-shadow(0 6px 18px rgba(0,0,0,.35)); }
 .main-nav { margin-inline-start: auto; display: none; gap: 4px; }
 .main-nav a { color: #e9edf6; text-decoration: none; font-size: 14px; letter-spacing: .04em; padding: 8px 12px; border-radius: 8px; }
 .main-nav a:hover, .main-nav a.on { color: var(--gold-soft); }
@@ -76,7 +75,6 @@ html[dir="rtl"] .btn { text-transform: none; letter-spacing: 0; font-size: 15px;
 @keyframes kenburns { to { transform: scale(1); } }
 .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,18,43,.35) 0%, rgba(8,18,43,.15) 40%, rgba(8,18,43,.92) 100%); }
 .hero-inner { position: relative; z-index: 2; padding-block: 140px 80px; }
-.hero-mark { width: 92px; height: 92px; background: #fff; border-radius: 50%; padding: 6px; margin-bottom: 22px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
 .eyebrow { display: inline-block; color: var(--gold-soft); text-transform: uppercase; letter-spacing: .28em; font-size: 12px; font-weight: 600; margin-bottom: 14px; }
 html[dir="rtl"] .eyebrow { letter-spacing: 0; font-size: 14px; }
 .hero h1 { font-size: clamp(40px, 7vw, 86px); max-width: 15ch; margin-bottom: 18px; }

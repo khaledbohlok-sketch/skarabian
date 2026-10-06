@@ -1,0 +1,37 @@
+/* Printable lists & reports on the official letterhead (A4). */
+@import url("studio-doc.css");
+html, body { margin: 0; background: #e9edf3; }
+.print-toolbar { position: sticky; top: 0; z-index: 10; display: flex; gap: 8px; justify-content: center; padding: 10px; background: #213562; }
+.pbtn { border: 0; border-radius: 8px; padding: 9px 16px; background: #b08d57; color: #fff; font: 600 14px "IBM Plex Sans", sans-serif; cursor: pointer; }
+.pbtn.ghost { background: transparent; border: 1px solid rgba(255,255,255,.4); }
+.print-body .page { height: auto; min-height: 297mm; margin: 12px auto; box-shadow: 0 2px 14px rgba(20,30,60,.14); padding: 35mm 14mm 26mm; }
+.print-body .page .lh { position: absolute; top: 9mm; left: 14mm; right: 14mm; height: 22mm; display: flex; align-items: center; }
+.print-body .page .lh img.lh-logo { height: 21mm; }
+.print-body .lh-v1 .lh-brand, .lh-stack { display: flex; flex-direction: column; align-items: center; }
+.print-body .lh-v1 .lh-en { font: 600 11pt "IBM Plex Sans", sans-serif; color: #213562; }
+.print-body .lh-v2 .lh-brand { display: flex; align-items: center; gap: 4mm; }
+.print-body .lh-v2 .lh-names { display: flex; flex-direction: column; color: #213562; }
+.print-body .lh-v2 .lh-ar { font: 600 13pt "IBM Plex Sans Arabic", sans-serif; }
+.print-body .lh-v2 .lh-en { font: 500 15pt "IBM Plex Sans", sans-serif; }
+.print-body .lh-watermark { position: absolute; left: 50%; top: 53%; transform: translate(-50%, -50%); width: 92mm; opacity: .055; pointer-events: none; }
+.print-body .lh-watermark img { width: 100%; }
+.print-body .page-body { position: relative; font: 9.6pt "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif; color: #1d2433; }
+.print-body .page-body[dir="rtl"], [dir="rtl"] .print-body .page-body { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif; }
+.doc-title { color: #213562; font-size: 18pt; margin: 0 0 1mm; }
+.doc-meta { color: #6b7488; font-size: 8.6pt; margin: 0 0 3mm; }
+.doc-table { width: 100%; border-collapse: collapse; font-size: 8.6pt; }
+.doc-table th { background: #213562; color: #fff; text-align: start; padding: 2mm; font-weight: 600; }
+.doc-table td { padding: 1.6mm 2mm; border-bottom: 1px solid #e3e7ef; }
+.doc-table tr:nth-child(even) td { background: #f7f8fb; }
+.doc-table .num { text-align: end; font-variant-numeric: tabular-nums; }
+.doc-table .neg { color: #b42323; }
+.doc-table tfoot th { background: #eef1f5; color: #213562; }
+.chip { display: inline-block; background: #eef1f5; padding: 0 2mm; border-radius: 2mm; margin-inline-end: 1mm; }
+.print-body .lh-foot { position: absolute; }
+@media print {
+  html, body { background: #fff; }
+  .no-print { display: none !important; }
+  .print-body .page { margin: 0; box-shadow: none; min-height: auto; }
+  .print-body .lh-foot { position: fixed; bottom: 4mm; }
+  .print-body .lh-watermark { position: fixed; }
+}

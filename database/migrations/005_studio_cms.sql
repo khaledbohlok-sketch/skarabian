@@ -2,15 +2,11 @@
 SET NAMES utf8mb4;
 
 CREATE TABLE studio_templates (
-  id                  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  doc_type            VARCHAR(40) NOT NULL,
-  lang                CHAR(2) NOT NULL,
-  title               VARCHAR(150) NOT NULL,
-  body                MEDIUMTEXT NOT NULL,       -- wording with {{placeholders}}
-  letterhead_version  TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  doc_type            VARCHAR(40) NOT NULL PRIMARY KEY,
+  defaults            JSON NULL,                 -- Owner's default wording/values for this document (terms, clauses, declarations...)
+  letterhead_version  TINYINT UNSIGNED NOT NULL DEFAULT 2,
   updated_by          INT UNSIGNED NULL,
-  updated_at          DATETIME NULL,
-  UNIQUE KEY uq_tpl (doc_type, lang)
+  updated_at          DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Which roles may create each document type (editable by the Owner)

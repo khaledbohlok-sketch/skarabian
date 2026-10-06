@@ -47,9 +47,8 @@ $flashes = Session::takeFlash();
 <a class="skip" href="#main"><?= e(__('common.skip_to_content')) ?></a>
 <header class="site-header<?= $solidHeader ? ' solid' : '' ?>" data-header>
   <div class="container nav-bar">
-    <a class="logo" href="<?= e(site_url()) ?>">
-      <img src="<?= e(asset('img/sk-mark.png')) ?>" alt="" width="46" height="46">
-      <span><strong>Sk.Arabian</strong><small>اس كي ارابيان للتجارة</small></span>
+    <a class="logo" href="<?= e(site_url()) ?>" aria-label="SK Arabians — <?= e(__('site.home')) ?>">
+      <img src="<?= e(asset('img/sk-logo-white.png')) ?>" alt="Sk.Arabian — اس كي ارابيان للتجارة" width="132" height="60">
     </a>
     <nav class="main-nav" aria-label="<?= e(__('common.menu')) ?>">
       <?php foreach ($nav as [$label, $slug]): ?><a href="<?= e(site_url($slug)) ?>" class="<?= str_starts_with($path, '/' . lang() . '/' . $slug) ? 'on' : '' ?>"><?= e(__($label)) ?></a><?php endforeach; ?>
@@ -73,7 +72,7 @@ $flashes = Session::takeFlash();
   <div class="container">
     <div class="footer-grid">
       <div>
-        <a class="logo" href="<?= e(site_url()) ?>"><img src="<?= e(asset('img/sk-mark.png')) ?>" alt="" width="46" height="46"><span><strong>Sk.Arabian</strong><small>اس كي ارابيان للتجارة</small></span></a>
+        <a class="logo" href="<?= e(site_url()) ?>"><img src="<?= e(asset('img/sk-logo-white.png')) ?>" alt="Sk.Arabian" width="176" height="80"></a>
         <p><?= e(__('site.footer_about')) ?></p>
         <div class="socials">
           <?php foreach (['instagram' => 'instagram', 'x' => 'xlogo', 'youtube' => 'youtube', 'facebook' => 'facebook'] as $k => $ic): if ($u = setting('company.' . $k)): ?>

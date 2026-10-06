@@ -111,10 +111,10 @@ final class DefaultRoles
     {
         return [
             'general_manager' => array_keys(StudioDocs::TYPES),
-            'accountant'      => ['financial_report', 'purchase_order', 'payslip', 'invoice', 'receipt', 'custom_letter'],
-            'hr_officer'      => ['salary_certificate', 'offer_letter', 'experience_letter', 'payslip', 'leave_approval', 'custom_letter'],
-            'veterinarian'    => ['diet_log', 'embryo_transfer'],
-            'trainer'         => ['diet_log'],
+            'accountant'      => ['fin', 'po', 'inv', 'pay', 'letter', 'rem', 'reg'],
+            'hr_officer'      => ['staff', 'idcard', 'sal', 'letters', 'offer', 'pay', 'letter', 'rem', 'reg'],
+            'veterinarian'    => ['horses', 'profile', 'diet', 'vet', 'cover', 'embryo', 'rem'],
+            'trainer'         => ['horses', 'profile', 'diet'],
         ];
     }
 }

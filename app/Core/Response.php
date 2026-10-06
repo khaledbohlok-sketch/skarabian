@@ -100,7 +100,7 @@ final class Response
         header('Permissions-Policy: geolocation=(), microphone=(), camera=(self)');
         header('Cross-Origin-Opener-Policy: same-origin');
         $csp = "default-src 'self'; img-src 'self' data: blob: https://*.cdninstagram.com https://i.ytimg.com https://*.tile.openstreetmap.org; "
-             . "script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; "
+             . "script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; "
              . "media-src 'self' blob:; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://player.vimeo.com https://www.google.com https://www.instagram.com; "
              . "connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'self'; object-src 'none'";
         header('Content-Security-Policy: ' . $csp);
