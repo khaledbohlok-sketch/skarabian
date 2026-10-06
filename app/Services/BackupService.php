@@ -137,4 +137,54 @@ final class BackupService
         $missing = array_diff(DB::column("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'"), $tables);
         return [!$missing, $db['name'] . ': ' . count($tables) . ' tables' . ($missing ? ', missing ' . implode(', ', $missing) : '')];
     }
+    /**
+     * Full restore test: loads the newest dump into an empty test database (config backup.restore_test_db, same
+     * MySQL user) and compares row counts with the live database. Without a test database, falls back to test().
+     */
+    public static function restoreTest(): array
+    {
+        $testDb = (string) Config::get('backup.restore_test_db', '');
+        if ($testDb === '') {
+            return self::test();
+        }
+        $db = array_values(array_filter(self::list(), fn ($f) => str_starts_with($f['name'], 'db-')))[0] ?? null;
+        if (!$db) {
+            return [false, 'no backup'];
+        }
+        $c = Config::get('db');
+        try {
+            $pdo = new \PDO('mysql:host=' . $c['host'] . ';port=' . ($c['port'] ?? 3306) . ';dbname=' . $testDb . ';charset=utf8mb4', $c['user'], $c['pass'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+        } catch (\PDOException $e) {
+            return [false, 'cannot open the test database ' . $testDb . ' (add the database user to it in cPanel)'];
+        }
+        $pdo->exec('SET FOREIGN_KEY_CHECKS=0');
+        foreach ($pdo->query("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'")->fetchAll(\PDO::FETCH_COLUMN) as $t) {
+            DB::assertIdent($t);
+            $pdo->exec("DROP TABLE `$t`");
+        }
+        $gz = gzopen(self::dir() . '/' . $db['name'], 'rb');
+        $stmt = '';
+        while (!gzeof($gz)) {
+            $line = (string) gzgets($gz, 16 << 20);
+            if ($stmt === '' && (str_starts_with($line, '--') || trim($line) === '')) {
+                continue;
+            }
+            $stmt .= $line;
+            if (str_ends_with(rtrim($line, "\r\n"), ';')) {
+                $pdo->exec($stmt);
+                $stmt = '';
+            }
+        }
+        gzclose($gz);
+        $diff = [];
+        foreach (['horses', 'employees', 'bills', 'bill_payments', 'users', 'documents', 'files'] as $t) {
+            $live = (int) DB::value("SELECT COUNT(*) FROM `$t`");
+            $copy = (int) $pdo->query("SELECT COUNT(*) FROM `$t`")->fetchColumn();
+            if ($copy < $live && $db['time'] >= time() - 3600) {
+                $diff[] = "$t $copy/$live";
+            }
+        }
+        $tables = count($pdo->query("SHOW TABLES")->fetchAll());
+        return [!$diff, $db['name'] . " restored into $testDb: $tables tables" . ($diff ? ', missing rows in ' . implode(', ', $diff) : '')];
+    }
 }

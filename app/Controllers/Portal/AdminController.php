@@ -297,7 +297,9 @@ class AdminController extends Controller
         }
         $mail = \App\Core\Config::get('mail.driver', 'log');
         $this->view('portal/admin/settings', ['title' => __('nav.settings'), 'defs' => self::SETTINGS, 'mail' => $mail, 'canEdit' => Auth::can('settings', 'edit'),
-            'whatsapp' => (bool) \App\Core\Config::get('whatsapp.token'), 'drive' => (bool) \App\Core\Config::get('backup.gdrive_folder_id')]);
+            'whatsapp' => (bool) \App\Core\Config::get('whatsapp.token'), 'drive' => \App\Services\Offsite::configured(),
+            'cron' => array_map(fn ($t) => ['task' => $t] + (DB::row('SELECT started_at, ok, message FROM cron_runs WHERE task = ? ORDER BY id DESC LIMIT 1', [$t]) ?? []), array_keys(\App\Services\Cron::TASKS)),
+            'cronLast' => DB::value('SELECT MAX(started_at) FROM cron_runs')]);
     }
 
     private const SECURITY = [
@@ -371,8 +373,8 @@ class AdminController extends Controller
     public function backups(): void
     {
         $this->owner();
-        $this->view('portal/admin/backups', ['title' => __('nav.backups'), 'files' => BackupService::list(), 'test' => (string) Request::query('test') === '1' ? BackupService::test() : null,
-            'drive' => (bool) \App\Core\Config::get('backup.gdrive_folder_id'), 'last' => DB::row("SELECT created_at, new_values FROM activity_log WHERE action = 'backup' ORDER BY id DESC LIMIT 1")]);
+        $this->view('portal/admin/backups', ['title' => __('nav.backups'), 'files' => BackupService::list(), 'test' => (string) Request::query('test') === '1' ? BackupService::restoreTest() : null,
+            'drive' => \App\Services\Offsite::configured(), 'last' => DB::row("SELECT created_at, new_values FROM activity_log WHERE action = 'backup' ORDER BY id DESC LIMIT 1")]);
     }
 
     public function runBackup(): void
@@ -380,7 +382,13 @@ class AdminController extends Controller
         $this->owner();
         try {
             $files = BackupService::run('manual');
-            $this->flash('success', __('backups.done', ['files' => implode(', ', $files)]));
+            try {
+                $off = \App\Services\Offsite::upload($files);
+            } catch (\Throwable $e) {
+                \App\Core\ErrorHandler::log($e);
+                $off = __('backups.offsite_failed') . ' ' . $e->getMessage();
+            }
+            $this->flash('success', __('backups.done', ['files' => implode(', ', $files)]) . ($off ? ' · ' . $off : ''));
         } catch (\Throwable $e) {
             \App\Core\ErrorHandler::log($e);
             $this->flash('error', __('backups.failed'));
@@ -436,11 +444,23 @@ class AdminController extends Controller
 
     // ------------------------------------------------------------------ activity log (read-only, tamper-evident)
 
+    /** Only the Owner sees the full log; others with access (Technical Support) see login and security events. */
+    private const SECURITY_ACTIONS = ['login', 'logout', 'login_failed', 'login_blocked', 'account_locked', 'access_denied', 'csrf_rejected',
+        '2fa_enabled', '2fa_disabled', 'password_changed', 'session_ended', 'sessions_revoked', 'backup', 'unlock'];
+
+    private function activityScope(array &$where, array &$p): void
+    {
+        if (!Auth::isOwner()) {
+            $where[] = 'a.action IN ' . DB::in(self::SECURITY_ACTIONS, 'sa', $p);
+        }
+    }
+
     public function activity(): void
     {
         Auth::requirePerm('activity', 'view');
         $where = ['1=1'];
         $p = [];
+        $this->activityScope($where, $p);
         foreach (['user_id' => 'a.user_id = :u', 'action' => 'a.action = :a', 'module' => 'a.module = :m'] as $k => $sql) {
             $v = (string) Request::query($k, '');
             if ($v !== '') {
@@ -478,6 +498,9 @@ class AdminController extends Controller
     {
         Auth::requirePerm('activity', 'view');
         $a = DB::row('SELECT * FROM activity_log WHERE id = ?', [(int) $id]) ?? Response::notFound();
+        if (!Auth::isOwner() && !in_array($a['action'], self::SECURITY_ACTIONS, true)) {
+            Auth::deny('owner_only');
+        }
         $this->view('portal/admin/activity_item', ['title' => __('nav.activity') . ' #' . $a['id'], 'a' => $a, 'intact' => hash_equals(Audit::hashRow($a), (string) $a['hash'])]);
     }
 
@@ -505,11 +528,59 @@ class AdminController extends Controller
         if (Request::query('open')) {
             $sql .= ' AND reviewed = 0';
         }
+        $old = (array) \App\Core\Config::get('old_db', []);
+        $latest = DB::row('SELECT run_id, MAX(created_at) AS at FROM migration_report GROUP BY run_id ORDER BY at DESC LIMIT 1');
         $this->view('portal/admin/migration', [
-            'title' => __('nav.migration_report'), 'run' => $run, 'runs' => DB::column('SELECT DISTINCT run_id FROM migration_report ORDER BY run_id DESC'),
+            'title' => __('nav.migration_report'), 'run' => $run, 'configured' => !empty($old['name']) && !empty($old['user']),
+            'canCommit' => $latest && str_starts_with($latest['run_id'], 'P-') && strtotime($latest['at']) > time() - 86400, 'runs' => DB::column('SELECT DISTINCT run_id FROM migration_report ORDER BY run_id DESC'),
             'summary' => DB::all('SELECT entity, action, COUNT(*) AS n, SUM(reviewed) AS done FROM migration_report WHERE run_id = ? GROUP BY entity, action ORDER BY entity, action', [$run]),
             'rows' => DB::all($sql . ' ORDER BY entity, id LIMIT 1000', $p),
         ]);
+    }
+
+    /** Owner runs the old-system import from the portal: preview first, then the real import after review. */
+    public function migrationRun(): void
+    {
+        $this->owner();
+        $c = (array) \App\Core\Config::get('old_db', []);
+        if (empty($c['name']) || empty($c['user'])) {
+            $this->flash('error', __('migration.not_configured'));
+            $this->redirect('/portal/migration-report');
+        }
+        $commit = Request::post('mode') === 'commit';
+        if ($commit) {
+            $latest = (string) DB::value('SELECT run_id FROM migration_report ORDER BY id DESC LIMIT 1');
+            if (!str_starts_with($latest, 'P-') || strtoupper(trim((string) Request::post('confirm'))) !== 'IMPORT') {
+                $this->flash('error', __('migration.confirm_needed'));
+                $this->redirect('/portal/migration-report');
+            }
+        }
+        try {
+            $res = (new \App\Services\OldImport(\App\Services\OldImport::connect($c), $commit, \App\Services\OldImport::overridesFile()))->run();
+        } catch (\PDOException $e) {
+            \App\Core\ErrorHandler::log($e);
+            $this->flash('error', __('migration.connect_failed'));
+            $this->redirect('/portal/migration-report');
+        }
+        if (!$commit) {
+            Audit::log('import_preview', 'settings', null, null, null, ['run' => $res['run'], 'counts' => $res['counts']], 'Import preview');
+        }
+        $this->flash('success', __($commit ? 'migration.imported' : 'migration.previewed', ['n' => array_sum($res['counts'])]));
+        $this->redirect('/portal/migration-report?run=' . urlencode($res['run']));
+    }
+
+    public function migrationReviewAll(): void
+    {
+        $this->owner();
+        $run = (string) Request::post('run');
+        $p = ['r' => $run];
+        $sql = 'UPDATE migration_report SET reviewed = 1 WHERE run_id = :r';
+        if (($e = (string) Request::post('entity')) !== '') {
+            $sql .= ' AND entity = :e';
+            $p['e'] = $e;
+        }
+        DB::run($sql, $p);
+        $this->redirect('/portal/migration-report?' . http_build_query(['run' => $run, 'entity' => $e ?: null]));
     }
 
     public function migrationReviewed(string $id): void

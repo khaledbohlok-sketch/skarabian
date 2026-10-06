@@ -23,7 +23,7 @@ foreach ($it as $f) {
         }
     }
     // keys passed as 'label' => 'x.y', options, nav entries etc.
-    preg_match_all("/'((?:common|nav|auth|site|horse|horses|health|diet|training|shows|breeding|embryos|hr|employees|attendance|leave|loans|finance|bills|accounts|parties|invoices|po|payroll|budgets|inventory|items|studio|cms|inbox|users|roles|settings|activity|approvals|validation|files|status|notify|timeline|ownership|account|app|verify|dashboard|reports|lookups|categories|news|gallery|currencies|trash|notes|security|backups|search|migration|my_hr|sessions|lookups)\\.[a-z0-9_]+)'/", $src, $m2);
+    preg_match_all("/'((?:common|nav|auth|site|horse|horses|health|diet|training|shows|breeding|embryos|hr|employees|attendance|leave|loans|finance|bills|accounts|parties|invoices|po|payroll|budgets|inventory|items|studio|cms|inbox|users|roles|settings|activity|approvals|validation|files|status|notify|timeline|ownership|account|app|verify|dashboard|reports|lookups|categories|news|gallery|currencies|trash|notes|security|backups|search|migration|my_hr|cron|sessions|lookups)\\.[a-z0-9_]+)'/", $src, $m2);
     foreach ($m2[1] as $k) {
         if (!str_ends_with($k, '_')) {
             $keys[$k] = true;

@@ -155,6 +155,8 @@ $r->get('/portal/activity', [P\AdminController::class, 'activity']);
 $r->get('/portal/activity/verify', [P\AdminController::class, 'verifyLog']);
 $r->get('/portal/activity/{id}', [P\AdminController::class, 'activityItem']);
 $r->get('/portal/migration-report', [P\AdminController::class, 'migrationReport']);
+$r->post('/portal/migration-report/run', [P\AdminController::class, 'migrationRun']);
+$r->post('/portal/migration-report/review-all', [P\AdminController::class, 'migrationReviewAll']);
 $r->post('/portal/migration-report/{id}/reviewed', [P\AdminController::class, 'migrationReviewed']);
 
 // ----------------------------------------------------------------- Generic resources (keep last)

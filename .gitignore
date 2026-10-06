@@ -10,3 +10,5 @@
 /vendor/
 .DS_Store
 *.log
+/storage/cron.lock
+/migration/mapping.php

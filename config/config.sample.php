@@ -78,6 +78,9 @@ return [
         'provider_url' => 'https://open.er-api.com/v6/latest/QAR',
     ],
 
+    // The OLD portal database, read only, for the one-time import (tools/import_old.php). Remove after go-live.
+    'old_db' => ['host' => 'localhost', 'name' => '', 'user' => '', 'pass' => ''],
+
     // Absolute path to storage (outside public_html). Default: <app root>/storage
     'storage_path' => null,
 ];

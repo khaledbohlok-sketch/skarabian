@@ -142,8 +142,9 @@ final class HorseService
         $seen = [];
         for ($depth = 0; $depth < 12 && $frontier; $depth++) {
             $params = [];
-            $in = DB::in($frontier, 'f', $params);
-            $children = array_map('intval', DB::column("SELECT id FROM horses WHERE sire_id IN $in OR dam_id IN $in", $params));
+            $inS = DB::in($frontier, 's', $params);
+            $inD = DB::in($frontier, 'd', $params);
+            $children = array_map('intval', DB::column("SELECT id FROM horses WHERE sire_id IN $inS OR dam_id IN $inD", $params));
             if (in_array($candidateId, $children, true)) {
                 return true;
             }

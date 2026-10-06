@@ -189,6 +189,9 @@ final class Seeder
             'site.sections'                  => 'featured,horses,achievements,foals,bloodlines,breeding,gallery,story,experts,contact',
             'notify.daily_summary_email'     => '1',
             'notify.daily_summary_whatsapp'  => '0',
+            'notify.daily_summary_time'      => '07:00',
+            'security.weekly_report'         => '1',
+            'security.large_export_rows'     => '500',
             'security.business_hours'        => '06:00-22:00',
             'security.alert_new_device'      => '1',
         ];
