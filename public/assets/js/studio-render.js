@@ -87,11 +87,6 @@ function defaults(){return{
    introAr:"يسرّ إدارة اس كي ارابيان للتجارة، سجل تجاري رقم 231961، أن تتقدّم إليكم بهذا العرض الوظيفي الرسمي لشغل منصب {position}، تقديرًا لمؤهلاتكم وخبراتكم في مجال إدارة مرابط الخيول العربية الأصيلة، وذلك وفقًا للبنود والشروط الآتية:",
    tableAfter:5,clauses:OFFER_CLAUSES.map(c=>({...c})),money:OFFER_MONEY.map(m=>({...m})),
    ownerEn:"Mr. Hamad Khalaf A A Al-Mannai",ownerAr:"السيد / حمد خلف أحمد آل سالم المناعي",ownerShortEn:"Mr. Hamad Khalaf Al-Mannai",ownerShortAr:"السيّد حمد خلف المناعي",ownerQid:"28663400213",ownerTitleEn:"Owner & Authorised Signatory",ownerTitleAr:"المالك والمفوّض بالتوقيع"},
- transfer:{lang:"en",no:"SK/TR/2026/001",date:today(),transferDate:today(),hName:"MEERA AL MASHRAB",breed:"Purebred Arabian",breedAr:"عربي أصيل",sex:"mare",colourEn:"Grey",colourAr:"رمادي",dob:"Jan 29, 2021",sire:"Dominic M (US)",dam:"Majalina (US)",chip:"",passport:"",origin:"",
-   sNameEn:"SK Arabian for Trading",sNameAr:"اس كي ارابيان للتجارة",sId:"C.R. 231961",sNat:"Qatar",sPhone:"5536 6699",bNameEn:"Buyer name",bNameAr:"اسم المشتري",bId:"",bNat:"",bPhone:"",
-   showPrice:"yes",price:"",currency:"QAR",payStatus:"paid",witness:"",
-   declEn:"We, the undersigned, confirm that ownership of the horse described above has been transferred from the Seller to the Buyer on {transferDate}. The Seller confirms that the horse is free of any claims, liens or disputes, and the Buyer accepts the horse in its present condition. From the date of transfer, the Buyer takes full responsibility for the horse, including its care, insurance and registration with the relevant authorities.",
-   declAr:"نقرّ نحن الموقّعين أدناه بأنه قد تم نقل ملكية الخيل الموصوف أعلاه من البائع إلى المشتري بتاريخ {transferDate}. ويقرّ البائع بأن الخيل خالٍ من أي مطالبات أو رهون أو نزاعات، ويقبل المشتري الخيل بحالته الراهنة. ويتحمّل المشتري اعتبارًا من تاريخ النقل كامل المسؤولية عن الخيل، بما في ذلك رعايته وتأمينه وتسجيله لدى الجهات المختصة."},
  inv:{lang:"en",mode:"invoice",no:"SK/INV/2026/001",rno:"SK/RC/2026/001",date:today(),due:"",currency:"QAR",cName:"Customer name",cPhone:"",cEmail:"",cAddr:"",
    items:[{d:"Monthly boarding – October 2026",q:1,p:3500},{d:"Farrier service",q:1,p:250}],discount:0,paid:0,
    payInfo:"Payment by cash, cheque or bank transfer to SK Arabian for Trading.",payInfoAr:"الدفع نقدًا أو بشيك أو بتحويل بنكي إلى اس كي ارابيان للتجارة.",
@@ -139,8 +134,8 @@ function fmtMonth(v,lang){const m=/^(\d{4})-(\d{2})$/.exec(v||"");if(!m)return v
 function nextMonth(v){const m=/^(\d{4})-(\d{2})$/.exec(v||"");if(!m)return v;let y=+m[1],mo=+m[2]+1;if(mo>12){mo=1;y++}return `${y}-${String(mo).padStart(2,"0")}`}
 function nextNo(v){return String(v||"").replace(/(\d+)(?!.*\d)/,m=>String(+m+1).padStart(m.length,"0"))}
 const NEWKEEP_ALL=["lang","currency","method","mode","type","summary","showPrice","rMethod","dpy","gest","term","notice","dueDay","tableAfter","season","inc","slots","titleEn","titleAr","subEn","subAr","terms","termsAr","payInfo","payInfoAr","greetEn","greetAr","introEn","introAr","clauses","money","declEn","declAr","extrasEn","extrasAr","breed","breedAr","signName","cityEn","cityAr","shipTo","payment","prepared","approved","requested"];
-const NEWKEEP={transfer:["sNameEn","sNameAr","sId","sNat","sPhone"],offer:["ownerEn","ownerAr","ownerShortEn","ownerShortAr","ownerQid","ownerTitleEn","ownerTitleAr","salCur"]};
-const NEWTODAY=["date","transferDate","start"];
+const NEWKEEP={offer:["ownerEn","ownerAr","ownerShortEn","ownerShortAr","ownerQid","ownerTitleEn","ownerTitleAr","salCur"]};
+const NEWTODAY=["date","start"];
 function cleanNew(doc,prev){const D=defaults()[doc],keep=new Set([...NEWKEEP_ALL,...(NEWKEEP[doc]||[])]),o={};
   for(const k in D){if(k[0]==="_")continue;if(keep.has(k)&&k in prev){o[k]=clone(prev[k]);continue}
     const v=D[k];if(NEWTODAY.includes(k))o[k]=today();else if(Array.isArray(v))o[k]=[];else if(v&&typeof v==="object")o[k]=clone(v);else if(typeof v==="number")o[k]="";else o[k]=""}
@@ -271,28 +266,6 @@ R.offer=d=>{
 };
 
 const SEX={mare:["Mare","فرس"],stallion:["Stallion","حصان (فحل)"],gelding:["Gelding","حصان مخصي"],filly:["Filly","مهرة"],colt:["Colt","مهر"]};
-R.transfer=d=>{
-  const ar=d.lang==="ar",L=(e,a)=>ar?a:e,C=CUR[d.currency]||CUR.QAR,B=[];
-  const td=fmtDate(d.transferDate,d.lang)||"";
-  B.push({html:`<div class="tr-ref"><span>${L("Certificate No.","رقم الشهادة")}: <b class="num">${esc(d.no)}</b></span><span>${L("Date","التاريخ")}: <b>${fmtDate(d.date,d.lang)}</b></span></div>`});
-  B.push({html:`<div class="tr-title"><h1>${L("Certificate of Transfer of Ownership","شهادة نقل ملكية خيل")}</h1><div class="sub">${L("Arabian Horse","خيل عربي")}</div></div>`});
-  const sx=SEX[d.sex]||["",""];
-  B.push({html:`<div class="sech">${L("Horse details","بيانات الخيل")}</div><table class="kv">
-   <tr><td class="l">${L("Horse name","اسم الخيل")}</td><td class="v">${esc(d.hName)}</td><td class="l">${L("Breed","السلالة")}</td><td class="v">${esc(ar?d.breedAr:d.breed)}</td></tr>
-   <tr><td class="l">${L("Sex","الجنس")}</td><td class="v">${ar?sx[1]:sx[0]}</td><td class="l">${L("Colour","اللون")}</td><td class="v">${esc(ar?d.colourAr:d.colourEn)}</td></tr>
-   <tr><td class="l">${L("Date of birth","تاريخ الميلاد")}</td><td class="v">${esc(d.dob)}</td><td class="l">${L("Microchip No.","رقم الشريحة الإلكترونية")}</td><td class="v num">${esc(d.chip)}</td></tr>
-   <tr><td class="l">${L("Sire","الأب")}</td><td class="v">${esc(d.sire)}</td><td class="l">${L("Dam","الأم")}</td><td class="v">${esc(d.dam)}</td></tr>
-   <tr><td class="l">${L("Passport / Reg. No.","رقم الجواز / التسجيل")}</td><td class="v num">${esc(d.passport)}</td><td class="l">${L("Country of birth","بلد الولادة")}</td><td class="v">${esc(d.origin)}</td></tr></table>`});
-  const party=(t,n,id,nat,ph)=>`<div class="party"><h4>${t}</h4><div class="nm">${esc(n)}</div><dl>${[[L("ID / C.R. No.","رقم الهوية / السجل"),id],[L("Nationality","الجنسية"),nat],[L("Phone","الهاتف"),ph]].filter(x=>x[1]).map(x=>`<dt>${x[0]}</dt><dd class="num">${esc(x[1])}</dd>`).join("")}</dl></div>`;
-  B.push({html:`<div class="parties">${party(L("Seller (previous owner)","البائع (المالك السابق)"),ar?d.sNameAr:d.sNameEn,d.sId,ar?(d.sNatAr||d.sNat):d.sNat,d.sPhone)}${party(L("Buyer (new owner)","المشتري (المالك الجديد)"),ar?d.bNameAr:d.bNameEn,d.bId,ar?(d.bNatAr||d.bNat):d.bNat,d.bPhone)}</div>`});
-  if(d.showPrice==="yes"&&n2(d.price)){const ps={paid:L("Paid in full","مدفوع بالكامل"),partial:L("Partly paid","مدفوع جزئيًا"),pending:L("Not yet paid","غير مدفوع")}[d.payStatus]||"";
-    B.push({html:`<div class="sech">${L("Sale details","بيانات البيع")}</div><table class="kv"><tr><td class="l">${L("Transfer date","تاريخ النقل")}</td><td class="v">${td}</td><td class="l">${L("Sale price","سعر البيع")}</td><td class="v num">${money(d.price)} ${ar?C.arCode:C.code}</td></tr>
-     <tr><td class="l">${L("Amount in words","المبلغ كتابةً")}</td><td class="v" colspan="1">${esc(ar?wordsAr(d.price,d.currency):wordsEn(d.price,d.currency))}</td><td class="l">${L("Payment","الدفع")}</td><td class="v">${ps}</td></tr></table>`})}
-  else B.push({html:`<table class="kv"><tr><td class="l">${L("Transfer date","تاريخ النقل")}</td><td class="v" colspan="3">${td}</td></tr></table>`});
-  B.push({html:`<div class="sech">${L("Declaration","الإقرار")}</div><div class="decl">${rich(fill(ar?d.declAr:d.declEn,{transferDate:td,horse:esc(d.hName)}))}</div>`});
-  B.push({html:`<div class="sigs three" style="padding-top:16mm"><div class="sig">${L("Seller's signature","توقيع البائع")}<b>${esc(ar?d.sNameAr:d.sNameEn)}</b></div><div class="sig">${L("Buyer's signature","توقيع المشتري")}<b>${esc(ar?d.bNameAr:d.bNameEn)}</b></div><div class="sig">${L("Witness / stud stamp","الشاهد / ختم المربط")}${d.witness?`<b>${esc(d.witness)}</b>`:""}</div></div>`});
-  return{dir:ar?"rtl":"ltr",blocks:B};
-};
 R.inv=d=>{
   const ar=d.lang==="ar",L=(e,a)=>ar?a:e,C=CUR[d.currency]||CUR.QAR,cc=ar?C.arCode:C.code,B=[];
   if(d.mode==="receipt"){
@@ -471,7 +444,7 @@ const AR=(o,k,ar)=>ar&&String(o[k+"Ar"]||"").trim()?o[k+"Ar"]:o[k];
 function pedLabel(p,ar){if(ar&&p.length===2){const w=c=>c==="s"?"أب":"أم",a=c=>c==="s"?"الأب":"الأم";return `${w(p[1])} ${a(p[0])}`}const w=ar?{s:"الأب",d:"الأم"}:{s:"Sire",d:"Dam"};if(ar){const parts=[...p].map(c=>c==="s"?"أب":"أم");return parts.length===1?w[p]:parts.reverse().join(" ").replace(/^/,"")}const words=[...p].map(c=>c==="s"?"sire":"dam");return words.length===1?w[p]:words.slice(0,-1).map(x=>x.charAt(0).toUpperCase()+x.slice(1)+"'s").join(" ").replace(/'s (\w)/g,(m,c)=>"'s "+c.toLowerCase())+" "+words[words.length-1]}
 function horseAge(dob){const t=Date.parse(dob);if(isNaN(t))return"";const y=(Date.now()-t)/(365.25*864e5);return y>=1?Math.floor(y):""}
 R.profile=d=>{const ar=d.lang==="ar",L=(e,a)=>ar?a:e,B=[],sx=SEX[d.sex]||["",""],st=(HSTAT.find(x=>x[0]===d.status)||["",""])[1];
-  const STAT_AR={stud:"في المربط",boarding:"إقامة (خيل مالك)",sold:"مُباع",leased:"مؤجَّر",deceased:"نافق"};
+  const STAT_AR={stud:"في المربط",boarding:"إقامة (خيل مالك)",leased:"مؤجَّر",deceased:"نافق"};
   const age=horseAge(d.dob);const nm=ar?(d.nameAr||d.nameEn):(d.nameEn||d.nameAr);let nm2=ar?d.nameEn:d.nameAr;if(low(nm2)===low(nm))nm2="";
   const facts=[[L("Sex","الجنس"),ar?sx[1]:sx[0]],[L("Colour","اللون"),ar?d.colourAr:d.colourEn],[L("Date of birth","تاريخ الميلاد"),d.dob?`${esc(d.dob)}${age!==""?` (${age} ${L(age===1?"year":"years","سنة")})`:""}`:""],[L("Breed","السلالة"),ar?d.breedAr:d.breed],[L("Country of birth","بلد الولادة"),d.origin],[L("Breeder","المربي"),d.breeder],[L("Owner","المالك"),d.owner],[L("Microchip No.","رقم الشريحة"),d.chip],[L("Passport / Reg. No.","رقم الجواز / التسجيل"),d.passport],[L("Height","الارتفاع"),d.height],[L("Status","الحالة"),ar?STAT_AR[d.status]||"":st],[L("Stable / Box","الإسطبل / البوكس"),d.box]].filter(x=>String(x[1]||"").trim());
   B.push({html:`<div class="pf-head"><div class="pf-id"><div class="eyebrow">${L("Horse profile","ملف الخيل")}</div><h1 class="pf-name">${esc(nm||L("Unnamed horse","خيل بدون اسم"))}</h1>${nm2?`<div class="pf-name2">${esc(nm2)}</div>`:""}
@@ -518,9 +491,9 @@ R.staff=d=>{const B=[],arr=[...(CTX.employees||[])].filter(e=>e.status!=="left")
   if(!arr.length)B.push({html:`<p style="color:#8a93a6">No employees saved yet.</p>`});return{dir:"ltr",blocks:B}};
 const DOCNAME=k=>(DOCS.find(x=>x[0]===k)||[k,k])[1];
 const fmtAt=a=>{const d=new Date(a);return isNaN(d)?"":`${fmtDate(a.slice(0,10),"en")}, ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`};
-const DOCS=[["embryo","Embryo Transfer"],["letter","Custom Letter"],["idcard","Staff ID Cards"],["horses","All Horses"],["profile","Horse Profile"],["staff","All Employees"],["fin","Financial Report"],["po","Purchase Order"],["inv","Invoice / Receipt"],["pay","Payslips"],["diet","Diet Log"],["vet","Vet Record"],["cover","Covering"],["transfer","Horse Transfer"],["board","Boarding"],["sal","Salary Certificate"],["letters","Staff Letters"],["offer","Employment Offer"],["rem","Reminders"],["reg","Register"]];
-const TGROUPS=[["Office",["fin","po","inv","pay","letter"]],["Horses",["horses","profile","diet","vet","cover","transfer","board","embryo"]],["Staff",["staff","idcard","sal","letters","offer"]],["Tools",["rem","reg"]]];
-const HSTAT=[["stud","At the stud"],["boarding","Boarding (owner's horse)"],["sold","Sold"],["leased","Leased"],["deceased","Deceased"]];
+const DOCS=[["embryo","Embryo Transfer"],["letter","Custom Letter"],["idcard","Staff ID Cards"],["horses","All Horses"],["profile","Horse Profile"],["staff","All Employees"],["fin","Financial Report"],["po","Purchase Order"],["inv","Invoice / Receipt"],["pay","Payslips"],["diet","Diet Log"],["vet","Vet Record"],["cover","Covering"],["board","Boarding"],["sal","Salary Certificate"],["letters","Staff Letters"],["offer","Employment Offer"],["rem","Reminders"],["reg","Register"]];
+const TGROUPS=[["Office",["fin","po","inv","pay","letter"]],["Horses",["horses","profile","diet","vet","cover","board","embryo"]],["Staff",["staff","idcard","sal","letters","offer"]],["Tools",["rem","reg"]]];
+const HSTAT=[["stud","At the stud"],["boarding","Boarding (owner's horse)"],["leased","Leased"],["deceased","Deceased"]];
 const ESTAT=[["active","Working"],["leave","On leave"],["left","Left the company"]];
 function qidState(e){const iso=toISO(e.qidExp);if(!iso)return null;const t=today();if(iso<t)return["over","ID expired"];if(iso<=addDays(t,60))return["soon","ID expires soon"];return null}
 function qrSvg(text){try{const q=qrcode(0,"M");q.addData(text);q.make();const n=q.getModuleCount();let p="";for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))p+=`M${c} ${r}h1v1h-1z`;return `<svg viewBox="-1 -1 ${n+2} ${n+2}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect x="-1" y="-1" width="${n+2}" height="${n+2}" fill="#fff"/><path d="${p}" fill="#1d2433"/></svg>`}catch(e){return""}}

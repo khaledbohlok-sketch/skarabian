@@ -59,9 +59,6 @@ DB::transaction(function () use ($lk, $cat) {
     $c1 = $h(['name_en' => 'SK SAQR', 'name_ar' => 'اس كي صقر', 'sex' => 'male', 'dob' => '2024-02-10', 'color_id' => $grey, 'sire_id' => $tumooh, 'dam_id' => $bdoor, 'location_id' => $s1, 'born_at_sk' => 0]);
     $fi1 = $h(['name_en' => 'SK LULWA', 'name_ar' => 'اس كي لولوة', 'sex' => 'female', 'dob' => '2023-03-22', 'color_id' => $grey, 'sire_id' => $samed, 'dam_id' => $shammah, 'location_id' => $s2]);
     Settings::set('site.featured_horse_id', (string) $meera);
-    foreach ([[$tumooh, 'purchase'], [$meera, 'purchase'], [$f1, 'birth'], [$f2, 'birth']] as [$hid, $ev]) {
-        DB::insert('ownership_history', ['horse_id' => $hid, 'event_type' => $ev, 'event_date' => date('Y-m-d', strtotime('-1 year'))]);
-    }
 
     // ---- shows & results
     $shows = [];

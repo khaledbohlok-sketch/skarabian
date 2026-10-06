@@ -68,7 +68,6 @@ $r->get('/portal/horses/qr-sheet', [P\HorsesController::class, 'qrSheet']);
 $r->get('/portal/h/{id}', [P\HorsesController::class, 'scan']);
 $r->get('/portal/horses/{id}/pedigree', [P\HorsesController::class, 'pedigree']);
 $r->any('/portal/horses/{id}/foaling', [P\HorsesController::class, 'foaling']);
-$r->any('/portal/horses/{id}/sell', [P\HorsesController::class, 'sell']);
 $r->post('/portal/horses/{id}/assign', [P\HorsesController::class, 'assign']);
 $r->post('/portal/horses/{id}/unassign/{id2}', [P\HorsesController::class, 'unassign']);
 $r->post('/portal/horses/{id}/quick-feed', [P\HorsesController::class, 'quickFeed']);

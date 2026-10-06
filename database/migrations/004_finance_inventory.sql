@@ -154,7 +154,7 @@ CREATE TABLE invoices (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   number        VARCHAR(20) NOT NULL UNIQUE,               -- INV-YYYYMM-0001
   party_id      INT UNSIGNED NOT NULL,
-  invoice_type  ENUM('horse_sale','stud_fee','boarding','embryo_sale','other') NOT NULL,
+  invoice_type  ENUM('boarding','other') NOT NULL DEFAULT 'other',
   invoice_date  DATE NOT NULL,
   due_date      DATE NULL,
   currency      CHAR(3) NOT NULL DEFAULT 'QAR',

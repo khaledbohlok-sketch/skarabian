@@ -24,7 +24,7 @@ class Horses extends Resource
 
     public const SEXES = ['male' => 'horse.sex_male', 'female' => 'horse.sex_female', 'gelding' => 'horse.sex_gelding'];
     public const CATS = ['foal' => 'horse.cat_foal', 'colt' => 'horse.cat_colt', 'filly' => 'horse.cat_filly', 'stallion' => 'horse.cat_stallion', 'mare' => 'horse.cat_mare', 'gelding' => 'horse.cat_gelding'];
-    public const STATUSES = ['active' => 'horse.status_active', 'in_shelter' => 'horse.status_in_shelter', 'sold' => 'horse.status_sold', 'transferred' => 'horse.status_transferred', 'deceased' => 'horse.status_deceased'];
+    public const STATUSES = ['active' => 'horse.status_active', 'in_shelter' => 'horse.status_in_shelter', 'deceased' => 'horse.status_deceased'];
 
     public function sections(): array
     {
@@ -170,12 +170,6 @@ class Horses extends Resource
 
     public function afterSave(int $id, array $data, ?array $old, bool $created): void
     {
-        if ($created && empty($data['is_external'])) {
-            DB::insert('ownership_history', [
-                'horse_id' => $id, 'event_type' => !empty($data['purchase_date']) ? 'purchase' : 'import',
-                'event_date' => $data['purchase_date'] ?? date('Y-m-d'), 'price_qar' => $data['purchase_price_qar'] ?? null, 'created_by' => Auth::id(),
-            ]);
-        }
         // A foal born at the stud only appears in "Latest Foals" after the Owner approves
         $h = DB::row('SELECT born_at_sk, show_on_website, website_approved_at FROM horses WHERE id = ?', [$id]);
         if ($h && $h['born_at_sk'] && $h['show_on_website'] && !$h['website_approved_at']) {
@@ -213,9 +207,6 @@ class Horses extends Resource
         if ($row['sex'] === 'female' && Auth::can('horse_breeding', 'create')) {
             $a[] = ['label' => 'horses.record_foaling', 'url' => '/portal/horses/' . $row['id'] . '/foaling'];
         }
-        if (Auth::can('horses', 'edit') && !$row['is_external'] && in_array($row['status'], ['active', 'in_shelter'], true)) {
-            $a[] = ['label' => 'horses.transfer_ownership', 'url' => '/portal/horses/' . $row['id'] . '/sell'];
-        }
         return $a;
     }
 
@@ -246,7 +237,6 @@ class Horses extends Resource
         if (Auth::can('finance')) {
             $t['finance'] = ['label' => 'horses.finance', 'render' => fn ($r) => View::partial('portal/horses/tab_finance', ['h' => $r])];
         }
-        $t['ownership'] = ['label' => 'horses.ownership', 'render' => fn ($r) => View::partial('portal/horses/tab_ownership', ['h' => $r])];
-        return $t + $this->standardTabs($row, ['studio' => ['profile', 'diet', 'vet', 'cover', 'transfer'], 'categories' => ['photo', 'video', 'document', 'certificate']]);
+        return $t + $this->standardTabs($row, ['studio' => ['profile', 'diet', 'vet', 'cover', 'board'], 'categories' => ['photo', 'video', 'document', 'certificate']]);
     }
 }

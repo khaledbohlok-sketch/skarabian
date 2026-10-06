@@ -47,7 +47,7 @@ CREATE TABLE horses (
   owner_type           ENUM('sk','client') NOT NULL DEFAULT 'sk',
   owner_party_id       INT UNSIGNED NULL,
   location_id          INT UNSIGNED NULL,
-  status               ENUM('active','in_shelter','sold','transferred','deceased') NOT NULL DEFAULT 'active',
+  status               ENUM('active','in_shelter','deceased') NOT NULL DEFAULT 'active',
   is_external          TINYINT(1) NOT NULL DEFAULT 0,   -- pedigree-only horse not kept at SK
   sire_id              INT UNSIGNED NULL,
   dam_id               INT UNSIGNED NULL,
@@ -272,24 +272,3 @@ CREATE TABLE pregnancy_checks (
   CONSTRAINT fk_pc_br FOREIGN KEY (breeding_record_id) REFERENCES breeding_records(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE ownership_history (
-  id              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  horse_id        INT UNSIGNED NOT NULL,
-  event_type      ENUM('purchase','birth','sale','transfer','import') NOT NULL,
-  event_date      DATE NOT NULL,
-  from_label      VARCHAR(150) NULL,
-  from_party_id   INT UNSIGNED NULL,
-  to_party_id     INT UNSIGNED NULL,           -- NULL = SK Arabians
-  price_qar       DECIMAL(14,2) NULL,          -- sensitive
-  currency        CHAR(3) NULL,
-  exchange_rate   DECIMAL(18,6) NULL,
-  price_original  DECIMAL(14,2) NULL,
-  status          ENUM('pending','completed','rejected') NOT NULL DEFAULT 'completed',
-  bill_id         INT UNSIGNED NULL,
-  document_id     INT UNSIGNED NULL,
-  notes           VARCHAR(255) NULL,
-  created_by      INT UNSIGNED NULL,
-  created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY idx_oh (horse_id, event_date),
-  CONSTRAINT fk_oh_h FOREIGN KEY (horse_id) REFERENCES horses(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

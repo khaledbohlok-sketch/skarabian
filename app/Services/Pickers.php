@@ -107,10 +107,6 @@ final class Pickers
                 'table' => 'bill_payments', 'label' => "CONCAT((SELECT b.number FROM bills b WHERE b.id = t.bill_id), ' — ', t.amount_qar, ' QAR — ', t.payment_date)",
                 'search' => ['t.reference_no'], 'grantedBy' => ['finance'], 'order' => 't.id DESC',
             ],
-            'ownership' => [
-                'table' => 'ownership_history', 'label' => "CONCAT((SELECT h.name_en FROM horses h WHERE h.id = t.horse_id), ' — ', t.event_type, ' ', t.event_date)",
-                'search' => ['t.id'], 'where' => "t.event_type IN ('sale','transfer') AND t.status = 'completed'", 'grantedBy' => ['horses'], 'noDeleted' => true, 'order' => 't.id DESC',
-            ],
         ];
     }
 

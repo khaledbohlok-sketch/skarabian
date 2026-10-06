@@ -81,8 +81,12 @@ final class Timeline
                 $out[] = self::item($r['movement_date'], 'inventory', $r['name_en'] . ' − ' . rtrim(rtrim((string) $r['quantity'], '0'), '.') . ' ' . $r['unit'], Auth::can('finance') ? money($r['total_qar'], 'QAR', false) : null, '/portal/items/' . $r['item_id']);
             }
         }
-        foreach (DB::all('SELECT o.*, p.name_en AS party FROM ownership_history o LEFT JOIN parties p ON p.id = o.to_party_id WHERE o.horse_id = ?', [$id]) as $r) {
-            $out[] = self::item($r['event_date'], 'ownership', __('ownership.type_' . $r['event_type']) . ($r['party'] ? ' → ' . $r['party'] : ''), __('ownership.status_' . $r['status']));
+        // How the horse came to the stud: born here or purchased
+        $h = DB::row('SELECT dob, born_at_sk, purchase_date FROM horses WHERE id = ?', [$id]);
+        if ($h && $h['born_at_sk'] && $h['dob']) {
+            $out[] = self::item($h['dob'], 'acquired', __('timeline.born_at_sk'), null);
+        } elseif ($h && $h['purchase_date']) {
+            $out[] = self::item($h['purchase_date'], 'acquired', __('timeline.purchased'), null);
         }
         if (Auth::can('horse_notes')) {
             foreach (DB::all('SELECT n.id, n.created_at, n.note, u.name FROM horse_notes n LEFT JOIN users u ON u.id = n.created_by WHERE n.horse_id = ? AND n.deleted_at IS NULL ORDER BY n.id DESC LIMIT 60', [$id]) as $r) {

@@ -24,7 +24,6 @@ final class StudioDocs
         'diet'     => ['code' => 'DIET','record' => 'horse',          'module' => 'horse_diet',     'group' => 'horses'],
         'vet'      => ['code' => 'VET', 'record' => 'horse',          'module' => 'horse_health',   'group' => 'horses'],
         'cover'    => ['code' => 'COV', 'record' => 'breeding',       'module' => 'horse_breeding', 'group' => 'horses'],
-        'transfer' => ['code' => 'OTC', 'record' => 'ownership',      'module' => 'horses',         'group' => 'horses'],
         'board'    => ['code' => 'BRD', 'record' => 'party',          'module' => 'horses',         'group' => 'horses'],
         'embryo'   => ['code' => 'ETR', 'record' => 'embryo',         'module' => 'embryos',        'group' => 'horses'],
         'staff'    => ['code' => 'STF', 'record' => null,             'module' => 'hr',             'group' => 'staff'],

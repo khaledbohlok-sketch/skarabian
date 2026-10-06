@@ -169,7 +169,7 @@ CREATE TABLE notifications (
 
 CREATE TABLE approvals (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  type          VARCHAR(30) NOT NULL,   -- bill, payroll, horse_sale, delete_financial, new_user, purchase_order, foal_website, leave
+  type          VARCHAR(30) NOT NULL,   -- bill, payroll, delete_financial, new_user, purchase_order, foal_website, leave
   record_type   VARCHAR(40) NOT NULL,
   record_id     INT UNSIGNED NOT NULL,
   title         VARCHAR(200) NOT NULL,

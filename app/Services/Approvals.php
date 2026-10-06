@@ -20,7 +20,6 @@ final class Approvals
             'bill'             => ['finance', [FinanceService::class, 'approveBill'], [FinanceService::class, 'rejectBill']],
             'purchase_order'   => ['finance', [InventoryService::class, 'approvePo'], [InventoryService::class, 'rejectPo']],
             'payroll'          => ['payroll', [PayrollService::class, 'approve'], [PayrollService::class, 'reject']],
-            'horse_sale'       => ['horses', [HorseService::class, 'approveSale'], [HorseService::class, 'rejectSale']],
             'delete_financial' => ['finance', [TrashService::class, 'approveDelete'], null],
             'new_user'         => ['users', [UserService::class, 'approveUser'], [UserService::class, 'rejectUser']],
             'foal_website'     => ['cms', [HorseService::class, 'approveFoalWebsite'], null],
@@ -63,7 +62,7 @@ final class Approvals
             return Auth::isOwner();
         }
         // Money-related approvals are reserved to Owner and General Manager
-        if (in_array($approval['type'], ['bill', 'payroll', 'horse_sale', 'delete_financial', 'new_user', 'purchase_order'], true)
+        if (in_array($approval['type'], ['bill', 'payroll', 'delete_financial', 'new_user', 'purchase_order'], true)
             && !in_array(Auth::roleSlug(), ['owner', 'general_manager'], true)) {
             return false;
         }

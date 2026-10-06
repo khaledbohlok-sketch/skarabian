@@ -200,52 +200,6 @@ class HorsesController extends Controller
         $this->redirect('/portal/horses/' . $id);
     }
 
-    /** Ownership transfer (buyer from the Clients list). Needs Owner / General Manager approval. */
-    public function sell(string $id): void
-    {
-        $h = $this->horse($id, 'horses', 'edit');
-        if (Request::isPost()) {
-            $party = (int) Request::post('party_id');
-            $type = Request::post('event_type') === 'sale' ? 'sale' : 'transfer';
-            $date = (string) Request::post('date');
-            $currency = (string) Request::post('currency', 'QAR');
-            $price = Money::parse(Request::post('price'));
-            $rate = Money::parse(Request::post('exchange_rate')) ?? 1.0;
-            $errors = [];
-            if (!DB::value("SELECT 1 FROM parties WHERE id = ? AND type IN ('client','both') AND deleted_at IS NULL", [$party])) {
-                $errors['party_id'] = __('validation.pick_from_list');
-            }
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-                $errors['date'] = __('validation.date');
-            }
-            if (!DB::value('SELECT 1 FROM currencies WHERE code = ? AND active = 1', [$currency])) {
-                $errors['currency'] = __('validation.invalid');
-            }
-            if ($price !== null && $price < 0) {
-                $errors['price'] = __('validation.min', ['min' => 0]);
-            }
-            if (!Auth::can('horses', 'sensitive')) {
-                $price = null; // price is visible/editable only for roles with sensitive access
-            }
-            if ($errors) {
-                Session::errors($errors);
-                Session::keepOld($_POST);
-                $this->redirect('/portal/horses/' . $h['id'] . '/sell');
-            }
-            try {
-                HorseService::requestTransfer((int) $h['id'], [
-                    'party_id' => $party, 'event_type' => $type, 'date' => $date, 'currency' => $currency, 'price' => $price,
-                    'exchange_rate' => $rate, 'notes' => mb_substr((string) Request::post('notes'), 0, 255) ?: null,
-                ]);
-                $this->flash('success', __('horses.transfer_requested'));
-            } catch (\DomainException $e) {
-                $this->flash('error', $e->getMessage());
-            }
-            $this->redirect('/portal/horses/' . $h['id'] . '?tab=ownership');
-        }
-        $this->view('portal/horses/sell', ['title' => __('horses.transfer_ownership') . ': ' . $h['name_en'], 'h' => $h]);
-    }
-
     public function addCheck(string $id): void
     {
         Auth::requirePerm('horse_breeding', 'create');

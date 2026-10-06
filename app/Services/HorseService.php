@@ -7,7 +7,7 @@ use App\Core\Audit;
 use App\Core\Auth;
 use App\Core\DB;
 
-/** Horse workflows that touch several modules: foaling, ownership transfer, website approval, finance summary. */
+/** Horse workflows that touch several modules: foaling, website approval, finance summary, pedigree. */
 final class HorseService
 {
     /**
@@ -53,7 +53,6 @@ final class HorseService
                 'owner_type' => $embryo && $embryo['owner_type'] === 'client' ? 'client' : 'sk', 'owner_party_id' => $embryo['owner_party_id'] ?? null,
                 'status' => 'active', 'born_at_sk' => 1, 'breeder' => 'SK Arabians', 'notes' => $foal['notes'] ?? null, 'created_by' => Auth::id(),
             ]);
-            DB::insert('ownership_history', ['horse_id' => $id, 'event_type' => 'birth', 'event_date' => $foal['dob'], 'created_by' => Auth::id()]);
             if ($br) {
                 DB::update('breeding_records', ['status' => 'foaled', 'foaling_date' => $foal['dob'], 'foal_id' => $id, 'updated_at' => date('Y-m-d H:i:s')], 'id = :id', ['id' => $br['id']]);
             }
@@ -88,60 +87,6 @@ final class HorseService
     {
         DB::update('horses', ['show_on_website' => 1, 'website_approved_at' => date('Y-m-d H:i:s')], 'id = :id', ['id' => $horseId]);
         Cache::bump();
-    }
-
-    /** Ownership transfer request (buyer from the Clients list). Needs Owner / GM approval. */
-    public static function requestTransfer(int $horseId, array $d): int
-    {
-        $h = DB::row('SELECT * FROM horses WHERE id = ? AND deleted_at IS NULL', [$horseId]);
-        if (!$h || in_array($h['status'], ['sold', 'transferred', 'deceased'], true)) {
-            throw new \DomainException(__('horses.cannot_transfer'));
-        }
-        if (DB::value("SELECT id FROM ownership_history WHERE horse_id = ? AND status = 'pending'", [$horseId])) {
-            throw new \DomainException(__('horses.transfer_pending'));
-        }
-        $rate = $d['currency'] === Money::BASE ? 1.0 : (float) $d['exchange_rate'];
-        $priceQar = $d['price'] !== null ? Money::toQar((float) $d['price'], $rate) : null;
-        $id = DB::insert('ownership_history', [
-            'horse_id' => $horseId, 'event_type' => $d['event_type'], 'event_date' => $d['date'],
-            'from_label' => $h['owner_type'] === 'sk' ? 'SK Arabians' : (string) DB::value('SELECT name_en FROM parties WHERE id = ?', [$h['owner_party_id']]),
-            'from_party_id' => $h['owner_type'] === 'client' ? $h['owner_party_id'] : null, 'to_party_id' => $d['party_id'],
-            'price_qar' => $priceQar, 'currency' => $d['price'] !== null ? $d['currency'] : null, 'exchange_rate' => $d['price'] !== null ? $rate : null,
-            'price_original' => $d['price'], 'status' => 'pending', 'notes' => $d['notes'], 'created_by' => Auth::id(),
-        ]);
-        Approvals::request('horse_sale', 'ownership', $id, __('approvals.horse_transfer', ['name' => $h['name_en']]), $priceQar);
-        return $id;
-    }
-
-    public static function approveSale(int $ownershipId, array $payload, array $approval): void
-    {
-        $o = DB::row('SELECT * FROM ownership_history WHERE id = ? FOR UPDATE', [$ownershipId]);
-        if (!$o || $o['status'] !== 'pending') {
-            return;
-        }
-        DB::update('ownership_history', ['status' => 'completed'], 'id = :id', ['id' => $ownershipId]);
-        DB::update('horses', [
-            'status' => $o['event_type'] === 'sale' ? 'sold' : 'transferred', 'owner_type' => 'client', 'owner_party_id' => $o['to_party_id'],
-            'updated_at' => date('Y-m-d H:i:s'),
-        ], 'id = :id', ['id' => $o['horse_id']]);
-        DB::run('DELETE FROM horse_assignments WHERE horse_id = ?', [$o['horse_id']]);
-        if ((float) $o['price_qar'] > 0) {
-            // Income record (invoice + bill) so the amount is part of the finance reports
-            $billId = FinanceService::createIncomeFromTransfer($o);
-            DB::update('ownership_history', ['bill_id' => $billId], 'id = :id', ['id' => $ownershipId]);
-        }
-        if (method_exists(Studio::class, 'generateFromRecord')) {
-            $docId = Studio::generateFromRecord('transfer', $ownershipId, (int) $approval['requested_by']);
-            if ($docId) {
-                DB::update('ownership_history', ['document_id' => $docId], 'id = :id', ['id' => $ownershipId]);
-            }
-        }
-        Cache::bump();
-    }
-
-    public static function rejectSale(int $ownershipId, array $payload, array $approval): void
-    {
-        DB::update('ownership_history', ['status' => 'rejected'], "id = :id AND status = 'pending'", ['id' => $ownershipId]);
     }
 
     /** Horse finance tab: bills linked to the horse, allocated inventory usage and income. */
