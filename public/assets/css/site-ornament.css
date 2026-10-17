@@ -737,3 +737,12 @@ html[lang="ar"] .ped-root-other { font-family: var(--font-display); letter-spaci
 .ped-root-text small { font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); }
 html[dir="rtl"] .ped-root-text small { letter-spacing: 0; text-transform: none; font-size: var(--t-small); }
 .ped-root-rule { grid-column: 1 / -1; height: 1px; background: var(--metal-line); }
+/* a filtered collection (one category) stays a strict grid so breeders can scan it: no plate */
+@media (min-width: 900px) {
+  .horse-groups.filtered .hgrid.editorial > .hcard:first-child { grid-column: auto; }
+  .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-media { aspect-ratio: 4 / 5; }
+  .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-body { margin-top: 0; padding-inline-start: 0; }
+  .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-name { font-size: var(--t-h4); padding: 0; background: none; max-width: none; }
+  .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-medals { inset-inline-end: auto; inset-inline-start: 50%; top: 0; translate: -50% -50%; }
+  .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-body::before { display: block; }
+}
