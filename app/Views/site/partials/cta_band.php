@@ -8,6 +8,7 @@ $ext = str_starts_with($enquire, 'https://');
 ?>
 <section class="cta-band" aria-labelledby="h-cta">
   <div class="container cta-inner reveal">
+    <svg class="orn orn-divider" aria-hidden="true"><use href="<?= e(asset('img/ornaments.svg')) ?>#divider"></use></svg>
     <span class="eyebrow eyebrow-line"><?= e(__('site.cta_eyebrow')) ?></span>
     <h2 id="h-cta" class="split"><?= split_title(__('site.cta_title')) ?></h2>
     <p><?= e(__('site.cta_text')) ?></p>

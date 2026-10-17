@@ -1,5 +1,6 @@
 <?php use App\Core\View; ?>
-<?= View::partial('site/partials/page_hero', ['crumbs' => [[__('site.nav_contact'), null]], 'eyebrow' => e(__('site.get_in_touch')), 'title' => __('site.contact_title'), 'lead' => __('site.contact_intro')]) ?>
+<?php $bandPhoto = \App\Services\SiteData::heroPhotos(2); $bandPhoto = $bandPhoto[1] ?? ($bandPhoto[0] ?? null); ?>
+<?= View::partial('site/partials/page_hero', ['bg' => $bandPhoto ? \App\Services\SiteData::img((int) $bandPhoto['main_photo_id']) : null, 'cls' => 'band-photo', 'crumbs' => [[__('site.nav_contact'), null]], 'eyebrow' => e(__('site.get_in_touch')), 'title' => __('site.contact_title'), 'lead' => __('site.contact_intro'), 'ghost' => t_other('site.nav_contact'), 'italic' => true]) ?>
 <section class="chapter">
   <div class="container contact">
     <div class="contact-info reveal">

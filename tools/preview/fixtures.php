@@ -108,6 +108,7 @@ foreach ($json['results'] as $r) {
     $place = $showCity[$show['name']] ?? [$show['city'] ?? null, $show['country'] ?? null, null];
     $results[] = [
         'id' => ++$rid, 'class_name' => $r['class'], 'placing' => $r['placing'], 'title_en' => $r['title'], 'title_ar' => null, 'medal' => $r['medal'] ?: 'none', 'score' => $r['score'],
+        'judge_card' => !empty($r['judge_card']) ? json_encode($r['judge_card'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : null,
         'show_en' => $show['name'], 'show_ar' => null, 'city' => $place[0], 'country' => null, 'country_en' => $place[1], 'country_ar' => $place[2],
         'start_date' => !empty($show['year_only']) ? (string) $show['year'] : ($show['start'] ?? (string) $show['year']), 'organizer' => null,
         'horse_en' => $r['horse'], 'horse_ar' => $arabic[$r['horse']] ?? null, 'slug' => $slug($r['horse']), 'show_on_website' => $isPublic($r['horse']) ? 1 : 0,

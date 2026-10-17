@@ -232,7 +232,9 @@ final class SiteData
     public static function results(?int $horseId = null, ?int $limit = null): array
     {
         $params = [];
-        $sql = 'SELECT r.id, r.class_name, r.placing, r.title_en, r.title_ar, r.medal, r.score, s.name_en AS show_en, s.name_ar AS show_ar, s.city, s.country,
+        // the judges' card (database update 018): each judge's marks per criterion, shown on the website as the scorecard
+        $card = DB::hasColumn('show_results', 'judge_card') ? 'r.judge_card' : 'NULL AS judge_card';
+        $sql = 'SELECT r.id, r.class_name, r.placing, r.title_en, r.title_ar, r.medal, r.score, ' . $card . ', s.name_en AS show_en, s.name_ar AS show_ar, s.city, s.country,
                        c.name_en AS country_en, c.name_ar AS country_ar, ' . show_date_sql('s') . ' AS start_date, s.organizer,
                        h.name_en AS horse_en, h.name_ar AS horse_ar, h.slug, (' . self::publicWhere() . ') AS show_on_website, h.category, h.dob
                 FROM show_results r JOIN shows s ON s.id = r.show_id JOIN horses h ON h.id = r.horse_id LEFT JOIN countries c ON c.id = s.country

@@ -126,6 +126,37 @@ Tone by context: homepage — editorial and calm; horse profile — factual, pro
 
 ---
 
+## 6. Motifs and ornament (website v3, richness layer)
+
+Three motifs only, always as 1px gold line work on the page's own ground, never as fills:
+
+- **The pointed arch**: frames the featured champion (the Portrait Wall), the story plate, every horse card (a
+  shallow arch with a gold rim) and the monogram tiles; the inline clip paths are `#arch-clip`, `#arch-round`,
+  `#arch-cards`.
+- **The eight-pointed star**: the rosette (threshold of every chapter, the cross in "sire × dam", corners of the
+  judges' sheet), the drawn star of the preloader, the lattice at 3–5% behind chapters.
+- **The seal**: three rings, the stud's name in Latin outside and in Arabic inside (both from the language files),
+  the mark in the middle; in the hero's corner, the footer, on monogram tiles and stamped on the judges' sheet.
+
+Gold foil (`--metal`, `background-clip: text`) is reserved for one word per screen: the hero's cover line, the
+closing band's last word, the big numerals, the champions' names on their plaques. Everything else gold is a
+hairline or small caps.
+
+Restraint rules: never more than two ornaments in one viewport; ghosts and watermarks at 9% or less and never
+behind body text; decorative Arabic only from `lang/ar.php` strings or a horse's registered name; bronze is a
+gold-and-navy mix (`color-mix(in srgb, var(--c-gold) 58%, var(--c-navy-ink))`), never a new hue.
+
+### Typography additions
+
+- One word of a chapter or page title in Cormorant Garamond italic (300) against Marcellus roman; on the Arabic
+  edition Amiri regular against Amiri bold. Latin tracking only; Arabic is never letter-spaced.
+- The hero's gold key word is a cover line fitted to its column (container units); a horse's name on its page is a
+  nameplate in Marcellus capitals at .04em with the Arabic name at parity beside it.
+- Stories open with a gold drop cap and a small-caps lede; Arabic stories open with a gold star.
+- Numerals: Cormorant italic for years, counts and scores (tabular figures); Western digits everywhere.
+- Amiri regular (400) and bold (700) are both shipped; regular carries quotes, accent lines, Arabic names on the
+  English pages and the seal's ring; bold carries titles.
+
 ## 6. Components (website)
 
 | Component | Default | Hover | Notes |

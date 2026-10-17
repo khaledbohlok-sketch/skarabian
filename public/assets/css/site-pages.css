@@ -390,3 +390,34 @@ html.no-js .split .w > span, html.reduce .split .w > span { transform: none; ani
 .error-section .btn-ghost { color: var(--c-ivory); }
 /* masked headlines inside a revealed block rise with it */
 .in .split .w > span { animation: word-up var(--dur-xl) var(--ease-out-expo) forwards; animation-delay: calc(var(--i, 0) * 90ms); }
+
+/* ---- The judges' scorecard: a paper card with a double gold rule, the total in italic numerals, each criterion's
+   average mark as a gold bar out of 20 (the bars grow when the card comes into view) ---- */
+.scorecard { position: relative; display: grid; gap: var(--s-5); margin: 0; padding: clamp(24px, 2rem + 1vw, 40px); background: var(--bg-2); border: 1px solid var(--rule-gold); }
+.scorecard::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--rule-gold); opacity: .5; pointer-events: none; }
+.night .scorecard, .deep .scorecard { background: color-mix(in srgb, var(--c-ivory) 4%, transparent); }
+.sc-head { display: grid; gap: 4px; }
+.sc-show { font-family: var(--font-display); font-size: var(--t-h4); line-height: 1.2; }
+html[dir="rtl"] .sc-show { font-weight: var(--fw-bold); }
+.sc-class { color: var(--text-2); font-size: var(--t-small); }
+.sc-total { display: flex; align-items: baseline; gap: var(--s-4); flex-wrap: wrap; padding-bottom: var(--s-4); border-bottom: 1px solid var(--rule); }
+.sc-total b { font-family: var(--font-accent); font-style: italic; font-weight: 300; font-size: clamp(3rem, 2rem + 3vw, 5rem); line-height: .9; letter-spacing: -.02em; color: var(--c-gold-2); background: var(--metal); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+html[dir="rtl"] .sc-total b { font-family: var(--font-display); font-style: normal; font-weight: 400; }
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) { .sc-total b { -webkit-text-fill-color: currentColor; background: none; } }
+.sc-total span { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--text-2); font-size: var(--t-small); }
+.sc-rows { display: grid; gap: var(--s-3); margin: 0; }
+.sc-row { display: grid; grid-template-columns: minmax(72px, 28%) 1fr; align-items: center; gap: var(--s-4); }
+.sc-row dt { font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); }
+html[dir="rtl"] .sc-row dt { text-transform: none; letter-spacing: 0; font-size: var(--t-small); }
+.sc-row dd { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: var(--s-3); margin: 0; }
+.sc-bar { position: relative; height: 6px; background: color-mix(in srgb, var(--text) 10%, transparent); border-radius: 3px; overflow: hidden; }
+.sc-bar i { position: absolute; inset: 0; width: var(--v, 0%); background: var(--metal); border-radius: 3px; transform: scaleX(0); transform-origin: 0 50%; transition: transform 1200ms var(--ease-out-expo); }
+html[dir="rtl"] .sc-bar i { transform-origin: 100% 50%; }
+.in .sc-bar i, .scorecard.in .sc-bar i, html.no-js .sc-bar i, html.reduce .sc-bar i { transform: scaleX(1); }
+.sc-row dd b { font-family: var(--font-display); font-weight: var(--fw-regular); font-size: 1.05rem; min-width: 3.2em; text-align: end; }
+html[dir="rtl"] .sc-row dd b { font-weight: var(--fw-bold); }
+.sc-row dd small { color: var(--text-2); font-size: 11px; min-width: 5.5em; text-align: end; letter-spacing: .04em; }
+.sc-note { margin: 0; color: var(--text-2); font-size: var(--t-caps); letter-spacing: .06em; }
+.scorecard.compact { padding: clamp(20px, 1.5rem + 1vw, 32px); }
+.scorecard.compact .sc-row dd small { display: none; }
+@media (max-width: 479px) { .sc-row { grid-template-columns: 1fr; gap: 4px; } .sc-row dd small { display: none; } }

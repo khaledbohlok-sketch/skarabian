@@ -1,0 +1,739 @@
+/* SK Arabians — public website, version 3: the ornament and richness layer. Loads after site-pages.css and adds what a
+   maison adds on top of a clean page: gold foil that moves, arches and filigree around photographs, the eight-pointed
+   star as divider and watermark, ghost numerals behind chapter titles, light and grain on the midnight chapters, a
+   ticker of titles under the hero, a medal cabinet, and the hover life of cards. Everything here is additive: remove
+   the file and the pages still stand. Colours: the brand tokens only. Motion respects prefers-reduced-motion. */
+
+/* ---- Gold foil: a sheen that travels across metallic text (the gold word of every headline, the big numerals) ---- */
+.gold-text, .foil { background-size: 240% 100%; animation: foil-sheen 9s var(--ease-in-out) infinite; }
+@keyframes foil-sheen { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.foil { color: var(--c-gold-2); background-image: var(--metal); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) { .foil { -webkit-text-fill-color: currentColor; background: none; } }
+
+/* ---- Ornaments: the sprite symbols (public/assets/img/ornaments.svg) drawn in gold hairline ---- */
+.orn { display: block; fill: none; stroke: none; color: var(--gold); }
+.orn-divider { width: min(320px, 60%); height: 24px; margin-inline: auto; color: var(--gold); opacity: .8; }
+.orn-divider.start { margin-inline: 0; }
+html[dir="rtl"] .orn-divider.start { margin-inline: 0; }
+.orn-rosette { width: 28px; height: 28px; color: var(--gold); }
+/* a framed photograph: four filigree corners drawn just inside the frame */
+.framed { position: relative; }
+.framed .orn-corner { position: absolute; z-index: 2; width: clamp(36px, 4vw, 64px); height: clamp(36px, 4vw, 64px); color: var(--c-gold-soft); pointer-events: none; opacity: .9; filter: drop-shadow(0 1px 4px color-mix(in srgb, var(--c-navy-deep) 60%, transparent)); }
+.framed .orn-corner.tl { top: 12px; left: 12px; }
+.framed .orn-corner.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+.framed .orn-corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+.framed .orn-corner.br { bottom: 12px; right: 12px; transform: scale(-1); }
+/* the arch: a photograph clipped to the pointed arch, a gold arch drawn a hair outside it */
+.arched { position: relative; }
+.arched > img, .arched > a > img, .arched .hcard-ph { clip-path: url(#arch-clip); }
+.arched::before { content: ""; position: absolute; inset: -10px; clip-path: url(#arch-clip); background: var(--c-gold); opacity: .7; z-index: -2; }
+.arched::after { content: ""; position: absolute; inset: -9px; clip-path: url(#arch-clip); background: var(--bg); z-index: -1; }
+.arched.round > img, .arched.round > a > img, .arched.round .hcard-ph { clip-path: url(#arch-round); }
+.arched.round::before, .arched.round::after { clip-path: url(#arch-round); }
+
+/* ---- Chapter heads: a ghost numeral behind the title, an ornamental rule under the lead ---- */
+.chapter-head { position: relative; }
+.chapter-head[data-ghost]::before { content: attr(data-ghost); position: absolute; z-index: 0; inset-inline-start: -.08em; top: -.55em; font-family: var(--font-accent); font-style: italic; font-weight: 300;
+  font-size: clamp(9rem, 6rem + 12vw, 22rem); line-height: 1; color: var(--text); opacity: .045; pointer-events: none; user-select: none; letter-spacing: -.04em; }
+.night .chapter-head[data-ghost]::before, .deep .chapter-head[data-ghost]::before { color: var(--c-gold-soft); opacity: .06; }
+.chapter-head > * { position: relative; z-index: 1; }
+
+/* ---- Midnight chapters: a gold light low in the frame, grain, the lattice ---- */
+.night, .deep, .cta-band { position: relative; isolation: isolate; }
+.night::before, .deep::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(70% 55% at 85% 100%, color-mix(in srgb, var(--c-gold-2) 14%, transparent), transparent 70%), radial-gradient(60% 40% at 0% 0%, color-mix(in srgb, var(--c-navy-2) 60%, transparent), transparent 70%); }
+html[dir="rtl"] .night::before, html[dir="rtl"] .deep::before { background: radial-gradient(70% 55% at 15% 100%, color-mix(in srgb, var(--c-gold-2) 14%, transparent), transparent 70%), radial-gradient(60% 40% at 100% 0%, color-mix(in srgb, var(--c-navy-2) 60%, transparent), transparent 70%); }
+.night::after, .deep::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--grain) center / 160px; opacity: .06; mix-blend-mode: overlay; }
+/* paper chapters: the lattice, very faint, and a thin gold rule at the top */
+.chapter:not(.night):not(.deep)::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; -webkit-mask: var(--pattern) center / 96px 96px; mask: var(--pattern) center / 96px 96px; background: var(--c-navy); opacity: .035; }
+.chapter > .container { position: relative; z-index: 1; }
+.chapter + .chapter::after, .hero-ledger + .chapter::after { content: ""; position: absolute; top: 0; inset-inline: 0; height: 1px; background: var(--metal-line); opacity: .7; }
+
+/* ---- Hero: the vertical ghost wordmark, the ticker of titles, a gold light ---- */
+.hero-ghost { position: absolute; z-index: 0; right: calc(var(--gutter) - .15em); top: 50%; transform: translateY(-50%) rotate(180deg); writing-mode: vertical-rl; font-family: var(--font-display); font-size: clamp(2.5rem, 2rem + 3vw, 6rem); letter-spacing: .32em; line-height: 1;
+  color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--c-gold-soft) 40%, transparent); pointer-events: none; display: none; }
+html[dir="rtl"] .hero-ghost { right: auto; left: calc(var(--gutter) - .15em); transform: translateY(-50%); }
+@media (min-width: 1200px) { .hero-ghost { display: block; } .hero-scroll { inset-inline-end: calc(var(--gutter) + 5.5rem); } }
+.hero-light { position: absolute; inset: auto -10% -20% -10%; height: 70%; z-index: -1; pointer-events: none; background: radial-gradient(45% 55% at 20% 100%, color-mix(in srgb, var(--c-gold-2) 26%, transparent), transparent 70%); mix-blend-mode: screen; }
+html[dir="rtl"] .hero-light { background: radial-gradient(45% 55% at 80% 100%, color-mix(in srgb, var(--c-gold-2) 26%, transparent), transparent 70%); }
+.hero-dust { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; }
+.hero-inner { z-index: 1; }
+/* the ticker: every public title, passing slowly along the bottom edge of the hero */
+.ticker { position: relative; overflow: hidden; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: color-mix(in srgb, var(--c-navy-deep) 70%, transparent); color: var(--c-ivory); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.ticker-track { display: flex; width: max-content; gap: 0; animation: ticker 60s linear infinite; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.ticker-item { display: inline-flex; align-items: center; gap: var(--s-4); padding: 12px var(--s-6); white-space: nowrap; font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: .16em; text-transform: uppercase; }
+html[dir="rtl"] .ticker-item { text-transform: none; letter-spacing: 0; font-size: var(--t-small); }
+.ticker-item .orn-rosette { width: 14px; height: 14px; color: var(--c-gold-2); }
+.ticker-item b { font-weight: var(--fw-semibold); color: var(--c-gold-soft); }
+.ticker-item span { color: var(--c-soft); font-weight: var(--fw-regular); letter-spacing: .08em; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+html[dir="rtl"] .ticker-track { animation-name: ticker-rtl; }
+@keyframes ticker-rtl { to { transform: translateX(50%); } }
+.hero-foot { position: relative; z-index: 1; }
+
+/* ---- Horse cards: a double gold frame appears inside the photograph, a sheen crosses it, the card tilts toward the
+   pointer and a soft light follows it (site.js sets --px/--py/--rx/--ry on computers) ---- */
+.hcard { perspective: 1200px; }
+.hcard-media { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform var(--dur-md) var(--ease-out); transform-style: preserve-3d; }
+.hcard-media::before { content: ""; position: absolute; z-index: 2; inset: 12px; border: 1px solid color-mix(in srgb, var(--c-gold-soft) 75%, transparent); opacity: 0; transform: scale(1.03); transition: opacity var(--dur-md) var(--ease-out), transform var(--dur-lg) var(--ease-out-expo); pointer-events: none; }
+.hcard-media::after { content: ""; position: absolute; z-index: 3; inset: 0; background: radial-gradient(420px circle at var(--px, 50%) var(--py, 50%), color-mix(in srgb, var(--c-gold-soft) 14%, transparent), transparent 70%); opacity: 0; transition: opacity var(--dur-md) var(--ease-out); pointer-events: none; }
+.hcard:hover .hcard-media::before { opacity: 1; transform: none; }
+.hcard:hover .hcard-media::after { opacity: 1; }
+.hcard-media .sheen { position: absolute; z-index: 4; inset: 0; background: var(--shimmer); transform: translateX(-120%); pointer-events: none; }
+.hcard:hover .hcard-media .sheen { animation: light-pass 1.1s var(--ease-out-expo) forwards; }
+html[dir="rtl"] .hcard-media .sheen { transform: translateX(120%); }
+html[dir="rtl"] .hcard:hover .hcard-media .sheen { animation-name: light-pass-rtl; }
+@keyframes light-pass-rtl { to { transform: translateX(-120%); } }
+.hcard-name { position: relative; padding-inline-start: 0; }
+.hcard:hover .hcard-name { color: var(--gold-text); transition: color var(--dur) var(--ease-out); }
+
+/* ---- The featured champion: the photograph under a pointed arch with a gold rim, a medal on its shoulder ---- */
+.feature-media.arched { overflow: visible; box-shadow: none; aspect-ratio: 4 / 5; }
+.feature-media.arched img, .feature-media.arched .hcard-ph { clip-path: url(#arch-clip); box-shadow: var(--shadow-photo); }
+.feature-media .corner { display: none; }
+.feature-medal { position: absolute; z-index: 3; inset-inline-end: -14px; bottom: 8%; width: clamp(64px, 6vw, 96px); height: auto; color: var(--c-gold-2); filter: drop-shadow(0 10px 20px color-mix(in srgb, var(--c-navy-deep) 60%, transparent)); }
+.feature-medal.silver { color: var(--c-soft); } .feature-medal.bronze { color: color-mix(in srgb, var(--c-gold) 58%, var(--c-navy-ink)); }
+.feature-text h3 { font-size: clamp(2.75rem, 1.6rem + 4.5vw, 6rem); }
+
+/* ---- The medal cabinet (Achievements): three medals on their ribbons with the counts, before the ledger ---- */
+.cabinet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); margin-bottom: clamp(40px, 3rem + 2vw, 72px); }
+.cabinet-item { display: grid; justify-items: center; gap: var(--s-2); padding: var(--s-5) var(--s-3); border: 1px solid var(--rule); background: color-mix(in srgb, var(--c-ivory) 3%, transparent); text-align: center; }
+.cabinet-item svg { width: clamp(56px, 6vw, 92px); height: auto; }
+.cabinet-item.gold svg { color: var(--c-gold-2); } .cabinet-item.silver svg { color: var(--c-soft); } .cabinet-item.bronze svg { color: color-mix(in srgb, var(--c-gold) 58%, var(--c-navy-ink)); }
+.cabinet-item b { font-family: var(--font-accent); font-style: italic; font-weight: 300; font-size: clamp(2.2rem, 1.6rem + 2vw, 3.6rem); line-height: 1; color: var(--text); }
+html[dir="rtl"] .cabinet-item b { font-family: var(--font-display); font-style: normal; font-weight: 400; }
+.cabinet-item span { font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--gold-text); }
+html[dir="rtl"] .cabinet-item span { text-transform: none; letter-spacing: 0; font-size: var(--t-small); }
+.medal-ledger strong::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-inline-end: 10px; background: var(--c-gold-2); transform: rotate(45deg); vertical-align: middle; opacity: .8; }
+
+/* ---- Story: the quotation mark as a gold glyph behind the quote; the photograph under a round arch ---- */
+.quote { position: relative; padding-inline-start: .15em; }
+.quote .q { position: absolute; inset-inline-start: -.45em; top: -.35em; font-size: 3.2em; line-height: 1; color: var(--gold); opacity: .55; font-family: var(--font-accent); }
+.story-media.arched { overflow: visible; box-shadow: none; }
+.story-media.arched img { clip-path: url(#arch-round); box-shadow: var(--shadow-photo); }
+
+/* ---- Gallery: a thin gold frame and the caption rise on hover ---- */
+.gallery a::before { content: ""; position: absolute; z-index: 2; inset: 10px; border: 1px solid color-mix(in srgb, var(--c-gold-soft) 70%, transparent); opacity: 0; transition: opacity var(--dur-md) var(--ease-out); pointer-events: none; }
+.gallery a:hover::before { opacity: 1; }
+.gallery figcaption, .gallery .cap { position: absolute; z-index: 2; inset-inline: 0; bottom: 0; padding: 40px var(--s-4) var(--s-4); background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 85%, transparent), transparent); color: var(--c-ivory); font-family: var(--font-display); font-size: var(--t-small); letter-spacing: .04em; opacity: 0; transform: translateY(8px); transition: opacity var(--dur-md) var(--ease-out), transform var(--dur-md) var(--ease-out-expo); pointer-events: none; }
+.gallery a:hover .cap { opacity: 1; transform: none; }
+
+/* ---- Page bands (inner pages): the ghost title word behind the band, a rosette under the lead ---- */
+.page-hero .container { position: relative; }
+.page-hero-rule { position: relative; }
+.page-hero-rule::after { content: ""; position: absolute; left: 50%; top: -9px; width: 18px; height: 18px; transform: translateX(-50%) rotate(45deg); border: 1px solid var(--c-gold-2); background: var(--c-navy-deep); }
+
+/* ---- Footer: the wordmark in moving gold foil, an ornamental rule above the columns ---- */
+.footer-wordmark { color: transparent; -webkit-text-stroke: 0; background: linear-gradient(100deg, color-mix(in srgb, var(--c-gold-2) 22%, transparent) 0%, color-mix(in srgb, var(--c-gold-soft) 55%, transparent) 50%, color-mix(in srgb, var(--c-gold-2) 22%, transparent) 100%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; animation: foil-sheen 12s var(--ease-in-out) infinite; }
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) { .footer-wordmark { -webkit-text-stroke: 1px color-mix(in srgb, var(--c-gold-2) 45%, transparent); background: none; } }
+.footer-orn { display: block; width: min(420px, 70%); height: 24px; margin: 0 auto clamp(40px, 3rem + 2vw, 72px); color: var(--c-gold-2); opacity: .8; }
+
+/* ---- Buttons: the gold button carries a thin inner rule, like a seal ---- */
+.btn-gold::before { content: ""; position: absolute; inset: 4px; border: 1px solid color-mix(in srgb, var(--c-white) 35%, transparent); border-radius: inherit; pointer-events: none; }
+
+/* ---- Preloader: the eight-pointed star drawn in gold around the mark ---- */
+.preloader-star { position: absolute; width: 150px; height: 150px; color: var(--c-gold-2); fill: none; stroke: currentColor; stroke-width: 1; }
+.preloader-star path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1s var(--ease-in-out-quint) .15s forwards; }
+.preloader-star path + path { animation-delay: .4s; }
+.preloader-mark { position: relative; width: 150px; height: 150px; display: grid; place-items: center; gap: 0; }
+.preloader-mark img { position: relative; }
+.preloader-word { position: absolute; top: calc(100% + 28px); white-space: nowrap; }
+.preloader-line { position: absolute; top: calc(100% + 76px); }
+
+/* ---- The phone menu: a rosette watermark and the links in gold on hover ---- */
+.nav-panel::after { content: ""; position: absolute; inset-inline-end: -20vw; bottom: -10vh; width: 70vw; height: 70vw; background: url("ornaments.svg#rosette") no-repeat center / contain; opacity: .06; pointer-events: none; }
+
+/* ---- The cursor ring: gold, a little larger ---- */
+.cursor { width: 72px; height: 72px; margin: -36px 0 0 -36px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-text, .foil, .footer-wordmark { animation: none; }
+  .ticker-track { animation: none; flex-wrap: wrap; width: auto; }
+  .hcard-media { transform: none !important; }
+  .hcard-media .sheen { display: none; }
+  .preloader-star path { stroke-dashoffset: 0; animation: none; }
+}
+@media (max-width: 899px) {
+  .chapter-head[data-ghost]::before { font-size: clamp(7rem, 5rem + 10vw, 11rem); top: -.5em; }
+  .feature-medal { width: 56px; inset-inline-end: 0; }
+}
+/* ghost numerals on the other chapter heads (story, contact) */
+.story-text, .contact-info { position: relative; }
+.story-text[data-ghost]::before, .contact-info[data-ghost]::before { content: attr(data-ghost); position: absolute; z-index: 0; inset-inline-start: -.08em; top: -.6em; font-family: var(--font-accent); font-style: italic; font-weight: 300; font-size: clamp(7rem, 5rem + 10vw, 16rem); line-height: 1; color: var(--text); opacity: .045; pointer-events: none; user-select: none; letter-spacing: -.04em; }
+.contact-info[data-ghost]::before { color: var(--c-gold-soft); opacity: .06; }
+.story-text > *, .contact-info > * { position: relative; z-index: 1; }
+.orn-laurel { width: 64px; height: 32px; color: var(--gold); margin-bottom: var(--s-2); opacity: .9; }
+.cta-inner .orn-divider { margin-bottom: var(--s-2); }
+
+/* ---- Pedigree: gold connectors join every horse to its sire and dam (the parent cell spans both children, so the
+   children's centres sit at a quarter and three quarters of its height) ---- */
+.ped5 table { border-spacing: 14px 0; }
+.ped5 td { position: relative; }
+.ped5 td::after { content: ""; position: absolute; inset-inline-end: -8px; top: 25%; bottom: 25%; border-inline-end: 1px solid var(--rule-gold); }
+.ped5 td::before { content: ""; position: absolute; inset-inline-end: -8px; top: 50%; width: 8px; border-top: 1px solid var(--rule-gold); }
+.ped5 td:not(.g1) .ped-box::before { content: ""; position: absolute; inset-inline-start: -8px; top: 50%; width: 7px; border-top: 1px solid var(--rule-gold); }
+.ped5.gens-2 .g2::after, .ped5.gens-2 .g2::before, .ped5.gens-3 .g3::after, .ped5.gens-3 .g3::before, .ped5.gens-4 .g4::after, .ped5.gens-4 .g4::before, .ped5.gens-5 .g5::after, .ped5.gens-5 .g5::before { display: none; }
+.ped-box { border-inline-start-width: 2px; background: color-mix(in srgb, var(--c-gold) 6%, var(--bg-2)); transition: background-color var(--dur) var(--ease-out); }
+.ped-box:hover { background: color-mix(in srgb, var(--c-gold) 14%, var(--bg-2)); }
+.ped5 .g1 .ped-box { background: var(--c-navy-ink); color: var(--c-ivory); border-inline-start-color: var(--c-gold-2); }
+.ped5 .g1 .ped-box small { color: var(--c-gold-soft); }
+.ped5 .g1 .ped-box a { color: var(--c-ivory); border-bottom-color: color-mix(in srgb, var(--c-gold-2) 60%, transparent); }
+
+/* ===== The second pass: what the design panel asked for ===== */
+
+/* ---- The house grade: every photograph warmed and deepened the same way, so the collection reads as one afternoon ---- */
+.hcard-media img, .feature-media img, .story-media img, .gallery img, .news-media img, .pgallery-main img, .page-hero-bg img, .article-media img, .line-photo img, .hero-slide, .strip img { filter: saturate(.92) contrast(1.04) sepia(.07); }
+
+/* ---- Midnight rooms lit from above; the threshold of every chapter: a gilt hairline and the rosette on a disc ---- */
+.chapter.night { background: radial-gradient(90% 60% at 50% -10%, var(--c-navy-2) 0%, var(--c-navy-ink) 45%, var(--c-navy-deep) 100%); }
+.chapter.deep { background: radial-gradient(90% 60% at 50% -10%, var(--c-navy) 0%, var(--c-navy-ink) 50%, var(--c-navy-deep) 100%); }
+.chapter + .chapter::after, .hero-ledger + .chapter::after { content: none; }
+.threshold { position: absolute; top: 0; inset-inline: 0; height: 1px; background: var(--metal-line); opacity: .85; z-index: 2; pointer-events: none; }
+.threshold .orn { position: absolute; left: 50%; top: -22px; width: 44px; height: 44px; padding: 10px; transform: translateX(-50%); background: var(--bg); color: var(--gold); border-radius: 50%; }
+.hero-ledger + .chapter .threshold, #home-start + .chapter .threshold { display: none; }
+
+/* ---- The hero as a lit window: a gold hairline frame draws itself; the photograph settles; the copy rises; the room
+   then sinks under the ledger as the page scrolls (the hero is sticky, every following section covers it) ---- */
+.hero-frame { position: absolute; z-index: 1; inset: calc(var(--hdr-h) + 10px) var(--gutter) var(--gutter); width: auto; height: auto; pointer-events: none; overflow: visible; display: none; }
+.hero-frame rect { fill: none; stroke: color-mix(in srgb, var(--c-gold-soft) 55%, transparent); stroke-width: 1; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.8s var(--ease-out-expo) .6s forwards; }
+html.intro .hero-frame rect { animation-delay: 1.9s; }
+@media (min-width: 900px) { .hero-frame { display: block; } .hero-inner { padding-inline: calc(var(--gutter) + 28px); } .hero-foot { margin-inline: 0; } }
+.hero-veil { background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--c-navy-deep) 60%, transparent) 30%, transparent 58%), linear-gradient(to right, color-mix(in srgb, var(--c-navy-deep) 42%, transparent), transparent 55%), radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--c-navy-deep) 70%, transparent) 100%); }
+html[dir="rtl"] .hero-veil { background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--c-navy-deep) 60%, transparent) 30%, transparent 58%), linear-gradient(to left, color-mix(in srgb, var(--c-navy-deep) 42%, transparent), transparent 55%), radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--c-navy-deep) 70%, transparent) 100%); }
+html.intro .hero-media { animation: hero-settle 2.6s cubic-bezier(.2, .8, .2, 1) 1.2s both; }
+@keyframes hero-settle { from { transform: scale(1.12); } to { transform: scale(1.04); } }
+.hero-sink { position: absolute; inset: 0; z-index: 2; background: var(--c-navy-deep); opacity: 0; pointer-events: none; }
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  html.js .hero { position: sticky; top: 0; }
+  html.js .home > :not(.hero) { position: relative; z-index: 1; }
+  html.js .hero-ledger { box-shadow: 0 -30px 60px -20px color-mix(in srgb, var(--c-navy-deep) 45%, transparent); }
+}
+/* the seal in the hero's corner (in place of the scroll line) */
+.seal { position: relative; display: inline-grid; place-items: center; width: 96px; height: 96px; color: var(--c-gold-2); text-decoration: none; }
+.seal svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: seal-spin 40s linear infinite; }
+.seal img { position: relative; width: 20px; height: auto; opacity: .9; }
+@keyframes seal-spin { to { transform: rotate(360deg); } }
+.hero-scroll.seal { display: none; width: 104px; height: 104px; background: none; inset-inline-end: calc(var(--gutter) + 24px); bottom: calc(var(--gutter) + 60px); opacity: .85; overflow: visible; transition: opacity var(--dur) var(--ease-out); }
+.hero-scroll.seal:hover { opacity: 1; }
+.hero-scroll.seal:hover svg { animation-play-state: paused; }
+@media (min-width: 1024px) { .hero-scroll.seal { display: inline-grid; } .hero-ghost { display: none; } }
+.footer-seal { width: 120px; height: 120px; margin: 0 auto var(--s-5); display: grid; }
+/* the no-photo tile: the seal around the initials in foil, each tile turned a little differently */
+.hcard-ph .ph-seal { position: absolute; width: 70%; max-width: 220px; aspect-ratio: 1; color: color-mix(in srgb, var(--c-gold-2) 70%, transparent); transform: rotate(var(--rot, 0deg)); }
+.hcard-ph .ph-mark { opacity: .1; }
+.hcard-ph .ph-initials { font-size: clamp(1.6rem, 1.6vw + 1rem, 2.6rem); }
+
+/* ---- The phone hero: the horse as a framed print across the top, the headline beginning on its lower edge ---- */
+@media (max-width: 899px) {
+  .hero { grid-template-rows: auto 1fr auto; align-items: start; min-height: 0; }
+  .hero-media { position: relative; inset: auto; grid-row: 1; margin: calc(var(--hdr-h) + 12px) 16px 0; aspect-ratio: 4 / 5; max-height: 58svh; overflow: hidden; z-index: 0; border: 1px solid color-mix(in srgb, var(--c-gold-soft) 45%, transparent); padding: 10px; }
+  .hero-media img, .hero-media video { inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-position: 50% 30%; }
+  .hero-media::after { content: ""; position: absolute; inset: 10px; background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 85%, transparent), transparent 45%); pointer-events: none; }
+  .hero-veil, html[dir="rtl"] .hero-veil { background: linear-gradient(to bottom, color-mix(in srgb, var(--c-navy-deep) 70%, transparent), transparent 20%); }
+  .hero-light { inset: auto -10% 0 -10%; height: 60%; }
+  .hero-inner { grid-row: 2; padding-top: 0; margin-top: -1.15em; padding-bottom: var(--s-6); }
+  .hero-copy .eyebrow { display: none; }
+  .hero-copy h1 { font-size: clamp(2.6rem, 2rem + 4vw, 3.5rem); margin-bottom: var(--s-4); }
+  .hero-copy .accent { font-size: 1.25rem; margin-bottom: var(--s-5); }
+  .hero-foot { padding-top: var(--s-4); }
+  .ticker { grid-row: 3; }
+  .hero-slide.on { animation-name: none; }
+  .hero-dust { display: none; }
+}
+@media (min-width: 481px) and (max-width: 899px) { .hero-media { aspect-ratio: 1 / 1; max-height: 62svh; } }
+
+/* ---- The preloader parts like stable doors ---- */
+.preloader { background: transparent; }
+.preloader-leaf { position: absolute; top: 0; bottom: 0; width: 50.5%; background: var(--c-navy-deep); }
+.preloader-leaf::before { content: ""; position: absolute; inset: 0; -webkit-mask: var(--pattern) center / 72px 72px; mask: var(--pattern) center / 72px 72px; background: var(--c-gold); opacity: .05; }
+.preloader-leaf.start { left: 0; } .preloader-leaf.end { right: 0; }
+html.intro-out .preloader { transform: none; transition: none; }
+html.intro-out .preloader-leaf { transition: transform 1.1s var(--ease-in-out-quint); }
+html.intro-out .preloader-leaf.start { transform: translateX(-101%); }
+html.intro-out .preloader-leaf.end { transform: translateX(101%); }
+.preloader-mark { z-index: 1; }
+
+/* ---- The featured champion's name, ghosted behind the record ---- */
+.feature-text { position: relative; }
+.feature-ghost { position: absolute; z-index: 0; inset-inline-end: -.1em; top: -.42em; font-family: var(--font-display); font-size: clamp(6rem, 4rem + 9vw, 16rem); line-height: 1; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--c-gold-2) 20%, transparent); pointer-events: none; user-select: none; }
+html[dir="rtl"] .feature-ghost { font-weight: var(--fw-bold); }
+.feature-text > * { position: relative; z-index: 1; }
+.feature-text > .feature-ghost { z-index: 0; }
+.chapter { overflow: clip; }
+
+/* ---- Scenes without scripts: the scorecard's bars follow one another; medals are struck as their row arrives; the
+   bloodline tree draws itself; the pedigree unfolds generation by generation ---- */
+.sc-bar i { transition-delay: calc(var(--i, 0) * 120ms + 150ms); }
+.reveal-pre.stagger > li .medal, .reveal-pre .cabinet-item svg { transform: scale(1.6); opacity: 0; }
+.reveal-pre.stagger.in > li .medal, .reveal-pre.in .cabinet-item svg { transform: none; opacity: 1; transition: transform 700ms var(--ease-spring) calc(var(--i, 0) * 70ms + 250ms), opacity 400ms var(--ease-out) calc(var(--i, 0) * 70ms + 250ms); }
+.line-tree path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.in .line-tree path, html.no-js .line-tree path, html.reduce .line-tree path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s var(--ease-out-expo) 200ms; }
+.reveal-pre .ped-box { opacity: 0; transform: translateX(-14px); }
+html[dir="rtl"] .reveal-pre .ped-box { transform: translateX(14px); }
+.reveal-pre.in .ped-box { opacity: 1; transform: none; transition: opacity 500ms var(--ease-out), transform 800ms var(--ease-out-expo); }
+.reveal-pre.in .g2 .ped-box { transition-delay: 150ms; } .reveal-pre.in .g3 .ped-box { transition-delay: 300ms; } .reveal-pre.in .g4 .ped-box { transition-delay: 450ms; } .reveal-pre.in .g5 .ped-box { transition-delay: 600ms; }
+/* the pedigree lights the line back to the horse (site.js adds .lit along the hovered path) */
+.ped-box { transition: opacity var(--dur-md) var(--ease-out), background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out); cursor: default; }
+.ped5.has-lit .ped-box:not(.lit) { opacity: .38; }
+.ped-box.lit { background: color-mix(in srgb, var(--c-gold) 18%, var(--bg-2)); border-inline-start-color: var(--c-gold-2); }
+.ped5 .g1 .ped-box.lit { background: var(--c-navy); }
+.ped5.has-lit td:not(.lit-td)::after, .ped5.has-lit td:not(.lit-td)::before { opacity: .35; }
+.ped5 td.lit-td::after, .ped5 td.lit-td::before { border-color: var(--c-gold-2); }
+.ped-box:focus-visible { outline: 2px solid var(--c-gold-2); outline-offset: 2px; }
+
+/* ---- Cameos: double gold rings on the small portraits (bloodlines, team) ---- */
+.line-photo, .expert-photo { border: 0; box-shadow: 0 0 0 1px var(--rule-gold), 0 0 0 5px var(--bg), 0 0 0 6px color-mix(in srgb, var(--c-gold) 40%, transparent), 0 18px 40px -18px var(--c-navy-deep); }
+.expert-photo { aspect-ratio: 4 / 5; border-radius: 50% / 40%; object-position: 50% 20%; }
+.line-horses a:hover .line-photo { box-shadow: 0 0 0 1px var(--c-gold-2), 0 0 0 5px var(--bg), 0 0 0 6px var(--c-gold-2), 0 18px 40px -18px var(--c-navy-deep); }
+
+/* ---- The viewing room: a spotlight behind the print, the print edged in gold ---- */
+.lb { background: radial-gradient(60% 50% at 50% 45%, color-mix(in srgb, var(--c-navy) 90%, transparent) 0%, color-mix(in srgb, var(--c-navy-deep) 96%, transparent) 70%); }
+.lb-stage img { box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-gold-2) 55%, transparent), 0 0 0 8px color-mix(in srgb, var(--c-navy-deep) 60%, transparent), 0 60px 120px -40px var(--c-navy-deep); transition: transform 600ms var(--ease-out-expo); }
+.lb-cap { font-family: var(--font-accent); font-style: italic; font-size: 1.25rem; color: var(--c-gold-soft); }
+html[dir="rtl"] .lb-cap { font-family: var(--font-display); font-style: normal; }
+
+/* ---- The phone menu opens from the thumb (site.js sets --ox/--oy from the button) ---- */
+@media (max-width: 1199px) and (prefers-reduced-motion: no-preference) {
+  .nav-panel { transform: none; opacity: 1; clip-path: circle(0px at var(--ox, 90%) var(--oy, 36px)); transition: clip-path 650ms var(--ease-in-out-quint); visibility: hidden; }
+  .nav-panel.open { clip-path: circle(150% at var(--ox, 90%) var(--oy, 36px)); visibility: visible; }
+}
+
+/* ---- The cursor speaks: a gold pill says what the thing under it is ---- */
+.cursor-label { position: absolute; top: 50%; left: 50%; translate: 20px 18px; padding: 7px 14px; border-radius: var(--r-pill); background: var(--c-gold-2); color: var(--c-navy-deep); font-family: var(--font-text); font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; scale: 0; transform-origin: 0 0; transition: scale 350ms var(--ease-spring); }
+html[dir="rtl"] .cursor-label { left: auto; right: 50%; translate: -20px 18px; transform-origin: 100% 0; letter-spacing: 0; text-transform: none; font-size: .8rem; }
+.cursor.say .cursor-label { scale: 1; }
+.cursor.say::before { transform: scale(.4); }
+
+/* ---- The chapter rail (computers): 01–10 in the left gutter, the current chapter in gold ---- */
+.chapter-rail { position: fixed; z-index: var(--z-sticky); inset-inline-start: 14px; top: 50%; transform: translateY(-50%); display: none; gap: 6px; list-style: none; margin: 0; padding: 0; }
+@media (min-width: 1360px) { .chapter-rail { display: grid; } }
+.chapter-rail a { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; color: color-mix(in srgb, var(--c-slate) 70%, transparent); font-family: var(--font-accent); font-style: italic; font-size: .9rem; text-decoration: none; transition: color var(--dur) var(--ease-out); }
+.chapter-rail a::before { content: ""; width: 10px; height: 1px; background: currentColor; transition: width var(--dur-md) var(--ease-out-expo); }
+.chapter-rail a:hover, .chapter-rail a.on { color: var(--c-gold); }
+.chapter-rail a.on::before { width: 22px; }
+.chapter-rail.on-night a { color: color-mix(in srgb, var(--c-soft) 55%, transparent); }
+.chapter-rail.on-night a.on, .chapter-rail.on-night a:hover { color: var(--c-gold-soft); }
+html[dir="rtl"] .chapter-rail a { font-family: var(--font-display); font-style: normal; }
+
+/* ---- The photograph travels to its page (cross-document view transitions, where the browser has them) ---- */
+::view-transition-group(horse-photo) { animation-duration: 650ms; animation-timing-function: var(--ease-in-out-quint); overflow: clip; }
+::view-transition-old(horse-photo), ::view-transition-new(horse-photo) { object-fit: cover; mix-blend-mode: normal; height: 100%; }
+::view-transition-group(horse-name) { animation-duration: 650ms; animation-timing-function: var(--ease-in-out-quint); }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .seal svg { animation: none; }
+  .hero-frame rect { stroke-dashoffset: 0; animation: none; }
+  html.js .hero { position: relative; }
+  .reveal-pre.stagger > li .medal, .reveal-pre .cabinet-item svg, .reveal-pre .ped-box { transform: none; opacity: 1; }
+  .line-tree path { stroke-dashoffset: 0; }
+}
+
+/* ===== The third pass: the gate and the book (the design panel's heritage and typography lenses) ===== */
+
+/* ---- Foil that catches the light as the page scrolls: where the browser drives animations from scroll, every gold
+   word and numeral is swept as it crosses the viewport, like a foil-stamped cover tilted under a lamp ---- */
+@supports (animation-timeline: view()) {
+  .gold-text, .foil, .footer-wordmark, .wm-foil { animation: foil-scroll linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  @keyframes foil-scroll { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+}
+
+/* ---- The calligraphic ghosts: a chapter's name in the other language stands behind its title (Arabic in Amiri on
+   the English edition, English in Marcellus capitals on the Arabic one); a horse's other name behind its facts ---- */
+.chapter-head[data-ghost]::before, .story-text[data-ghost]::before, .contact-info[data-ghost]::before, .page-hero .container[data-ghost]::before, .profile-info[data-ghost]::before {
+  content: attr(data-ghost); position: absolute; z-index: 0; inset-inline-start: -.04em; inset-inline-end: auto; top: -.5em; font-family: "Amiri", var(--font-display); font-style: normal; font-weight: 400;
+  font-size: clamp(5.5rem, 3.5rem + 9vw, 15rem); line-height: 1; letter-spacing: 0; white-space: nowrap; direction: rtl; unicode-bidi: isolate; color: var(--c-gold); opacity: .085; pointer-events: none; user-select: none; }
+.night .chapter-head[data-ghost]::before, .deep .chapter-head[data-ghost]::before, .contact-info[data-ghost]::before, .page-hero .container[data-ghost]::before { color: var(--c-gold-soft); opacity: .09; }
+html[dir="rtl"] .chapter-head[data-ghost]::before, html[dir="rtl"] .story-text[data-ghost]::before, html[dir="rtl"] .contact-info[data-ghost]::before, html[dir="rtl"] .page-hero .container[data-ghost]::before, html[dir="rtl"] .profile-info[data-ghost]::before {
+  font-family: var(--font-display); text-transform: uppercase; letter-spacing: .06em; direction: ltr; font-size: clamp(4.5rem, 3rem + 7vw, 11rem); top: -.42em; }
+.page-hero .container[data-ghost]::before { inset-inline-start: auto; inset-inline-end: -.04em; top: -.12em; font-size: clamp(6rem, 4rem + 10vw, 17rem); }
+.page-hero .container > * { position: relative; z-index: 1; }
+.profile-info { position: relative; }
+.profile-info[data-ghost]::before { top: -.26em; inset-inline-start: auto; inset-inline-end: -.06em; font-size: clamp(5rem, 3rem + 7vw, 11rem); opacity: .06; }
+.profile-info > * { position: relative; z-index: 1; }
+@media (min-width: 1024px) { .profile-info[data-ghost]::before { font-size: 14vw; } }
+
+/* ---- The 'unwan' chapter opener: the index inside a slim gold cartouche, a palmette finial under the lead ---- */
+.chapter-index { position: relative; padding: 7px 18px 8px; border: 1px solid var(--rule-gold); border-radius: var(--r-pill); }
+.chapter-index::before, .chapter-index::after { content: ""; position: absolute; top: 50%; width: 7px; height: 7px; translate: 0 -50%; rotate: 45deg; background: var(--bg); border: 1px solid var(--c-gold); opacity: 1; }
+.chapter-index::before { inset-inline-start: -4px; }
+.chapter-index::after { inset-inline-end: -4px; }
+html[dir="rtl"] .chapter-index { padding-block: 4px 9px; line-height: 1.3; }
+.chapter-head .lead::after, .story-text .lead::after { content: ""; display: block; width: min(320px, 70%); height: 16px; margin-top: var(--s-5); background: var(--gold); -webkit-mask: var(--finial) 0 50% / 320px 16px no-repeat; mask: var(--finial) 0 50% / 320px 16px no-repeat; opacity: .85; }
+html[dir="rtl"] .chapter-head .lead::after { -webkit-mask-position: 100% 50%; mask-position: 100% 50%; transform: scaleX(-1); }
+.orn-finial { width: min(320px, 70%); height: 16px; color: var(--c-gold-2); margin-top: clamp(28px, 2rem + 1.5vw, 56px); opacity: .9; }
+html[dir="rtl"] .orn-finial { transform: scaleX(-1); }
+.page-hero-rule { display: none; }
+
+/* ---- The khatam: one giant eight-pointed star bleeds off the end side of every midnight room and turns slowly ---- */
+.khatam-wm { position: absolute; z-index: 0; inset-inline-end: -22vw; top: 4%; width: 72vw; height: 72vw; max-width: 1200px; max-height: 1200px; color: var(--c-gold-soft); opacity: .055; pointer-events: none; overflow: visible; animation: khatam-turn 180s linear infinite; }
+@keyframes khatam-turn { to { transform: rotate(360deg); } }
+.night .khatam-wm, .deep .khatam-wm { z-index: 0; }
+.night > .container, .deep > .container { position: relative; z-index: 1; }
+.page-hero .khatam-wm { width: 62vw; height: 62vw; top: -16vw; inset-inline-end: -18vw; opacity: .05; }
+.cta-band .khatam-wm { inset-inline-end: auto; inset-inline-start: 50%; top: -34vw; width: 96vw; height: 96vw; translate: -50% 0; opacity: .045; }
+html[dir="rtl"] .cta-band .khatam-wm { translate: 50% 0; }
+.cta-band .cta-inner { position: relative; z-index: 1; }
+.about .chapter.night .khatam-wm { top: -10%; }
+
+/* ---- The hero as a gate: a pointed arch in gold hairline draws itself up around the title after the doors part,
+   the keystone blooms; the stud's name in the other script above the eyebrow; folios in the frame's corners ---- */
+.hero { --copy-w: 100%; }
+.hero-arch { display: none; position: absolute; z-index: 0; top: calc(var(--hdr-h) - 12px); bottom: -12px; inset-inline-start: calc(var(--gutter) + 28px - 76px); width: calc(var(--copy-w) + 152px); height: auto; color: var(--c-gold-2); pointer-events: none; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1; opacity: .8; mix-blend-mode: screen; }
+.hero-arch .gate { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.7s var(--ease-in-out-quint) .55s forwards; }
+.hero-arch .gate.inner { opacity: .5; animation-delay: .85s; }
+.hero-arch .bloom { opacity: 0; animation: bloom-in 1.4s var(--ease-out) 2s forwards; }
+@keyframes bloom-in { to { opacity: 1; } }
+html.intro .hero-arch .gate { animation-delay: 1.85s; }
+html.intro .hero-arch .gate.inner { animation-delay: 2.15s; }
+html.intro .hero-arch .bloom { animation-delay: 3.3s; }
+@media (min-width: 1024px) {
+  .hero { --copy-w: min(640px, 44vw); }
+  .hero-arch { display: block; }
+  .hero-copy { max-width: var(--copy-w); }
+  .hero-frame rect { stroke: color-mix(in srgb, var(--c-gold-soft) 38%, transparent); }
+}
+.hero-copy { position: relative; z-index: 1; container-type: inline-size; }
+.hero-arabic { display: block; font-family: "Amiri", var(--font-display); font-size: 1.55rem; line-height: 1.2; color: var(--c-gold-2); margin-bottom: var(--s-3); text-align: left; }
+html[dir="rtl"] .hero-arabic { text-align: right; }
+html[dir="rtl"] .hero-arabic { font-family: var(--font-display); font-size: .8rem; letter-spacing: .3em; text-transform: uppercase; }
+.hero-folio { position: absolute; z-index: 1; top: calc(var(--hdr-h) + 24px); display: none; white-space: nowrap; font: 600 .625rem/1 var(--font-text); letter-spacing: .28em; text-transform: uppercase; color: color-mix(in srgb, var(--c-gold-soft) 72%, transparent); }
+.hero-folio.start { inset-inline-start: calc(var(--gutter) + 28px); }
+.hero-folio.end { inset-inline-end: calc(var(--gutter) + 28px); }
+html[dir="rtl"] .hero-folio { letter-spacing: 0; text-transform: none; font-size: .8rem; }
+@media (min-width: 900px) { .hero-folio { display: block; } }
+/* the cover line: the gold word drops onto its own line and grows until it fills the column edge to edge */
+.hero-copy h1.cover { max-width: none; }
+.hero-copy h1 .w-key { display: block; margin-top: .06em; padding-block: .02em .1em; margin-block: 0 -.06em; line-height: .88; }
+.hero-copy h1 .w-key > span { display: inline-block; font-size: min(clamp(4.25rem, 2rem + 9vw, 11.5rem), calc(100cqi / var(--chars, 8) * 1.72)); letter-spacing: -.03em; line-height: .88; padding-inline-end: .04em; }
+html[dir="rtl"] .hero-copy h1 .w-key { line-height: 1.1; padding-block: .12em .22em; margin-block: -.06em -.14em; }
+html[dir="rtl"] .hero-copy h1 .w-key > span { font-size: min(clamp(3.5rem, 1.8rem + 7vw, 8.5rem), calc(100cqi / var(--chars, 8) * 1.45)); letter-spacing: 0; line-height: 1.1; }
+@media (max-width: 899px) { .hero-copy h1 .w-key > span { font-size: min(clamp(3rem, 1.6rem + 7vw, 5rem), calc(100cqi / var(--chars, 8) * 1.72)); } }
+
+/* ---- Mixed settings: one word of a title in Cormorant italic against the Marcellus roman (Amiri regular against
+   Amiri bold on the Arabic edition) ---- */
+.w-it > span { font-family: var(--font-accent); font-style: italic; font-weight: 300; font-size: 1.16em; letter-spacing: -.01em; vertical-align: -.03em; padding-inline-end: .06em; }
+.split .w.w-it { padding-block: .08em .2em; margin-block: -.08em -.2em; }
+html[dir="rtl"] .w-it > span { font-family: var(--font-display); font-style: normal; font-weight: 400; font-size: 1.04em; letter-spacing: 0; vertical-align: 0; padding: 0; }
+html[dir="rtl"] .split .w.w-it { padding-block: .16em .24em; margin-block: -.16em -.24em; }
+
+/* ---- Arabic names on the English pages are set in Amiri; Latin names on the Arabic pages in Marcellus ---- */
+html:not([lang="ar"]) :is(.hcard-other, .alt-name, .nameplate-alt, .ph-name)[lang="ar"] { font-family: "Amiri", "IBM Plex Sans Arabic", serif; font-style: normal; font-weight: 400; }
+html[lang="ar"] :is(.hcard-other, .alt-name, .nameplate-alt, .ph-name)[lang="en"] { font-family: var(--font-display); font-style: normal; font-weight: 400; letter-spacing: .04em; }
+
+/* ---- The arcade: every horse photograph under a shallow pointed arch with a gold rim; on hover a second arch draws
+   itself from the base to the apex; the title count sits at the keystone ---- */
+.hcard-frame { position: relative; display: block; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform var(--dur-md) var(--ease-out); transform-style: preserve-3d; }
+.hcard-media { display: block; transform: none; clip-path: url(#arch-cards); border-radius: 0; }
+.hcard-media img { object-position: 50% 18%; }
+.hcard-media::before { content: none; }
+.hcard-arch { position: absolute; z-index: 5; inset: -6px -6px 0; width: auto; height: auto; fill: none; stroke-width: 1; pointer-events: none; overflow: visible; }
+.hcard-arch .rim { stroke: var(--rule-gold); transition: stroke var(--dur) var(--ease-out); }
+.hcard-arch .draw { stroke: var(--c-gold-2); stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .9s var(--ease-out-expo); }
+.hcard:hover .hcard-arch .draw, .hcard:focus-visible .hcard-arch .draw { stroke-dashoffset: 0; }
+.hcard:hover .hcard-arch .rim { stroke: var(--c-gold-soft); }
+.hcard-medals { inset-block-start: auto; inset-inline-end: auto; top: 0; inset-inline-start: 50%; translate: -50% -50%; z-index: 6; border: 1px solid var(--rule-gold); }
+html[dir="rtl"] .hcard-medals { translate: 50% -50%; }
+.hcard-body::before { content: ""; display: block; width: 40px; height: 1px; margin-bottom: 2px; background: var(--metal-line); }
+.hcard-parents { font-family: var(--font-accent); font-style: italic; font-weight: 400; font-size: 1.1rem; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+html[dir="rtl"] .hcard-parents { font-family: var(--font-text); font-style: normal; font-size: var(--t-small); }
+.hcard-parents .x { width: 12px; height: 12px; color: var(--c-gold-2); }
+.hcard-meta { font-size: .6875rem; letter-spacing: .2em; }
+/* the plate: the first horse of each category, twice the width, its name set large across the lower edge of the photograph */
+@media (min-width: 900px) {
+  .hgrid.editorial > .hcard:first-child { grid-column: span 2; }
+  .hgrid.editorial > .hcard:first-child .hcard-media { aspect-ratio: 4 / 3; }
+  .hgrid.editorial > .hcard:first-child .hcard-media img { object-position: 50% 30%; }
+  .hgrid.editorial > .hcard:first-child .hcard-body { margin-top: calc(-1 * var(--s-4) - 1.3em); padding-inline-start: var(--s-5); z-index: 7; }
+  .hgrid.editorial > .hcard:first-child .hcard-body::before { display: none; }
+  .hgrid.editorial > .hcard:first-child .hcard-name { font-size: clamp(2rem, 1.2rem + 2vw, 3.5rem); letter-spacing: .01em; line-height: .95; width: fit-content; max-width: 10em; padding: .12em .5em .06em 0; background: var(--bg); text-wrap: balance; }
+  html[dir="rtl"] .hgrid.editorial > .hcard:first-child .hcard-name { padding: .12em 0 .06em .5em; line-height: 1.25; }
+  .hgrid.editorial > .hcard:first-child .hcard-medals { inset-inline-start: auto; inset-inline-end: var(--s-4); top: var(--s-4); translate: none; }
+}
+/* the bookplate: a horse without a photograph gets a monogrammed tile (the inner arch hairline, the seal turned a
+   little, the initials in foil, the other-language name, the category up the side) */
+.hcard-ph.plate::after { content: ""; position: absolute; inset: 12px; clip-path: url(#arch-cards); box-shadow: inset 0 0 0 1px var(--rule-gold); pointer-events: none; }
+.hcard-ph .ph-name { position: absolute; bottom: 15%; inset-inline: 28px; text-align: center; font-family: "Amiri", var(--font-display); font-size: 1.2rem; line-height: 1.2; color: var(--c-gold-soft); opacity: .9; }
+html[lang="ar"] .hcard-ph .ph-name { font-family: var(--font-display); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.hcard-ph .ph-side { position: absolute; top: 30px; inset-inline-end: 24px; writing-mode: vertical-rl; font: 600 .6rem/1 var(--font-text); letter-spacing: .3em; text-transform: uppercase; color: color-mix(in srgb, var(--c-gold-soft) 70%, transparent); }
+html[dir="rtl"] .hcard-ph .ph-side { writing-mode: horizontal-tb; letter-spacing: 0; text-transform: none; font-size: .75rem; top: 28px; }
+.hcard-ph .ph-initials { font-size: clamp(1.8rem, 1.6vw + 1.1rem, 3rem); letter-spacing: .12em; }
+
+/* ---- The profile masthead: the horse's name set as a nameplate, its other name at optical parity beside it on the
+   same baseline, a registry line beneath ---- */
+.nameplate { display: grid; gap: var(--s-3); container-type: inline-size; }
+.nameplate h1 { font-size: min(var(--t-display), calc(100cqi / var(--chars, 8) * 1.3)); text-transform: uppercase; letter-spacing: .04em; line-height: .92; max-width: none; margin: 0; }
+html[dir="rtl"] .nameplate h1 { text-transform: none; letter-spacing: 0; line-height: 1.15; font-size: min(clamp(3rem, 1.6rem + 6vw, 7.5rem), calc(100cqi / var(--chars, 8) * 1.4)); }
+.nameplate-rule { display: none; }
+.nameplate-alt { margin: 0; font-family: "Amiri", serif; font-weight: 400; font-size: clamp(1.9rem, 1.2rem + 2.6vw, 4.25rem); line-height: 1; color: var(--c-gold-soft); }
+html[dir="rtl"] .nameplate-alt { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .06em; font-size: clamp(1.4rem, 1rem + 1.8vw, 2.75rem); }
+@media (min-width: 1024px) {
+  .nameplate { grid-template-columns: auto 1fr auto; align-items: baseline; gap: var(--s-6); }
+  .nameplate-rule { display: block; height: 1px; min-width: 48px; background: var(--metal-line); align-self: center; }
+}
+.registry { margin: 0; font-family: var(--font-accent); font-style: italic; font-weight: 300; font-size: clamp(1.2rem, 1.05rem + .7vw, 1.7rem); line-height: 1.4; color: var(--c-soft); }
+.registry b { font-family: var(--font-display); font-style: normal; font-weight: 400; font-size: .76em; text-transform: uppercase; letter-spacing: .08em; color: var(--c-ivory); }
+.registry .dot { color: var(--c-gold-2); margin-inline: .15em; }
+html[dir="rtl"] .registry { font-family: var(--font-text); font-style: normal; font-size: var(--t-lead); }
+html[dir="rtl"] .registry b { text-transform: none; letter-spacing: 0; font-weight: var(--fw-bold); font-size: 1em; }
+.page-hero.has-nameplate .alt-name { display: none; }
+
+/* ---- The judges' card as a certificate: rosettes at the corners, the stud's seal stamped over the top corner, each
+   bar ending in a reed-pen rhombus with the judges' range as a hairline behind it, the criteria captioned in the
+   other language ---- */
+.scorecard.cert { overflow: visible; }
+.sc-corner { position: absolute; z-index: 2; width: 18px; height: 18px; padding: 2px; background: var(--bg); color: var(--gold); }
+.night .sc-corner, .deep .sc-corner { background: var(--c-navy-ink); }
+.sc-corner.tl { top: -9px; inset-inline-start: -9px; } .sc-corner.tr { top: -9px; inset-inline-end: -9px; } .sc-corner.bl { bottom: -9px; inset-inline-start: -9px; } .sc-corner.br { bottom: -9px; inset-inline-end: -9px; }
+.seal-stamp { position: absolute; z-index: 3; top: -28px; inset-inline-end: -16px; width: 88px; height: 88px; rotate: -8deg; opacity: .95; filter: drop-shadow(0 8px 16px color-mix(in srgb, var(--c-navy-deep) 45%, transparent)); }
+.seal-stamp svg { animation: none; }
+.seal-stamp::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--bg); opacity: .96; }
+.night .seal-stamp::before, .deep .seal-stamp::before { background: var(--c-navy-ink); }
+.scorecard.compact .seal-stamp { width: 68px; height: 68px; top: -22px; inset-inline-end: -10px; }
+html[dir="rtl"] .seal-stamp { rotate: 8deg; }
+.sc-bar { overflow: visible; }
+.sc-bar i.range { inset: auto; top: 50%; inset-inline-start: var(--lo, 0%); width: calc(var(--hi, 0%) - var(--lo, 0%)); height: 1px; translate: 0 -50%; background: var(--c-gold-soft); opacity: 0; transform: none; border-radius: 0; transition: opacity 600ms var(--ease-out) 1.2s; }
+.in .sc-bar i.range, .scorecard.in .sc-bar i.range, html.no-js .sc-bar i.range, html.reduce .sc-bar i.range { opacity: .6; transform: none; }
+.sc-bar i:not(.range)::after { content: ""; position: absolute; top: 50%; inset-inline-end: -4px; width: 8px; height: 8px; translate: 0 -50%; rotate: 45deg; background: var(--c-gold-2); }
+.sc-row dt small { display: block; font-family: "Amiri", serif; font-size: 12px; line-height: 1.2; letter-spacing: 0; text-transform: none; opacity: .65; }
+html[dir="rtl"] .sc-row dt small { font-family: var(--font-text); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+@media (max-width: 479px) { .sc-row dt small { display: inline; margin-inline-start: 6px; } }
+
+/* ---- Honours set like a stud book: a double rule under the table head, the show in Marcellus, the score in Cormorant
+   figures, placings as ordinals, a dotted leader running to the show ---- */
+.results-table th { border-bottom: 3px double var(--rule-gold); }
+.results-table td:nth-child(2) { font-family: var(--font-display); font-size: 1.05rem; }
+html[dir="rtl"] .results-table td:nth-child(2) { font-weight: var(--fw-bold); }
+.results-table .score { font-family: var(--font-accent); font-style: italic; font-size: 1.3rem; color: var(--text); font-variant-numeric: tabular-nums lining-nums; margin-inline-start: 6px; }
+html[dir="rtl"] .results-table .score { font-family: var(--font-display); font-style: normal; font-size: 1.1rem; }
+.ord sup { font-family: var(--font-accent); font-style: italic; font-weight: 400; font-size: .62em; vertical-align: .5em; line-height: 0; margin-inline-start: 1px; }
+.medal .ord sup { display: none; }
+.leader { display: none; flex: 1; min-width: 24px; height: 1px; align-self: center; background: radial-gradient(circle, var(--text-2) .8px, transparent 1.1px) 0 50% / 6px 1px repeat-x; opacity: .5; }
+@media (min-width: 720px) {
+  .medal-ledger .ml-show, .result-row .rr-show { display: grid; grid-template-columns: minmax(24px, 1fr) auto; align-items: baseline; column-gap: var(--s-3); text-align: end; }
+  .medal-ledger .ml-show .leader, .result-row .rr-show .leader { display: block; grid-row: 1; align-self: center; }
+  .result-row .rr-show small { grid-column: 2; }
+}
+
+/* ---- The pull quote: larger, the opening mark hung into the margin, an attribution under a gold rule ---- */
+.quote { font-size: clamp(2rem, 1.4rem + 2.6vw, 3.9rem); line-height: 1.14; max-width: 17em; hanging-punctuation: first; padding-inline-start: 0; }
+.quote .q { font-size: 2.4em; inset-inline-start: -.55em; top: -.12em; opacity: .22; }
+html[dir="rtl"] .quote .q { inset-inline-start: -.7em; top: -.2em; font-family: var(--font-display); }
+.quote .quote-by { display: block; margin-top: var(--s-5); font-family: var(--font-text); font-style: normal; font-weight: var(--fw-semibold); font-size: var(--t-caps); line-height: 1; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-text); }
+.quote .quote-by::before { content: ""; display: inline-block; width: 48px; height: 1px; margin-inline-end: var(--s-3); background: var(--metal-line); vertical-align: middle; }
+html[dir="rtl"] .quote .quote-by { letter-spacing: 0; text-transform: none; font-size: var(--t-small); }
+
+/* ---- Chapter openings: a drop cap in gold foil and the first words in small caps; the opening paragraph a size
+   larger in upright Cormorant (Amiri on the Arabic edition, opening with a gold star) ---- */
+p.opens { font-family: var(--font-accent); font-weight: 400; font-size: clamp(1.2rem, 1.05rem + .6vw, 1.5rem); line-height: 1.5; color: var(--text); }
+html[dir="rtl"] p.opens { font-family: "Amiri", var(--font-text); font-size: clamp(1.2rem, 1.05rem + .5vw, 1.4rem); line-height: 1.85; }
+.dcap { float: inline-start; font-family: var(--font-display); font-weight: 400; font-size: 4.4em; line-height: .78; padding: .08em .12em 0 0; margin-bottom: -.1em; }
+html[dir="rtl"] .dcap { padding: .08em 0 0 .12em; }
+@supports (initial-letter: 3) { .dcap { float: none; initial-letter: 3; line-height: 1; padding: 0 .1em 0 0; margin: 0; } }
+.lede { font-family: var(--font-text); font-weight: var(--fw-semibold); font-size: .8em; letter-spacing: .14em; text-transform: uppercase; }
+.dcap-ar { display: inline-block; width: 1.25em; height: 1.25em; margin-inline-end: .4em; vertical-align: -.28em; color: var(--c-gold); }
+.article .prose > p:first-child::first-letter { float: none; font-size: inherit; line-height: inherit; padding: 0; margin: 0; color: inherit; }
+
+/* ---- Framed plates: a double rule inside the frame and the filigree corners drawing in ---- */
+.pgallery-main.framed::before, .pgallery-main.framed::after { content: ""; position: absolute; z-index: 2; inset: 10px; border: 1px solid var(--rule-gold); pointer-events: none; }
+.pgallery-main.framed::after { inset: 14px; border-color: color-mix(in srgb, var(--c-gold) 25%, transparent); }
+.framed .orn-corner { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.reveal.framed .orn-corner, .reveal .framed .orn-corner { stroke-dashoffset: 1; transition: stroke-dashoffset 1s var(--ease-out-expo) .3s, translate 1s var(--ease-out-expo) .3s; }
+.reveal.framed .orn-corner.tl, .reveal.framed .orn-corner.bl { translate: -8px 0; } .reveal.framed .orn-corner.tr, .reveal.framed .orn-corner.br { translate: 8px 0; }
+.reveal.framed.in .orn-corner, html.no-js .framed .orn-corner, html.reduce .framed .orn-corner { stroke-dashoffset: 0; translate: 0 0; }
+.arched.framed .orn-corner.bl { bottom: -4px; left: -4px; } .arched.framed .orn-corner.br { bottom: -4px; right: -4px; }
+.arched.framed .orn-corner { color: var(--c-gold-2); filter: none; opacity: .95; }
+.gallery a.framed .orn-corner { opacity: 0; transition: opacity var(--dur-md) var(--ease-out); }
+.gallery a.framed:hover .orn-corner { opacity: .95; }
+.gallery a.framed .orn-corner.tl { top: 10px; left: 10px; } .gallery a.framed .orn-corner.tr { top: 10px; right: 10px; } .gallery a.framed .orn-corner.bl { bottom: 10px; left: 10px; } .gallery a.framed .orn-corner.br { bottom: 10px; right: 10px; }
+
+/* ---- The shajara: generation heads in roman numerals, sires marked with a filled star and dams with a hollow one ---- */
+.ped5 thead th { padding: 0 0 var(--s-3); font-family: var(--font-accent); font-style: italic; font-weight: 400; font-size: 1.15rem; color: var(--gold-text); text-align: start; letter-spacing: .04em; }
+html[dir="rtl"] .ped5 thead th { font-family: var(--font-display); font-style: normal; }
+.ped-box small::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-inline-end: 6px; rotate: 45deg; background: var(--c-gold); vertical-align: 0; }
+.ped-box.dam small::before { background: transparent; box-shadow: inset 0 0 0 1px var(--c-gold); }
+.ped-box { border-radius: 2px 12px 12px 2px; }
+.ped-box.dam { border-radius: 12px 2px 2px 12px; }
+html[dir="rtl"] .ped-box { border-radius: 12px 2px 2px 12px; } html[dir="rtl"] .ped-box.dam { border-radius: 2px 12px 12px 2px; }
+
+/* ---- The title bands of inner pages as an iwan: the gate's arch stands on the end side, drawn after the words rise ---- */
+.page-hero { isolation: isolate; }
+.page-arch { position: absolute; z-index: 0; inset-inline-end: -6vw; top: -30%; width: 52vw; height: 150%; max-width: 900px; color: var(--c-gold-2); opacity: .4; pointer-events: none; fill: none; stroke: currentColor; stroke-width: 1; }
+.page-arch path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.6s var(--ease-in-out-quint) .5s forwards; }
+.page-arch .inner { opacity: .5; animation-delay: .8s; }
+.page-hero .container { z-index: 1; }
+.page-hero.has-photo .page-arch { opacity: .28; }
+@media (max-width: 899px) { .page-arch { width: 130vw; inset-inline-end: -50vw; top: -10%; height: 120%; } }
+
+/* ---- The footer signs off: SK in moving foil, Arabians as an outline (the Arabic name on the Arabic edition); the
+   colophon names the faces, as a printed book does ---- */
+.footer-wordmark:has(.wm-foil) { background: none; color: var(--c-gold-2); -webkit-text-fill-color: initial; animation: none; font-size: clamp(3.5rem, 1rem + 15vw, 17rem); letter-spacing: -.01em; line-height: .84; transform: translateY(14%); }
+.wm-foil { background: var(--metal); background-size: 240% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: foil-sheen 12s var(--ease-in-out) infinite; }
+.wm-line { color: transparent; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--c-gold-2) 55%, transparent); }
+html[lang="ar"] .footer-wordmark { font-family: var(--font-display); font-weight: var(--fw-bold); font-size: clamp(3rem, 1rem + 10vw, 11rem); letter-spacing: 0; line-height: 1.1; }
+.colophon { margin: var(--s-6) 0 0; text-align: center; font-size: .625rem; font-weight: var(--fw-semibold); letter-spacing: .24em; text-transform: uppercase; color: color-mix(in srgb, var(--c-soft) 70%, transparent); }
+html[dir="rtl"] .colophon { letter-spacing: 0; text-transform: none; font-size: var(--t-small); }
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-text, .foil, .footer-wordmark, .wm-foil { animation: none; background-position: 40% 50%; }
+  .khatam-wm { animation: none; }
+  .hero-arch .gate, .page-arch path { stroke-dashoffset: 0; animation: none; }
+  .hero-arch .bloom { opacity: 1; animation: none; }
+  .hcard-frame { transform: none !important; }
+  .hcard-arch .draw { transition: none; }
+  .framed .orn-corner { stroke-dashoffset: 0 !important; translate: 0 0 !important; transition: none; }
+  .sc-bar i.range { opacity: .6; transition: none; }
+}
+
+/* ---- The Portrait Wall: the featured champion full-bleed to the screen edge and taller than the screen, under the
+   tall arch, staying in place while his record scrolls beside him; the name set at cover size crosses the photograph's
+   edge; the ghost name grows ---- */
+@media (min-width: 1200px) {
+  .feature.bleed { width: 100vw; margin-inline: calc(50% - 50vw); display: grid; gap: 0; align-items: start;
+    grid-template-columns: [full-start] var(--gutter) [content-start] repeat(12, minmax(0, 1fr)) [content-end] var(--gutter) [full-end]; }
+  .feature.bleed .feature-media { grid-column: full-start / 8; aspect-ratio: auto; min-height: 108svh; position: sticky; top: 0; border-radius: 0; margin: 0; align-self: start; }
+  .feature.bleed .feature-media > a { position: absolute; inset: 0; display: block; }
+  .feature.bleed .feature-media > a > img, .feature.bleed .feature-media .hcard-ph { position: absolute; inset: 0; width: 100%; height: 112%; object-fit: cover; object-position: 50% 20%; }
+  .feature.bleed .feature-media.arched::before { inset: -1px -10px -10px; }
+  .feature.bleed .feature-media.arched::after { inset: 0 -9px -9px; }
+  .feature.bleed .feature-medal { inset-inline-end: 24px; bottom: 10%; width: clamp(72px, 7vw, 110px); }
+  .feature.bleed .feature-text { grid-column: 8 / content-end; padding: var(--s-8) 0 var(--s-8) var(--s-7); position: relative; z-index: 2; align-content: start; }
+  .feature.bleed .feature-text h3 { font-size: var(--t-h1); line-height: .95; margin-inline-start: -1.6em; max-width: 8em; text-wrap: balance; position: relative; text-shadow: 0 2px 30px var(--c-navy-deep); }
+  .feature.bleed .feature-text h3::before { content: ""; position: absolute; inset: -.1em -.25em; z-index: -1; background: color-mix(in srgb, var(--c-navy-deep) 60%, transparent); filter: blur(24px); border-radius: 50%; }
+  .feature.bleed .feature-ghost { font-size: clamp(7rem, 4rem + 9vw, 15rem); inset-inline-end: -.05em; top: -.3em; -webkit-text-stroke-color: color-mix(in srgb, var(--c-gold-2) 24%, transparent); }
+  .feature.bleed .arched.framed .orn-corner.bl { left: 16px; bottom: 16px; }
+  .feature.bleed .arched.framed .orn-corner.br { right: 6px; bottom: 16px; }
+  html[dir="rtl"] .feature.bleed .feature-text { padding: var(--s-8) var(--s-7) var(--s-8) 0; }
+}
+@media (min-width: 1200px) and (prefers-reduced-motion: reduce) { .feature.bleed .feature-media { position: relative; } }
+
+/* ---- The judges' matrix: a column per judge, a row per criterion, every 20 marked with a gold rhombus, the panel
+   average in Marcellus at the end; the line breeders repeat beneath ---- */
+.sc-matrix-wrap { margin-top: var(--s-2); }
+.sc-matrix { width: 100%; border-collapse: collapse; font-family: var(--font-accent); font-weight: 400; font-size: 1.1rem; font-variant-numeric: tabular-nums lining-nums; }
+.sc-matrix th, .sc-matrix td { padding: 6px 8px; text-align: center; border-bottom: 1px solid var(--rule); }
+.sc-matrix thead th { font-family: var(--font-text); font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: .14em; color: var(--gold-text); border-bottom: 3px double var(--rule-gold); padding-bottom: 8px; }
+.sc-matrix thead th abbr { text-decoration: none; cursor: help; border-bottom: 1px dotted color-mix(in srgb, var(--c-gold) 60%, transparent); }
+.sc-matrix tbody th { font-family: var(--font-text); font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); text-align: start; white-space: nowrap; }
+html[dir="rtl"] .sc-matrix tbody th { text-transform: none; letter-spacing: 0; font-size: var(--t-small); }
+.sc-matrix td { color: var(--text); }
+.sc-matrix td.sc-20 { color: var(--gold-text); position: relative; }
+.sc-matrix td.sc-20::after { content: ""; display: inline-block; width: 5px; height: 5px; margin-inline-start: 4px; vertical-align: .35em; rotate: 45deg; background: var(--c-gold-2); }
+.sc-matrix .sc-avg { font-family: var(--font-display); color: var(--text); border-inline-start: 1px solid var(--rule-gold); }
+.sc-matrix thead .sc-avg { font-family: var(--font-accent); font-style: italic; font-size: 1.1rem; letter-spacing: 0; text-transform: none; }
+html[dir="rtl"] .sc-matrix { font-family: var(--font-display); }
+.sc-matrix th:hover, .sc-matrix thead th:focus-within { color: var(--c-gold-2); }
+.sc-perfect { margin: 0; font-family: var(--font-accent); font-style: italic; font-weight: 400; font-size: 1.25rem; color: var(--gold-text); }
+.sc-perfect::before { content: ""; display: inline-block; width: 28px; height: 1px; margin-inline-end: 10px; vertical-align: middle; background: var(--metal-line); }
+html[dir="rtl"] .sc-perfect { font-family: var(--font-display); font-style: normal; font-size: 1.1rem; }
+@media (max-width: 639px) { .sc-matrix { font-size: 1rem; } .sc-matrix th, .sc-matrix td { padding: 5px 5px; } .sc-matrix tbody th { position: sticky; inset-inline-start: 0; background: var(--bg-2); } }
+
+/* ---- The parade (phones): the rows snap card by card, the centred horse at full size and colour while its
+   neighbours sit back; a gold line grows under the row and a counter follows; the hero takes a swipe and a gold
+   progress line fills over each slide; every touch has a press ---- */
+.hero-progress { display: none; width: 120px; height: 1px; background: color-mix(in srgb, var(--c-ivory) 25%, transparent); }
+.hero-progress i { display: block; height: 100%; background: var(--metal-line); transform: scaleX(0); transform-origin: 0 50%; }
+html[dir="rtl"] .hero-progress i { transform-origin: 100% 50%; }
+.hero-progress.run i { animation: hero-progress 7s linear forwards; }
+@keyframes hero-progress { to { transform: scaleX(1); } }
+.row-foot { display: none; align-items: center; gap: var(--s-4); margin-top: var(--s-3); }
+.row-progress { flex: 1; height: 1px; background: var(--rule); }
+.row-progress i { display: block; height: 100%; background: var(--metal-line); transform: scaleX(.08); transform-origin: 0 50%; transition: transform 500ms var(--ease-out-expo); }
+html[dir="rtl"] .row-progress i { transform-origin: 100% 50%; }
+.row-n { font-family: var(--font-accent); font-style: italic; font-size: 1rem; color: var(--gold-text); white-space: nowrap; }
+.row-n b { font-weight: 400; font-size: 1.3em; color: var(--text); }
+html[dir="rtl"] .row-n { font-family: var(--font-display); font-style: normal; }
+@media (max-width: 899px) {
+  .hero-media { touch-action: pan-y; }
+  .hero-dots { display: none; }
+  .hero-progress { display: block; }
+  .row-foot { display: flex; }
+  .horse-groups.rows-on-phone:not(.filtered) .hcard { flex: 0 0 80vw; }
+  .strip > li { flex: 0 0 80vw; }
+  .horse-groups.rows-on-phone:not(.filtered) .hgrid, .strip { scroll-snap-type: x mandatory; }
+  .hcard.is-centre .hcard-body::after { transform: scaleX(1); }
+  .hcard.is-centre .hcard-arch .draw { stroke-dashoffset: 0; }
+  .hcard.is-centre .hcard-media .sheen { animation: light-pass 1.1s var(--ease-out-expo) forwards; }
+  .hcard.is-centre .hcard-name { color: var(--gold-text); }
+  .hgrid.editorial > .hcard:first-child .hcard-body { margin-top: 0; padding-inline-start: 0; }
+  .group.moved .group-head::after, .chapter.moved .group-head::after { opacity: 0; }
+  .rows-on-phone .group-head::after { content: ""; width: 14px; height: 14px; margin-inline-start: var(--s-3); border-inline-end: 1px solid var(--gold); border-top: 1px solid var(--gold); rotate: 45deg; opacity: .7; transition: opacity var(--dur-md) var(--ease-out); }
+  html[dir="rtl"] .rows-on-phone .group-head::after { rotate: -135deg; }
+}
+@supports (animation-timeline: view()) {
+  @media (max-width: 899px) and (prefers-reduced-motion: no-preference) {
+    .horse-groups.rows-on-phone:not(.filtered) .hcard, .strip .hcard { animation: card-depth linear both; animation-timeline: view(inline); animation-range: entry 0% exit 100%; }
+    .horse-groups.rows-on-phone:not(.filtered) .hcard-media img, .strip .hcard-media img { animation: card-walk linear both; animation-timeline: view(inline); animation-range: entry 0% exit 100%; }
+    html[dir="rtl"] .horse-groups.rows-on-phone:not(.filtered) .hcard-media img, html[dir="rtl"] .strip .hcard-media img { animation-name: card-walk-rtl; }
+    .row-progress i { transition: none; }
+  }
+}
+@keyframes card-depth { 0%, 100% { transform: scale(.92); opacity: .55; } 35%, 65% { transform: none; opacity: 1; } }
+@keyframes card-walk { from { transform: translateX(-6%) scale(1.1); } to { transform: translateX(6%) scale(1.1); } }
+@keyframes card-walk-rtl { from { transform: translateX(6%) scale(1.1); } to { transform: translateX(-6%) scale(1.1); } }
+@media (hover: none) {
+  a, button, .hcard { -webkit-tap-highlight-color: transparent; }
+  .hcard:active .hcard-media img { transform: scale(1.03); transition-duration: 180ms; }
+  .btn:active { transform: scale(.97); transition-duration: 120ms; }
+  .link-arrow:active .icon { transform: translate(3px, -3px); }
+  .medal:active { transform: scale(1.18); transition: transform 300ms var(--ease-spring); }
+}
+
+/* ---- The concierge dock (phones): a frosted navy bar along the bottom with the chapter line, WhatsApp and Enquire;
+   it rises once the title band has gone and sinks over the form, the closing band and the footer ---- */
+.dock { position: fixed; z-index: var(--z-sticky); inset-inline: 0; bottom: 0; display: none; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--s-3); padding: 10px var(--gutter) max(10px, env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--c-navy-deep) 86%, transparent); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); border-top: 1px solid var(--rule-gold); color: var(--c-ivory); transform: translateY(110%); transition: transform var(--dur-lg) var(--ease-out-expo); }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .dock { background: color-mix(in srgb, var(--c-navy-deep) 97%, transparent); } }
+.dock.on { transform: none; }
+.dock-chapter { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: .14em; text-transform: uppercase; color: var(--c-gold-soft); }
+html[dir="rtl"] .dock-chapter { letter-spacing: 0; text-transform: none; font-size: var(--t-small); }
+.dock .btn-line { color: var(--c-ivory); padding-inline: 12px; }
+.dock .btn .icon { width: 18px; height: 18px; }
+@media (max-width: 899px) {
+  .dock:not([hidden]) { display: grid; }
+  html.js .wa-float { display: none; }
+  main { padding-bottom: 72px; }
+  html { scroll-padding-bottom: 84px; }
+  .cursor { display: none; }
+}
+
+/* ---- Champions page: the hall as navy plaques, the name engraved in gold, the laurel above ---- */
+.champ-card { background: radial-gradient(90% 60% at 50% -10%, var(--c-navy-2) 0%, var(--c-navy-ink) 50%, var(--c-navy-deep) 100%); color: var(--c-ivory); border: 1px solid var(--rule-gold); position: relative; isolation: isolate; overflow: hidden; }
+.champ-card::before { content: ""; position: absolute; inset: 6px; border: 1px solid color-mix(in srgb, var(--c-gold) 28%, transparent); pointer-events: none; }
+.champ-card::after { content: ""; position: absolute; inset: 0; z-index: -1; -webkit-mask: var(--pattern) center / 120px 120px; mask: var(--pattern) center / 120px 120px; background: var(--c-gold); opacity: .05; pointer-events: none; }
+.champ-head h3 { font-size: var(--t-h2); line-height: 1; }
+.champ-head h3 a { color: var(--c-gold-2); background: var(--metal); background-size: 240% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none; animation: foil-sheen 9s var(--ease-in-out) infinite; }
+.champ-card .champ-meta { color: var(--c-gold-soft); }
+.champ-card .champ-titles { border-top-color: var(--rule); }
+.champ-card .champ-titles li { border-bottom-color: var(--rule); }
+.champ-card .champ-titles small, .champ-card .champ-foot .more { color: var(--c-soft); }
+.champ-card .champ-foot a { color: var(--c-gold-soft); }
+.champ-card .medal-pill { border-color: var(--rule); color: var(--c-ivory); }
+.champ-card .orn-laurel { color: var(--c-gold-2); }
+.champ-card:first-child .champ-head h3 { font-size: var(--t-h1); }
+@media (min-width: 1200px) { .champ-grid > .champ-card:first-child { grid-column: span 2; } }
+
+/* ---- Inner title bands with a photograph behind them: shorter than a profile's, the band lit like the hero ---- */
+.page-hero.band-photo { min-height: 62svh; }
+.page-hero.band-photo .page-hero-bg img { object-position: 50% 30%; }
+.page-hero.band-photo .page-hero-bg::after { background: linear-gradient(to top, var(--c-navy-deep) 10%, color-mix(in srgb, var(--c-navy-deep) 72%, transparent) 60%, color-mix(in srgb, var(--c-navy-deep) 45%, transparent)); }
+
+/* ---- The facts as a passport page: a double gold rule, the SK mark as a watermark ---- */
+.facts.passport, .profile-info .facts { position: relative; padding: var(--s-5) var(--s-5) var(--s-4); border: 1px solid var(--rule-gold); border-top-width: 1px; background: color-mix(in srgb, var(--c-gold) 4%, transparent); }
+.profile-info .facts::before { content: ""; position: absolute; inset: 5px; border: 1px solid color-mix(in srgb, var(--c-gold) 28%, transparent); pointer-events: none; }
+.profile-info .facts::after { content: ""; position: absolute; inset-inline-end: 18px; bottom: 14px; width: 54px; aspect-ratio: 265 / 400; background: var(--mark-img) center / contain no-repeat; opacity: .07; pointer-events: none; }
+.profile-info .facts > div:last-child { border-bottom: 0; }
+
+/* ---- The pedigree's root plate ---- */
+.ped-root { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: var(--s-4); margin-bottom: var(--s-4); }
+.ped-root-photo { position: relative; width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; overflow: hidden; background: var(--c-navy-ink); color: var(--c-gold-soft); box-shadow: 0 0 0 1px var(--rule-gold), 0 0 0 5px var(--bg), 0 0 0 6px color-mix(in srgb, var(--c-gold) 40%, transparent); }
+.ped-root-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+.ped-root-photo .foil { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .08em; }
+.ped-root-text { display: grid; gap: 2px; }
+.ped-root-text b { font-family: var(--font-display); font-weight: 400; font-size: var(--t-h3); line-height: 1; }
+html[dir="rtl"] .ped-root-text b { font-weight: var(--fw-bold); }
+.ped-root-other { font-family: "Amiri", serif; font-size: 1.1rem; color: var(--gold-text); }
+html[lang="ar"] .ped-root-other { font-family: var(--font-display); letter-spacing: .06em; text-transform: uppercase; font-size: .85rem; }
+.ped-root-text small { font-size: var(--t-caps); font-weight: var(--fw-semibold); letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); }
+html[dir="rtl"] .ped-root-text small { letter-spacing: 0; text-transform: none; font-size: var(--t-small); }
+.ped-root-rule { grid-column: 1 / -1; height: 1px; background: var(--metal-line); }

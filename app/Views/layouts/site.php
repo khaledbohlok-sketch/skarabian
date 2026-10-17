@@ -92,6 +92,7 @@ $est = (string) setting('site.established', '2025');
 <link rel="preload" href="<?= e(url('/assets/fonts/CormorantGaramond-300i.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <?php if (is_rtl()): ?>
 <link rel="preload" href="<?= e(url('/assets/fonts/Amiri-700-12.woff2')) ?>" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="<?= e(url('/assets/fonts/Amiri-400-11.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="<?= e(url('/assets/fonts/IBMPlexSansArabic-400-4.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <?php endif; ?>
 <script src="<?= e(asset('js/site-head.js')) ?>"></script>
@@ -100,14 +101,26 @@ $est = (string) setting('site.established', '2025');
 <link rel="stylesheet" href="<?= e(asset('css/fonts.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('css/site.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('css/site-pages.css')) ?>">
+<link rel="stylesheet" href="<?= e(asset('css/site-ornament.css')) ?>">
 <?php if ($chatOn): ?><link rel="stylesheet" href="<?= e(asset('css/ai-chat.css')) ?>" media="screen"><?php endif; ?>
 <?php if (!empty($jsonLd)): ?><script type="application/ld+json"><?= json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?></script><?php endif; ?>
 </head>
 <body>
-<?php // first visit of the session only (site-head.js sets html.intro): the mark, the name and a gold line, then the
-      // curtain lifts; decorative, skipped by a click or any key (site.js) ?>
+<?php // the arch clip paths used to frame photographs (inline: a clip-path cannot be read from an external file) ?>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <clipPath id="arch-clip" clipPathUnits="objectBoundingBox"><path d="M0 1V0.26C0 0.12 0.18 0.03 0.5 0C0.82 0.03 1 0.12 1 0.26V1Z"/></clipPath>
+  <clipPath id="arch-round" clipPathUnits="objectBoundingBox"><path d="M0 1V0.3C0 0.1 0.22 0 0.5 0C0.78 0 1 0.1 1 0.3V1Z"/></clipPath>
+  <clipPath id="arch-cards" clipPathUnits="objectBoundingBox"><path d="M0 1V0.22C0 0.09 0.2 0.02 0.5 0C0.8 0.02 1 0.09 1 0.22V1Z"/></clipPath>
+  <?php // the seal: three rings, the stud's name set around the outer ring in Latin and around the inner one in Arabic
+        // (both from the language files), the eight-pointed star between; CSS turns it slowly; the mark sits in the middle ?>
+  <symbol id="seal" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" stroke-width=".8"/><circle cx="50" cy="50" r="37.5" fill="none" stroke="currentColor" stroke-width=".5" opacity=".8"/><circle cx="50" cy="50" r="24" fill="none" stroke="currentColor" stroke-width=".5" opacity=".6"/><path id="seal-arc" d="M50 50m-43 0a43 43 0 1 1 86 0a43 43 0 1 1-86 0" fill="none"/><path id="seal-arc-2" d="M50 50m-31 0a31 31 0 1 1 62 0a31 31 0 1 1-62 0" fill="none"/><text font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="6" letter-spacing="2" fill="currentColor"><textPath href="#seal-arc">SK ARABIANS · DOHA · QATAR · EST. <?= e($est) ?> ·</textPath></text><text font-family="Amiri, serif" font-size="6.4" fill="currentColor" opacity=".9"><textPath href="#seal-arc-2" startOffset="2"><?= e(\App\Core\Lang::get('site.brand', [], 'ar')) ?> · <?= e(\App\Core\Lang::get('site.tagline', [], 'ar')) ?></textPath></text><g fill="none" stroke="currentColor" stroke-width=".6" opacity=".7"><rect x="46" y="27" width="8" height="8" transform="rotate(45 50 31)"/><rect x="46" y="27" width="8" height="8"/></g></symbol>
+</svg>
+<?php // first visit of the session only (site-head.js sets html.intro): the eight-pointed star is drawn in gold around
+      // the mark, the name and a gold line appear, then the curtain lifts; decorative, skipped by a click or any key ?>
 <div class="preloader" aria-hidden="true" data-preloader>
+  <div class="preloader-leaf start"></div><div class="preloader-leaf end"></div>
   <div class="preloader-mark">
+    <svg class="preloader-star" viewBox="0 0 100 100"><path d="M20 20H80V80H20Z" pathLength="1"/><path d="M50 7.6 92.4 50 50 92.4 7.6 50Z" pathLength="1"/></svg>
     <img src="<?= e(asset('img/sk-mark-white.png')) ?>" alt="" width="34" height="51">
     <span class="preloader-word" dir="ltr">SK Arabians</span>
     <span class="preloader-line"></span>
@@ -152,6 +165,7 @@ $est = (string) setting('site.established', '2025');
 </main>
 <footer class="site-footer">
   <div class="container">
+    <svg class="footer-orn" aria-hidden="true"><use href="<?= e(asset('img/ornaments.svg')) ?>#divider"></use></svg>
     <div class="footer-grid">
       <div class="footer-brand">
         <a class="logo" href="<?= e(site_url()) ?>" aria-label="<?= e(__('site.brand')) ?> — <?= e(__('site.home')) ?>"><img src="<?= e(asset('img/sk-logo-white.png')) ?>" alt="SK Arabians" width="140" height="52" loading="lazy"></a>
@@ -178,12 +192,24 @@ $est = (string) setting('site.established', '2025');
         <a class="link-arrow" href="<?= e($enquireUrl) ?>"<?= $enquireExt ? ' target="_blank" rel="noopener"' : '' ?>><?= e(__('site.plan_visit')) ?> <?= icon('arrow-up-right') ?></a>
       </div>
     </div>
-    <div class="footer-wordmark-wrap"><p class="footer-wordmark" aria-hidden="true" dir="ltr" lang="en">SK Arabians</p></div>
+    <div class="footer-wordmark-wrap">
+      <span class="seal footer-seal" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#seal"></use></svg><img src="<?= e(asset('img/sk-mark-white.png')) ?>" alt="" width="20" height="30" loading="lazy"></span>
+      <?php if (lang() === 'ar'): ?><p class="footer-wordmark" aria-hidden="true" lang="ar"><?= e(__('site.brand')) ?></p>
+      <?php else: ?><p class="footer-wordmark" aria-hidden="true" dir="ltr" lang="en"><span class="wm-foil">SK</span> <span class="wm-line">Arabians</span></p><?php endif; ?>
+    </div>
+    <p class="colophon"><?= e(__('site.colophon')) ?></p>
     <div class="footer-bottom"><span>© <?= date('Y') ?> <?= e(__('site.brand')) ?> · <?= e(__('site.cr')) ?> <span dir="ltr"><?= e(setting('company.cr', '231961')) ?></span> · <?= e(__('site.est', ['year' => $est])) ?></span><a href="<?= e(url('/portal/login')) ?>" rel="nofollow"><?= e(__('site.staff_login')) ?></a></div>
   </div>
 </footer>
 <?php if ($wa): ?><a class="wa-float" href="https://wa.me/<?= e($wa) ?>" target="_blank" rel="noopener" aria-label="<?= e(__('nav.whatsapp')) ?>"><?= icon('whatsapp') ?></a><?php endif; ?>
-<script type="application/json" id="sk-site-cfg"><?= json_encode(['viewer' => __('site.photo_viewer'), 'close' => __('common.close'), 'prev' => __('site.previous'), 'next' => __('site.next'), 'of' => __('site.photo_of')], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+<?php // the concierge dock (phones, with JavaScript): where you are, WhatsApp and Enquire one thumb away; it rises once the title band has gone ?>
+<nav class="dock" data-dock data-dock-title="<?= e(isset($title) && $title !== '' ? $title : __('site.brand')) ?>" hidden aria-label="<?= e(__('site.enquire')) ?>">
+  <span class="dock-chapter" data-dock-chapter></span>
+  <?php if ($wa): ?><a class="btn btn-line btn-sm" href="https://wa.me/<?= e($wa) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?><span class="sr-only"><?= e(__('nav.whatsapp')) ?></span></a><?php endif; ?>
+  <a class="btn btn-gold btn-sm" href="<?= e($enquireUrl) ?>"<?= $enquireExt ? ' target="_blank" rel="noopener"' : '' ?>><?= e(__('site.enquire')) ?></a>
+</nav>
+<script type="application/json" id="sk-site-cfg"><?= json_encode(['viewer' => __('site.photo_viewer'), 'close' => __('common.close'), 'prev' => __('site.previous'), 'next' => __('site.next'), 'of' => __('site.photo_of'),
+    'view' => __('site.cursor_view'), 'open' => __('site.cursor_open'), 'drag' => __('site.cursor_drag')], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
 <?php if ($isHome): // the homepage's scroll scenes (pinned film strip, gold threads): GSAP 3.12.5, self-hosted ?>
 <script src="<?= e(asset('vendor/gsap/gsap.min.js')) ?>" defer></script>
 <script src="<?= e(asset('vendor/gsap/ScrollTrigger.min.js')) ?>" defer></script>

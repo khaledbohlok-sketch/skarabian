@@ -480,18 +480,67 @@ function arrow(string $kind): string
 /**
  * A website headline ready for its entrance: every word in its own mask (site.js lifts them line by line) and the last
  * word in metallic gold. Escaped like e(); screen readers and search engines read the same words, and Arabic letters
- * stay joined because words are never split. $gold = false: masks only.
+ * stay joined because words are never split. $gold = false: masks only. $italic: the index of one word set in the
+ * italic accent face against the roman (a negative index counts from the end: -1 is the last word); a one-word title
+ * is left alone. $cover = true (the hero): the gold word becomes the cover line, fitted to the column by CSS
+ * (--chars carries its length).
  */
-function split_title(string $text, bool $gold = true): string
+function split_title(string $text, bool $gold = true, ?int $italic = null, bool $cover = false): string
 {
     $words = preg_split('/\s+/u', trim($text), -1, PREG_SPLIT_NO_EMPTY) ?: [];
     $last = count($words) - 1;
+    if ($italic !== null && $italic < 0) {
+        $italic = count($words) + $italic;
+    }
     $out = [];
     foreach ($words as $i => $w) {
-        $cls = $gold && $i === $last && $last > 0 ? ' class="gold-text"' : '';
-        $out[] = '<span class="w"><span' . $cls . ' style="--i:' . $i . '">' . e($w) . '</span></span>';
+        $isGold = $gold && $i === $last && $last > 0;
+        $isIt = !$isGold && $italic !== null && $i === $italic && $last > 0;
+        $wrap = 'w' . ($isGold && $cover ? ' w-key' : '') . ($isIt ? ' w-it' : '');
+        $style = '--i:' . $i . ($isGold && $cover ? ';--chars:' . mb_strlen($w) : '');
+        $out[] = '<span class="' . $wrap . '"><span' . ($isGold ? ' class="gold-text"' : '') . ' style="' . $style . '">' . e($w) . '</span></span>';
     }
     return implode(' ', $out);
+}
+
+/**
+ * A paragraph that opens like a chapter: the first letter as a drop cap in gold foil and the first words in small caps
+ * (Latin text); Arabic, whose letters join, opens with a gold star instead. $p is plain text; the result is escaped.
+ */
+function lede(string $p): string
+{
+    $p = trim($p);
+    if ($p === '') {
+        return '';
+    }
+    if (Lang::current() === 'ar') {
+        return '<svg class="orn dcap-ar" aria-hidden="true"><use href="' . e(asset('img/ornaments.svg')) . '#rosette"></use></svg>' . nl2br(e($p));
+    }
+    $first = mb_substr($p, 0, 1);
+    if (!preg_match('/^\p{Lu}$/u', $first)) {
+        return nl2br(e($p));
+    }
+    $words = preg_split('/\s+/u', mb_substr($p, 1), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+    $leadWords = array_slice($words, 0, 3);
+    $rest = array_slice($words, 3);
+    return '<b class="dcap foil" aria-hidden="true">' . e($first) . '</b><span class="lede"><span class="sr-only">' . e($first) . '</span>' . e(implode(' ', $leadWords)) . '</span>'
+        . ($rest ? ' ' . nl2br(e(implode(' ', $rest))) : '');
+}
+
+/** The other language's text for a key (Arabic on the English edition and the reverse), for the calligraphic ghosts. */
+function t_other(string $key, array $params = []): string
+{
+    return Lang::get($key, $params, Lang::current() === 'ar' ? 'en' : 'ar');
+}
+
+/** A placing as an ordinal: 1<sup>st</sup> (Arabic: the plain figure). Escaped. */
+function ordinal(int $n): string
+{
+    if (Lang::current() === 'ar') {
+        return (string) $n;
+    }
+    $suffix = ($n % 100 >= 11 && $n % 100 <= 13) ? 'th' : (['th', 'st', 'nd', 'rd'][$n % 10] ?? 'th');
+    return '<span class="ord">' . $n . '<sup>' . $suffix . '</sup></span>';
 }
 
 /** A headline with its last word in metallic gold, no masks (titles that do not animate in). Escaped like e(). */

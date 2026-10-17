@@ -12,6 +12,7 @@ $counts = $counts ?? array_map('count', $groups);
 $active = $active ?? '';
 $base = $base ?? site_url('horses');
 $rows = $rows ?? false;
+$editorial = !empty($editorial) || !$rows; // the first horse of each category as a plate, twice the width (computers)
 ?>
 <div class="tabs" role="tablist" aria-label="<?= e(__('site.our_horses')) ?>" data-cat-tabs>
   <a class="tab<?= $active === '' ? ' on' : '' ?>" href="<?= e($base) ?>" data-cat="all" role="tab" aria-selected="<?= $active === '' ? 'true' : 'false' ?>"><?= e(__('site.all')) ?> <span class="n"><?= (int) array_sum($counts) ?></span></a>
@@ -23,9 +24,10 @@ $rows = $rows ?? false;
 <?php foreach ($groups as $cat => $list): ?>
   <div class="group" data-group="<?= e($cat) ?>"<?= $active !== '' && $active !== $cat ? ' hidden' : '' ?>>
     <div class="group-head"><h3><?= e(__($labels[$cat])) ?></h3><span class="group-n"><?= count($list) ?></span><span class="group-rule" aria-hidden="true"></span></div>
-    <div class="hgrid stagger reveal">
+    <div class="hgrid stagger reveal<?= $editorial ? ' editorial' : '' ?>" data-parade>
       <?php foreach ($list as $h): ?><?= View::partial('site/partials/horse_card', ['h' => $h]) ?><?php endforeach; ?>
     </div>
+    <?php if ($rows): ?><div class="row-foot" aria-hidden="true"><span class="row-progress"><i></i></span><span class="row-n" dir="ltr"><b>1</b> / <?= count($list) ?></span></div><?php endif; ?>
   </div>
 <?php endforeach; ?>
 </div>

@@ -58,7 +58,8 @@
   --dur-2xl: 1800ms;
 
   /* motifs: the eight-pointed star lattice (a mask, painted in gold at low opacity), the SK mark, film grain */
-  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23000' stroke-width='1'%3E%3Crect x='25' y='25' width='22' height='22'/%3E%3Crect x='25' y='25' width='22' height='22' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='4'/%3E%3Cpath d='M0 0l9 9M72 0l-9 9M0 72l9-9M72 72l-9-9'/%3E%3C/g%3E%3C/svg%3E");
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23000' stroke-width='1'%3E%3Crect x='34' y='34' width='52' height='52'/%3E%3Crect x='34' y='34' width='52' height='52' transform='rotate(45 60 60)'/%3E%3Ccircle cx='60' cy='60' r='4'/%3E%3Ccircle cx='0' cy='0' r='1.5'/%3E%3Ccircle cx='120' cy='0' r='1.5'/%3E%3Ccircle cx='0' cy='120' r='1.5'/%3E%3Ccircle cx='120' cy='120' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+  --finial: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='16' viewBox='0 0 320 16'%3E%3Cg fill='none' stroke='%23000' stroke-width='1' stroke-linecap='round'%3E%3Cpath d='M0 8H286'/%3E%3Cpath d='M286 8c8-7 18-7 26 0c-8 7-18 7-26 0z'/%3E%3Ccircle cx='316' cy='8' r='1.6' fill='%23000' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
   --mark-img: url("../img/sk-mark-white.png"); /* not "--mark": the portal uses that name for a colour */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

@@ -38,11 +38,20 @@ if (array_sum($medals)) {
     }
     $medalPills .= '</div>';
 }
+// the registry line under the nameplate: category · colour · year · by SIRE out of DAM
+$reg = ['<b>' . e(__('horse.cat_' . $h['category'])) . '</b>'];
+if (SiteData::show('profile_colour') && $h['color_en']) { $reg[] = e(loc(['value_en' => $h['color_en'], 'value_ar' => $h['color_ar']], 'value')); }
+if (SiteData::show('profile_age') && $h['dob']) { $reg[] = '<span class="num">' . e(substr($h['dob'], 0, 4)) . '</span>'; }
+$registry = implode(' <span class="dot" aria-hidden="true">·</span> ', $reg);
+if ($h['sire_en'] || $h['dam_en']) {
+    $registry .= ' <span class="dot" aria-hidden="true">·</span> ' . e(__('site.by')) . ' <b>' . e(loc(['name_en' => $h['sire_en'], 'name_ar' => $h['sire_ar']]) ?: '—') . '</b> ' . e(__('site.out_of')) . ' <b>' . e(loc(['name_en' => $h['dam_en'], 'name_ar' => $h['dam_ar']]) ?: '—') . '</b>';
+}
 echo View::partial('site/partials/page_hero', [
     'crumbs' => [[__('site.nav_horses'), site_url('horses')], [$name, null]], 'cls' => 'profile-hero',
     'bg' => $imgs ? SiteData::img((int) $imgs[0]['id']) : null,
     'eyebrow' => e(__('horse.cat_' . $h['category'])) . ($h['dob'] && SiteData::show('profile_age') ? ' · ' . e(horse_age($h['dob'])) : ''), 'title' => $name,
     'alt' => $other !== '' && $other !== $name ? [$other, lang() === 'ar' ? 'en' : 'ar'] : null,
+    'nameplate' => true, 'registry' => $registry,
     'extra' => $medalPills,
 ]); ?>
 
@@ -50,17 +59,18 @@ echo View::partial('site/partials/page_hero', [
   <div class="container">
     <div class="profile">
       <div class="profile-media" data-gallery>
-        <div class="pgallery-main">
+        <div class="pgallery-main framed">
+          <?php foreach (['tl', 'tr', 'bl', 'br'] as $c): ?><svg class="orn-corner <?= $c ?>" aria-hidden="true"><use href="<?= e(asset('img/ornaments.svg')) ?>#corner"></use></svg><?php endforeach; ?>
           <?php if ($imgs): ?><a href="<?= e(SiteData::img((int) $imgs[0]['id'])) ?>" data-gallery-open aria-label="<?= e(__('site.open_photo')) ?>"><img src="<?= e(SiteData::img((int) $imgs[0]['id'])) ?>" alt="<?= e($name . ' – ' . horse_kind($h)) ?>" data-gallery-main fetchpriority="high" decoding="async" width="1200" height="900"></a>
           <?php else: ?><span class="hcard-ph big" aria-hidden="true"><span class="ph-mark"></span><span class="ph-initials"><?= e(SiteData::initials(loc($h))) ?></span></span><?php endif; ?>
         </div>
         <?php if ($imgs): ?><div class="pgallery-thumbs"<?= count($imgs) < 2 ? ' hidden' : '' ?>><?php foreach ($imgs as $i => $p): ?><button type="button" class="<?= $i === 0 ? 'on' : '' ?>" data-src="<?= e(SiteData::img((int) $p['id'])) ?>" data-caption="<?= e($name . ' — ' . __('site.photo_of', ['n' => $i + 1, 'total' => count($imgs)])) ?>" aria-label="<?= e(__('site.photo_n', ['n' => $i + 1])) ?>"<?= $i === 0 ? ' aria-current="true"' : '' ?>><img src="<?= e(SiteData::img((int) $p['id'], 'thumb')) ?>" alt="" loading="lazy" decoding="async" width="96" height="72"></button><?php endforeach; ?></div><?php endif; ?>
       </div>
-      <div class="profile-info">
+      <div class="profile-info"<?= $other !== '' && $other !== $name ? ' data-ghost="' . e($other) . '"' : '' ?>>
         <dl class="facts">
           <?php foreach ($facts as [$label, $value]): ?><div><dt><?= e(__($label)) ?></dt><dd><?= $value ?></dd></div><?php endforeach; ?>
         </dl>
-        <?php if (SiteData::show('profile_story') && ($story = loc($h, 'story'))): ?><div class="prose"><?php foreach (preg_split('/\R{2,}/', $story) as $p): ?><p><?= nl2br(e($p)) ?></p><?php endforeach; ?></div><?php endif; ?>
+        <?php if (SiteData::show('profile_story') && ($story = loc($h, 'story'))): ?><div class="prose"><?php foreach (preg_split('/\R{2,}/', $story) as $pi => $p): ?><p<?= $pi === 0 ? ' class="opens"' : '' ?>><?= $pi === 0 ? lede($p) : nl2br(e($p)) ?></p><?php endforeach; ?></div><?php endif; ?>
         <?php $shareUrl = absolute_url('/' . lang() . '/horses/' . $h['slug']);
           $shareText = $name . ' — SK Arabians';
           $shareWa = 'https://wa.me/?text=' . rawurlencode($shareText . "\n" . $shareUrl); ?>
@@ -86,6 +96,10 @@ echo View::partial('site/partials/page_hero', [
 
     <?php if ($results): ?>
     <div class="profile-block reveal" id="results"><h2><?= e(__('site.show_results')) ?></h2>
+      <?php // the judges' card of the horse's best result (gold before silver before bronze, then the highest total)
+        $carded = array_values(array_filter($results, fn ($r) => !empty($r['judge_card'])));
+        usort($carded, fn ($a, $b) => [array_search($a['medal'], ['gold', 'silver', 'bronze', 'none'], true), -(float) $a['score']] <=> [array_search($b['medal'], ['gold', 'silver', 'bronze', 'none'], true), -(float) $b['score']]);
+        if ($carded): ?><div class="profile-scorecard"><?= View::partial('site/partials/scorecard', ['r' => $carded[0]]) ?></div><?php endif; ?>
       <?php if ($titles): ?>
         <ol class="medal-line stagger">
           <?php foreach (array_slice($titles, 0, 6) as $r): $show = loc(['name_en' => $r['show_en'], 'name_ar' => $r['show_ar']]); $year = substr((string) $r['start_date'], 0, 4); ?>
@@ -96,7 +110,7 @@ echo View::partial('site/partials/page_hero', [
       <?php if (SiteData::showClass()): ?>
       <div class="table-scroll"><table class="results-table"><thead><tr><th scope="col"><?= e(__('site.year')) ?></th><th scope="col"><?= e(__('shows.show')) ?></th><th scope="col"><?= e(__('shows.class')) ?></th><th scope="col"><?= e(__('shows.placing')) ?></th><th scope="col"><?= e(__('shows.result')) ?></th></tr></thead><tbody>
       <?php foreach ($results as $r): ?><tr><td data-label="<?= e(__('site.year')) ?>"><?= e(fmt_date($r['start_date'])) ?></td><td data-label="<?= e(__('shows.show')) ?>"><?= e(loc(['name_en' => $r['show_en'], 'name_ar' => $r['show_ar']])) ?></td><td data-label="<?= e(__('shows.class')) ?>"><?= e((string) $r['class_name']) ?></td>
-        <td data-label="<?= e(__('shows.placing')) ?>"><?= $r['placing'] ? (int) $r['placing'] : '—' ?><?= $r['score'] !== null ? ' <small class="score">' . e(rtrim(rtrim(number_format((float) $r['score'], 2), '0'), '.')) . '</small>' : '' ?></td>
+        <td data-label="<?= e(__('shows.placing')) ?>"><?= $r['placing'] ? ordinal((int) $r['placing']) : '—' ?><?= $r['score'] !== null ? ' <small class="score num">' . e(rtrim(rtrim(number_format((float) $r['score'], 2), '0'), '.')) . '</small>' : '' ?></td>
         <td data-label="<?= e(__('shows.result')) ?>"><?php if ($r['medal'] !== 'none'): ?><span class="medal sm <?= e($medalCls[$r['medal']]) ?>" aria-hidden="true">★</span> <?php endif; ?><?= e(loc($r, 'title')) ?></td></tr><?php endforeach; ?>
       </tbody></table></div>
       <?php else: ?>
@@ -109,7 +123,7 @@ echo View::partial('site/partials/page_hero', [
     <?php endif; ?>
 
     <?php if ($pedigree && ($pedigree['sire'] || $pedigree['dam'])): ?>
-    <div class="profile-block reveal" id="pedigree"><h2><?= e(__('site.pedigree')) ?></h2><?= View::partial('site/partials/pedigree', ['ped' => $pedigree, 'gens' => $gens, 'name' => $name]) ?></div>
+    <div class="profile-block reveal" id="pedigree"><h2><?= e(__('site.pedigree')) ?></h2><?= View::partial('site/partials/pedigree', ['ped' => $pedigree, 'gens' => $gens, 'name' => $name, 'root' => ['name' => $name, 'other' => $other !== '' && $other !== $name ? $other : '', 'thumb' => $imgs ? SiteData::img((int) $imgs[0]['id'], 'thumb') : null, 'line' => trim(implode(' · ', array_filter([__('horse.cat_' . $h['category']), SiteData::show('profile_colour') && $h['color_en'] ? loc(['value_en' => $h['color_en'], 'value_ar' => $h['color_ar']], 'value') : '', SiteData::show('profile_age') && $h['dob'] ? substr($h['dob'], 0, 4) : ''])))]]) ?></div>
     <?php endif; ?>
 
     <?php if ($related): ?>

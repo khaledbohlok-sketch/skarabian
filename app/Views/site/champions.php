@@ -20,7 +20,7 @@ $badge = function (array $r) use ($medalCls): string {
     if (isset($medalCls[$r['medal']])) {
         return '<span class="medal ' . $medalCls[$r['medal']] . '" title="' . e(__('shows.medal_' . $r['medal'])) . '">★</span>';
     }
-    return '<span class="medal medal-plain"' . ($r['placing'] ? ' title="' . e(__('shows.placing')) . ': ' . (int) $r['placing'] . '">' . (int) $r['placing'] : '>·') . '</span>';
+    return '<span class="medal medal-plain"' . ($r['placing'] ? ' title="' . e(__('shows.placing')) . ': ' . (int) $r['placing'] . '">' . ordinal((int) $r['placing']) : '>·') . '</span>';
 };
 $titleLine = function (array $r) use ($showName): string {
     $year = substr((string) $r['start_date'], 0, 4);
@@ -38,8 +38,9 @@ if ($total) {
     }
     $tallyHtml .= '</div>';
 }
-echo View::partial('site/partials/page_hero', ['crumbs' => [[__('site.nav_champions'), null]], 'cls' => 'champions-hero', 'eyebrow' => e(__('site.champions_eyebrow')),
-    'title' => __('site.champions_title'), 'lead' => __('site.champions_intro'), 'extra' => $tallyHtml]); ?>
+$bandPhoto = SiteData::heroPhotos(1)[0] ?? null;
+echo View::partial('site/partials/page_hero', ['bg' => $bandPhoto ? SiteData::img((int) $bandPhoto['main_photo_id']) : null, 'crumbs' => [[__('site.nav_champions'), null]], 'cls' => 'champions-hero band-photo', 'eyebrow' => e(__('site.champions_eyebrow')),
+    'title' => __('site.champions_title'), 'lead' => __('site.champions_intro'), 'extra' => $tallyHtml, 'ghost' => t_other('site.nav_champions')]); ?>
 
 <?php if (!$total): ?>
 <section class="chapter"><div class="container"><div class="empty-note"><?= e(__('site.no_results')) ?></div></div></section>
@@ -48,14 +49,15 @@ echo View::partial('site/partials/page_hero', ['crumbs' => [[__('site.nav_champi
 <?php if ($champions): ?>
 <section class="chapter" id="champions">
   <div class="container">
-    <div class="chapter-head split-head reveal">
-      <div><span class="chapter-index"><b>01</b> <?= e(__('site.champions_eyebrow')) ?></span><h2 class="split"><?= split_title(__('site.champions_hall'), false) ?></h2></div>
+    <div class="chapter-head split-head reveal" data-ghost="<?= e(t_other('site.champions_hall')) ?>">
+      <div><span class="chapter-index"><b>01</b> <?= e(__('site.champions_eyebrow')) ?></span><h2 class="split"><?= split_title(__('site.champions_hall'), false, -1) ?></h2></div>
       <p class="lead"><?= e(__('site.champions_hall_sub')) ?></p>
     </div>
     <div class="champ-grid stagger reveal">
       <?php foreach ($champions as $c): $more = count($c['titles']) - 3; ?>
         <article class="champ-card">
           <div class="champ-head">
+            <svg class="orn orn-laurel" aria-hidden="true"><use href="<?= e(asset('img/ornaments.svg')) ?>#laurel"></use></svg>
             <h3><?= $horseLink($c) ?></h3>
             <span class="champ-meta"><?= e(__('horse.cat_' . $c['category'])) ?><?= $c['dob'] && SiteData::show('profile_age') ? ' · ' . e(horse_age($c['dob'])) : '' ?></span>
           </div>
@@ -82,8 +84,8 @@ echo View::partial('site/partials/page_hero', ['crumbs' => [[__('site.nav_champi
 
 <section class="chapter night" id="results">
   <div class="container">
-    <div class="chapter-head split-head reveal">
-      <div><span class="chapter-index"><b>02</b> <?= e(__('site.results_eyebrow')) ?></span><h2 class="split"><?= split_title(__('site.results_by_season'), false) ?></h2></div>
+    <div class="chapter-head split-head reveal" data-ghost="<?= e(t_other('site.results_by_season')) ?>">
+      <div><span class="chapter-index"><b>02</b> <?= e(__('site.results_eyebrow')) ?></span><h2 class="split"><?= split_title(__('site.results_by_season'), false, -1) ?></h2></div>
       <p class="lead"><?= e(__(SiteData::medalsOnly() ? 'site.results_sub_medals' : 'site.results_sub')) ?></p>
     </div>
     <div class="tabs" role="tablist" aria-label="<?= e(__('site.results_by_season')) ?>" data-cat-tabs data-param="year" data-default="<?= e($latest) ?>">
@@ -100,7 +102,7 @@ echo View::partial('site/partials/page_hero', ['crumbs' => [[__('site.nav_champi
             <li class="result-row">
               <?= $badge($r) ?>
               <div class="rr-main"><span class="rr-horse"><?= $horseLink($r) ?></span><span class="rr-what"><?= e(SiteData::resultText($r)) ?></span></div>
-              <div class="rr-show"><span class="rr-show-name"><?= e($showName($r)) ?></span><?php if ($w = $where($r)): ?><small><?= e($w) ?></small><?php endif; ?></div>
+              <div class="rr-show"><i class="leader" aria-hidden="true"></i><span class="rr-show-name"><?= e($showName($r)) ?></span><?php if ($w = $where($r)): ?><small><?= e($w) ?></small><?php endif; ?></div>
             </li>
           <?php endforeach; ?>
         </ol>
