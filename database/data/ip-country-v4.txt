@@ -1,0 +1,7 @@
+ip-country-v4.bin — country of an IPv4 address, for login alerts and the "Qatar only" role rule (app/Services/Geo.php).
+Built from "IP to Country Lite" by DB-IP, October 2026 edition: https://db-ip.com — licensed under Creative Commons
+Attribution 4.0 International (https://creativecommons.org/licenses/by/4.0/). IP geolocation by DB-IP.
+
+Format: "IPC4", a 4-byte count, then sorted records of 10 bytes: range start (4 bytes), range end (4 bytes), country
+code (2 letters; ZZ = unknown or private network). Big-endian. Looked up on the server only: no address is sent anywhere.
+To refresh it, download the new monthly CSV from db-ip.com and convert it the same way.

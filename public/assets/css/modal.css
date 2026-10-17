@@ -1,0 +1,100 @@
+/* The one modal (modal.js), in glass: frosted panel, gold hairline, a spring entrance; Esc closes and the focus stays inside (modal.js)
+   The one modal (modal.js): sizes sm 420 / md 600 / lg 860, at most 90% of the screen high, header and footer fixed and
+   the body scrolling, a blurred dark backdrop, a bottom sheet on phones. Plus confirm boxes, the image preview and toasts.
+   Colours are portal.css's semantic variables (light and dark follow by themselves). */
+#modal-root { position: fixed; inset: 0; z-index: var(--z-modal); pointer-events: none; }
+#modal-root:empty { display: none; }
+html:has(body.modal-open), body.modal-open { overflow: hidden; }
+
+.sk-backdrop { position: fixed; inset: 0; background: var(--backdrop); backdrop-filter: blur(var(--blur-sm)); -webkit-backdrop-filter: blur(var(--blur-sm)); opacity: 0; transition: opacity var(--dur) var(--ease-out); pointer-events: auto; }
+.sk-backdrop:not([hidden]) { opacity: 1; }
+.sk-backdrop[hidden] { display: none; }
+
+.sk-modal { position: fixed; top: 50%; left: 50%; display: flex; flex-direction: column; width: min(600px, calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: 90vh; max-height: 90dvh;
+  background: color-mix(in srgb, var(--card) 92%, transparent); color: var(--ink); border: 1px solid var(--glass-edge); border-radius: var(--radius-xl); box-shadow: var(--glass-highlight), var(--elev-4); pointer-events: auto;
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  opacity: 0; transform: translate(-50%, -50%) translateY(14px) scale(.97); transition: opacity var(--dur) var(--ease-out), transform var(--dur-md) var(--ease-spring); }
+/* a gold hairline along the top edge, as on the website's glass */
+.sk-modal:not(.sk-lightbox)::before { content: ""; position: absolute; inset-inline: 32px; top: 0; height: 1px; background: var(--metal-line); opacity: .6; pointer-events: none; }
+.sk-modal.in { opacity: 1; transform: translate(-50%, -50%); }
+.sk-modal.out { opacity: 0; transform: translate(-50%, -50%) translateY(6px) scale(.98); }
+.sk-modal.stacked-behind { filter: brightness(.92); }
+.sk-modal-sm { width: min(420px, calc(100vw - 32px)); }
+.sk-modal-md { width: min(600px, calc(100vw - 32px)); }
+.sk-modal-lg { width: min(860px, calc(100vw - 32px)); }
+.sk-modal-full { width: calc(100vw - 32px); height: calc(100vh - 32px); height: calc(100dvh - 32px); max-height: none; }
+/* a form in a frame needs a height of its own (its page sets it) */
+.sk-modal.sk-modal-frame { height: 90vh; height: 90dvh; }
+
+.sk-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); flex: none; padding: var(--space-5) var(--space-5) var(--space-4); border-bottom: 1px solid var(--line-2); }
+.sk-modal-headtext { min-width: 0; }
+.sk-modal-headtext h2 { margin: 0; font-family: var(--font-display); font-weight: var(--fw-regular); font-size: var(--fs-20); line-height: var(--lh-snug); color: var(--title); overflow-wrap: anywhere; }
+html[dir="rtl"] .sk-modal-headtext h2 { font-weight: var(--fw-bold); }
+.sk-modal-headtext h2:empty { display: none; }
+.sk-modal-subtitle { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.sk-modal-x { flex: none; margin: -6px; margin-inline-end: -8px; }
+.sk-modal-body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--space-5); }
+.sk-modal-body.sk-modal-body-iframe { padding: 0; overflow: hidden; }
+.sk-modal-body-iframe iframe { display: block; width: 100%; height: 100%; border: 0; border-end-start-radius: var(--radius-xl); border-end-end-radius: var(--radius-xl); }
+/* Cancel at the start, the main action at the end */
+.sk-modal-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); flex: none; padding: var(--space-4) var(--space-5); border-top: 1px solid var(--line-2); }
+.sk-modal-footer:empty { display: none; }
+.sk-modal-footer > :only-child { margin-inline-start: auto; }
+.sk-modal-footer .btn { min-width: 100px; }
+
+.sk-modal-message { margin: 0; font-size: 15px; line-height: var(--lh-body); color: var(--ink); }
+.sk-modal-type-input { width: 100%; margin-top: 14px; }
+.sk-modal-summary { display: grid; grid-template-columns: auto 1fr; gap: 4px var(--space-3); margin: var(--space-3) 0 0; padding: var(--space-3) var(--space-4); background: var(--sunk); border: 1px solid var(--line-2); border-radius: var(--radius-md); font-size: 13px; }
+.sk-modal-summary dt { margin: 0; color: var(--muted); }
+.sk-modal-summary dd { margin: 0; font-weight: var(--fw-medium); text-align: end; color: var(--ink); }
+.sk-modal-warning { margin: var(--space-3) 0 0; padding: var(--space-2) var(--space-3); background: var(--warn-s); color: var(--warn-t); border: 1px solid var(--warn-e); border-radius: var(--radius-md); font-size: 13px; }
+.sk-field-error-box { margin-bottom: 14px; padding: 10px var(--space-3); background: var(--bad-s); color: var(--bad-t); border: 1px solid var(--bad-e); border-radius: var(--radius-md); font-size: 13px; }
+.sk-field-error-box:empty, .sk-field-error-box[hidden] { display: none; }
+.sk-field-error-box ul { margin: 0; padding-inline-start: 18px; }
+
+.sk-modal-loading { display: grid; align-content: start; gap: var(--space-3); height: 100%; padding: var(--space-6) var(--space-5); }
+.sk-spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--gold-2); animation: sk-spin .7s linear infinite; }
+@keyframes sk-spin { to { transform: rotate(360deg); } }
+
+/* image / PDF preview */
+.sk-lightbox { background: transparent; border: 0; box-shadow: none; }
+.sk-lightbox .sk-modal-header { position: absolute; inset-inline: 0; top: 0; z-index: 1; border-bottom: 0; }
+.sk-lightbox .sk-modal-headtext h2 { color: var(--c-white); text-shadow: 0 1px 4px rgb(0 0 0 / .5); }
+.sk-lightbox .sk-modal-x { background: color-mix(in srgb, var(--c-white) 16%, transparent); color: var(--c-white); }
+.sk-lightbox .sk-modal-x:hover { background: color-mix(in srgb, var(--c-white) 28%, transparent); }
+.sk-lightbox .sk-modal-body { display: grid; place-items: center; padding: 0; background: color-mix(in srgb, var(--c-navy-deep) 92%, transparent); border-radius: var(--radius-xl); }
+.sk-lightbox img { max-width: 100%; max-height: 85vh; object-fit: contain; }
+
+/* toasts: one system for scripts (Modal.toast) and the server's flash messages; errors stay until closed */
+.sk-toast-wrap { position: fixed; bottom: var(--space-5); inset-inline-end: var(--space-5); z-index: var(--z-toast); display: flex; flex-direction: column; gap: var(--space-2); width: min(380px, calc(100% - 32px)); pointer-events: none; }
+.sk-toast { position: relative; display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4); pointer-events: auto;
+  background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--ink); border: 1px solid var(--glass-edge); border-radius: var(--radius-lg); box-shadow: var(--glass-highlight), var(--pop); font-size: 13.5px; line-height: var(--lh-body);
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  opacity: 0; transform: translateY(12px) scale(.97); transition: opacity var(--dur) var(--ease-out), transform var(--dur-md) var(--ease-spring); }
+/* saved: the success icon draws itself */
+.sk-toast.success .t-icon { animation: pop-in 520ms var(--ease-spring) both; }
+@media (prefers-reduced-motion: reduce) { .sk-toast.success .t-icon { animation: none; } }
+html[data-motion="reduce"] .sk-toast.success .t-icon { animation: none; }
+html[dir="rtl"] .sk-toast { padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3); }
+.sk-toast.in { opacity: 1; transform: none; }
+.sk-toast::before { content: ""; position: absolute; inset-block: 10px; inset-inline-start: 0; width: 3px; border-radius: 3px; background: var(--info-t); }
+.sk-toast.success::before { background: var(--ok-t); } .sk-toast.error::before { background: var(--bad-t); } .sk-toast.warning::before { background: var(--gold-2); }
+.sk-toast .t-icon { flex: none; width: 20px; height: 20px; margin-top: 1px; color: var(--info-t); }
+.sk-toast.success .t-icon { color: var(--ok-t); } .sk-toast.error .t-icon { color: var(--bad-t); } .sk-toast.warning .t-icon { color: var(--gold-2); }
+.sk-toast .t-msg { flex: 1; min-width: 0; padding-top: 1px; overflow-wrap: anywhere; }
+.sk-toast .t-msg a { color: var(--link); font-weight: var(--fw-semibold); }
+.sk-toast .t-x { flex: none; width: 32px; height: 32px; margin: -6px; margin-inline-start: 0; }
+
+/* phones: every dialog is a bottom sheet */
+@media (max-width: 640px) {
+  .sk-modal, .sk-modal-sm, .sk-modal-md, .sk-modal-lg { top: auto; bottom: 0; left: 0; width: 100%; max-width: 100%; max-height: 92vh; max-height: 92dvh; border-radius: var(--radius-xl) var(--radius-xl) 0 0; border-bottom: 0; transform: translateY(24px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .sk-modal.in { transform: none; }
+  .sk-modal.out { transform: translateY(24px); }
+  .sk-modal.sk-modal-frame, .sk-modal-full { height: 92vh; height: 92dvh; width: 100%; }
+  .sk-modal-header { padding: var(--space-4); }
+  .sk-modal-header::before { content: ""; position: absolute; top: 6px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: 4px; background: var(--line); }
+  .sk-modal-body { padding: var(--space-4); }
+  .sk-modal-footer { padding: var(--space-3) var(--space-4); }
+  .sk-modal-footer .btn { flex: 1 1 0; min-width: 0; }
+  .sk-toast-wrap { inset-inline: var(--space-3); bottom: var(--space-3); width: auto; }
+}

@@ -1,0 +1,102 @@
+/* Printouts (lists, reports) and Studio's print view, on the official A4 letterhead. The page boxes, letterhead,
+   reference + QR block and footer come from studio-doc.css (linked just before this file by layouts/print.php and
+   layouts/bare.php — once, not imported here as well), so printouts look like the Studio documents. */
+html, body { margin: 0; background: #e9edf3; }
+.print-toolbar { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; padding: 10px; background: #213562; }
+.pbtn { border: 0; border-radius: 8px; padding: 9px 16px; background: #b08d57; color: #fff; font: 600 14px "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif; cursor: pointer; }
+.pbtn.ghost { background: transparent; border: 1px solid rgba(255,255,255,.4); }
+.ptb-info { color: rgba(255,255,255,.85); font: 500 13px "IBM Plex Sans", sans-serif; white-space: nowrap; }
+.print-banner { box-sizing: border-box; max-width: 210mm; margin: 12px auto 0; padding: 10px 14px; border-radius: 8px; background: #fff; border-inline-start: 4px solid #213562;
+  font: 14px/1.5 "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif; color: #1d2433; box-shadow: 0 2px 10px rgba(20,30,60,.1); }
+.print-banner.bad { border-inline-start-color: #b42323; }
+.print-banner a { color: #213562; font-weight: 600; }
+.print-body .pages { margin: 12px auto; }
+.print-body .page { margin: 0 auto 12px; }
+
+/* One long page: what the letterhead pages are made from, and what prints when scripts can't run */
+.print-body .flowpage { height: auto; min-height: 297mm; box-sizing: border-box; padding: 35mm 14mm 26mm; }
+
+/* ---- the content ---- */
+.page-body, .listpage .flow { font: 9.6pt/1.35 "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif; color: #1d2433; }
+.page[dir="rtl"] .page-body, .listpage[dir="rtl"] .flow { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif; }
+.listpage .flow { gap: 3mm; }
+.page-body > * + * { margin-top: 3mm; }
+.doc-title { color: #213562; font-size: 17pt; line-height: 1.2; margin: 0; }
+.doc-period { color: #213562; font-size: 10.5pt; font-weight: 600; margin: 1mm 0 0; }
+.doc-meta { color: #6b7488; font-size: 8.4pt; margin: 1.2mm 0 0; }
+.doc-filters { margin-top: .6mm; }
+.conf { display: inline-block; vertical-align: middle; border: 1px solid #b42323; color: #b42323; font-size: 7.4pt; font-weight: 600; letter-spacing: .06em; padding: .2mm 1.6mm; border-radius: 1mm; text-transform: uppercase; }
+.doc-sub { color: #213562; font-size: 11.5pt; margin: 1mm 0 0; }
+.doc-note { color: #6b7488; font-size: 8.2pt; margin: 0; }
+.doc-end { color: #8a93a6; font-size: 7.6pt; text-align: center; margin: 0; }
+.cont { color: #8a93a6; font-size: 7.8pt; }
+.chip { display: inline-block; background: #eef1f5; padding: .3mm 2mm; border-radius: 2mm; margin: .5mm 0; margin-inline-end: 1mm; }
+.doc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(38mm, 1fr)); gap: 2.5mm; }
+.doc-cards .kc { border: 1px solid #e3e7ef; border-radius: 1.5mm; padding: 2mm 3mm; background: #f7f8fb; }
+.doc-cards small { display: block; color: #6b7488; font-size: 7.8pt; }
+.doc-cards b { font-size: 11pt; color: #213562; font-variant-numeric: tabular-nums; }
+.doc-cards b.neg { color: #b42323; }
+
+.doc-table { width: 100%; border-collapse: collapse; font-size: 8.4pt; }
+.doc-table.fixed { table-layout: fixed; }
+/* measuring (print.js): every value on one line, headings only as wide as their longest word */
+.doc-table.measure { table-layout: auto; width: max-content !important; }
+.doc-table.measure td { white-space: nowrap; }
+.doc-table.measure th .h { display: block; width: min-content; }
+.doc-table th { background: #213562; color: #fff; text-align: start; vertical-align: bottom; padding: 1.8mm; font-weight: 600; }
+.doc-table td { padding: 1.4mm 1.8mm; border-bottom: 1px solid #e3e7ef; vertical-align: top; overflow-wrap: break-word; }
+.doc-table tbody tr:nth-child(even) td { background: #f7f8fb; }
+.doc-table .num { text-align: end; font-variant-numeric: tabular-nums; }
+.doc-table td.num { white-space: nowrap; }
+.doc-table .neg { color: #b42323; }
+.doc-table tfoot th { background: #eef1f5; color: #213562; border-top: 1.5px solid #213562; }
+.doc-table tr.empty td { color: #6b7488; text-align: center; padding: 4mm; }
+.doc-table.dense { font-size: 7.6pt; }
+.doc-table.dense th, .doc-table.dense td { padding: 1.2mm 1.3mm; }
+.doc-table.dense2 { font-size: 7pt; }
+.doc-table.dense2 th, .doc-table.dense2 td { padding: 1mm; }
+.doc-table col.c-photo { width: 12mm; }
+.doc-table col.c-swatch { width: 9mm; }
+.doc-table.doc-cards { border-collapse: separate; }
+.pthumb { display: block; width: 9mm; height: 9mm; object-fit: cover; border-radius: 1mm; background: #eef1f5; }
+.pswatch { display: inline-block; width: 4mm; height: 4mm; border-radius: 1mm; border: 1px solid rgba(0,0,0,.15); vertical-align: middle; }
+.exp-bad { color: #b42323; font-weight: 600; }
+.exp-warn { color: #a86200; font-weight: 600; }
+
+/* the printout's reference + QR code in the letterhead */
+:is(.flowpage, .listpage) .lh-head .vq .num { font-weight: 600; font-size: 8.6pt; color: #213562; } /* list printouts only: Studio paper keeps studio-doc.css */
+:is(.flowpage, .listpage) .lh-head .vq-hint { font-size: 6.6pt; color: #8a93a6; }
+
+@media print {
+  html, body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .no-print { display: none !important; }
+  /* (scripts off: the long page) table rows never split, headings repeat on every sheet */
+  .doc-table tr { break-inside: avoid; }
+  .doc-table thead { display: table-header-group; }
+  .doc-table tfoot { display: table-footer-group; }
+  .print-fit { zoom: 1 !important; } /* print.js shrinks the paper to fit a phone screen; paper prints full size */
+  .print-body .pages { margin: 0; width: auto; }
+  .print-body .page { margin: 0; box-shadow: none; }
+  /* the long page (scripts off): letterhead, watermark and footer on every sheet */
+  .print-body .flowpage { min-height: auto; }
+  .print-body .flowpage .lh-head, .print-body .flowpage .lh-wm, .print-body .flowpage .lh-foot { position: fixed; }
+}
+/* Studio print view */
+.studio-print { padding: 16px 0; }
+.studio-print .pages { width: max-content; margin: 0 auto; }
+.studio-print .page { margin: 0 auto 16px; box-shadow: 0 2px 12px rgba(20, 30, 60, .12); }
+@media print { .studio-print { padding: 0; } .studio-print .page { margin: 0; box-shadow: none; } }
+
+/* Cinematic Dark — screen only: the preview sits on night like the Studio; the printed A4 is unchanged */
+@media screen {
+  html, body.print-body { background: #101a33; }
+  .print-body .print-fit { background: radial-gradient(circle at 50% 0%, rgba(42,63,110,.35), transparent 60%); }
+  .print-toolbar { background: rgba(16,26,51,.9); backdrop-filter: blur(12px); border-bottom: 1px solid #1c2c52; padding: 12px; gap: 10px; }
+  .pbtn { border-radius: 999px; min-height: 40px; padding: 0 20px; background: #c4a26c; color: #101a33; }
+  .pbtn:hover { background: #f4ecdd; }
+  .pbtn.ghost { background: transparent; color: #fff; border: 1px solid #2a3f6e; }
+  .pbtn.ghost:hover { border-color: #c4a26c; }
+  .print-body .page, .studio-print .page { box-shadow: 0 30px 70px rgba(0,0,0,.5); }
+  .print-banner { background: #14213f; color: #fff; border: 1px solid #2a3f6e; border-inline-start: 3px solid #c4a26c; box-shadow: none; }
+  .print-banner a { color: #c4a26c; }
+}

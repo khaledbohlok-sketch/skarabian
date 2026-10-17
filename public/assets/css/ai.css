@@ -1,0 +1,5 @@
+/* SK Arabians — AI assistant: the ✨ Translate buttons under English / Arabic fields (partials/ai_translate.php). */
+.field .ai-translate { display: inline-flex; align-self: flex-start; width: auto; max-width: max-content; min-height: 32px; margin-top: 2px; padding: 0 var(--space-3); gap: 4px; font-size: var(--fs-12); white-space: nowrap; opacity: .9; }
+.field .ai-translate:hover, .field .ai-translate:focus-visible { opacity: 1; }
+.field .ai-translate.is-busy { opacity: .6; cursor: progress; }
+.field .ai-filled { box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-2) 40%, transparent); transition: box-shadow var(--dur-slow); }

@@ -1,0 +1,83 @@
+/* Flatpickr in the staff system's look. Colours are portal.css's semantic variables, so the calendar follows the light
+   and dark themes by itself. Width / flex-basis of the day grid are left at flatpickr's own values on purpose: overriding
+   them broke the 6th row (cumulative rounding of 42 flex cells) — re-theme colours and fonts only. */
+
+.flatpickr-calendar { background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--pop); font-family: var(--font-text); animation: fp-fade-in var(--dur-fast) var(--ease-out); }
+.flatpickr-calendar.open { display: inline-block; z-index: var(--z-popover); }
+.flatpickr-calendar.arrowTop:before, .flatpickr-calendar.arrowTop:after, .flatpickr-calendar.arrowBottom:before, .flatpickr-calendar.arrowBottom:after { display: none; }
+@keyframes fp-fade-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* header: month button + year + arrows */
+.flatpickr-months { padding: 10px 10px 2px; }
+.flatpickr-months .flatpickr-month { height: 36px; color: var(--title); fill: var(--title); }
+.flatpickr-current-month { display: flex; align-items: center; gap: 2px; padding: 0; font-size: 14.5px; font-weight: var(--fw-semibold); }
+/* the real month <select> stays (datepicker.js drives it through flatpickr's own changeMonth()); .fp-month-btn is shown */
+.flatpickr-current-month .flatpickr-monthDropdown-months { display: none; }
+.fp-month-btn { padding: 4px 6px; border: 0; border-radius: var(--radius-sm); background: none; color: var(--title); font: inherit; font-weight: var(--fw-semibold); cursor: pointer; }
+.fp-month-btn:hover, .fp-month-btn[aria-expanded="true"] { background: var(--hover); }
+.flatpickr-current-month input.cur-year { width: 5ch; min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--title); font-family: var(--font-text); font-weight: var(--fw-semibold); cursor: pointer; box-shadow: none; }
+.flatpickr-current-month .numInputWrapper:hover { background: var(--hover); border-radius: var(--radius-sm); }
+.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month { top: 10px; padding: 6px; border-radius: var(--radius-sm); color: var(--gold-2); fill: var(--gold-2); }
+.flatpickr-months .flatpickr-prev-month:hover, .flatpickr-months .flatpickr-next-month:hover { background: var(--hover); color: var(--title); fill: var(--title); }
+.flatpickr-months .flatpickr-prev-month svg, .flatpickr-months .flatpickr-next-month svg { width: 15px; height: 15px; }
+
+/* weekdays and days */
+.flatpickr-weekdays, span.flatpickr-weekday { background: var(--card); }
+span.flatpickr-weekday { color: var(--muted); font-size: 11.5px; font-weight: var(--fw-semibold); }
+.flatpickr-day { color: var(--ink); font-size: 13.5px; }
+.flatpickr-day:hover, .flatpickr-day:focus { background: var(--select); border-color: var(--select); }
+.flatpickr-day.today { border: 1.5px solid var(--gold-2); background: transparent; }
+.flatpickr-day.today:hover { background: var(--select); }
+.flatpickr-day.selected, .flatpickr-day.selected:hover, .flatpickr-day.selected.today, .flatpickr-day.startRange, .flatpickr-day.endRange,
+.flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.flatpickr-day.inRange { background: var(--select); border-color: var(--select); box-shadow: -5px 0 0 var(--select), 5px 0 0 var(--select); }
+.flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { color: var(--faint); }
+.flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { color: var(--faint); cursor: not-allowed; background: transparent; opacity: .6; }
+.flatpickr-day.week.selected { border-radius: 0; }
+
+/* time */
+.flatpickr-time { border-top: 1px solid var(--line-2); }
+.flatpickr-time input, .flatpickr-time .flatpickr-time-separator, .flatpickr-time .flatpickr-am-pm { color: var(--ink); background: transparent; border: 0; font-family: var(--font-text); box-shadow: none; min-height: 0; }
+.flatpickr-time input:hover, .flatpickr-time input:focus, .flatpickr-time .flatpickr-am-pm:hover, .flatpickr-time .flatpickr-am-pm:focus { background: var(--hover); }
+
+/* footer: Today / Clear */
+.fp-footer { display: flex; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) 10px; border-top: 1px solid var(--line-2); }
+.fp-footer button { flex: 1; min-height: 36px; padding: 0 var(--space-2); border: 1px solid var(--line); border-radius: var(--radius-full); background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; font-weight: var(--fw-semibold); cursor: pointer; }
+.fp-footer button:hover { background: var(--hover); border-color: var(--gold-2); }
+.fp-footer button.fp-clear { color: var(--bad-t); }
+
+/* range shortcuts */
+.fp-shortcuts { display: flex; flex-direction: column; gap: 2px; min-width: 130px; padding: var(--space-2); border-inline-end: 1px solid var(--line-2); }
+.fp-shortcuts button { padding: 7px var(--space-2); border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink-2); font: inherit; font-size: 12.5px; text-align: start; white-space: nowrap; cursor: pointer; }
+.fp-shortcuts button:hover, .fp-shortcuts button.active { background: var(--hover); color: var(--title); font-weight: var(--fw-semibold); }
+.fp-with-shortcuts .flatpickr-innerContainer { align-items: stretch; }
+.fp-with-shortcuts.flatpickr-calendar { width: auto; }
+.fp-with-shortcuts .flatpickr-rContainer { width: 300px; }
+@media (max-width: 479px) { .fp-with-shortcuts .fp-shortcuts { display: none; } }
+
+/* RTL */
+html[dir="rtl"] .flatpickr-calendar { direction: rtl; }
+html[dir="rtl"] .flatpickr-months .flatpickr-prev-month, html[dir="rtl"] .flatpickr-months .flatpickr-next-month { transform: scaleX(-1); }
+
+/* the input wrapper: calendar icon + clear (×) inside the field */
+.date-field { position: relative; }
+.date-field input.fp-alt { width: 100%; min-height: var(--ctl); padding-block: 9px; padding-inline: 42px 14px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--field); color: var(--ink); font: inherit; font-size: var(--fs-14); text-align: start; }
+.date-field input.fp-alt:focus { outline: none; border-color: var(--gold-2); box-shadow: var(--focus-ring); }
+.date-field input.fp-alt:disabled { background: var(--sunk); border-style: dashed; color: var(--muted); }
+.date-field .fp-icon { position: absolute; inset-inline-start: 14px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 17px; height: 17px; color: var(--gold-2); pointer-events: none; }
+.date-field .fp-icon svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.date-field .fp-clear-btn { position: absolute; inset-inline-end: 6px; top: 50%; transform: translateY(-50%); display: none; align-items: center; justify-content: center; width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 15px; line-height: 1; cursor: pointer; }
+.date-field .fp-clear-btn:hover { background: var(--hover); color: var(--ink); }
+.date-field.fp-has-value .fp-clear-btn { display: flex; }
+.date-field.fp-has-value input.fp-alt { padding-inline-end: 38px; }
+.field .date-field, .filters .date-field { width: 100%; }
+@media (max-width: 640px) { .date-field input.fp-alt { font-size: 16px; } .date-field .fp-clear-btn { width: 36px; height: 36px; inset-inline-end: 3px; } .date-field.fp-has-value input.fp-alt { padding-inline-end: 42px; } }
+
+/* month / year lists from the calendar header (datepicker.js): the shared dropdown panel, one layer above the calendar */
+.fp-pop, .fp-pop-backdrop { z-index: calc(var(--z-popover) + 1); }
+.fp-pop-backdrop { position: fixed; inset: 0; background: var(--backdrop); }
+.fp-pop-backdrop[hidden], .fp-pop[hidden] { display: none; }
+.fp-month-pop, .fp-year-pop { width: 160px; }
+.fp-year-pop .sel-search { margin: 0 0 4px; }
+.fp-year-pop .sel-search input { width: 100%; }
+.fp-pop li[aria-disabled="true"], .fp-pop li[aria-disabled="true"]:hover { color: var(--faint); cursor: not-allowed; background: transparent; }

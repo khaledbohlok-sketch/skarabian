@@ -1,0 +1,25 @@
+{{# The plain-text copy of document.html (sent with it as multipart/alternative). Notes between these marks are not sent. #}}
+{{TXT_DEAR}} {{RECIPIENT_NAME}}{{TXT_DEAR_END}}
+
+{{TXT_INTRO}}
+
+{{TXT_REFERENCE}}: {{REFERENCE}}
+{{TXT_DOCUMENT}}: {{DOC_TYPE}} — {{DOC_TITLE}}
+{{TXT_ISSUED}}: {{ISSUED_DATE}}
+{{TXT_ISSUED_BY}}: {{ISSUED_BY}}
+{{TXT_ATTACHMENT}}: {{FILE_NAME}} ({{FILE_SIZE}})
+
+{{TXT_VERIFY_TITLE}}
+{{TXT_VERIFY_TEXT}}
+{{VERIFY_URL}}
+
+{{TXT_REGARDS}}
+{{TXT_TEAM}}
+
+--
+{{BRAND}}
+{{CONTACT_ADDRESS}}
+{{CONTACT_PHONE}} · {{CONTACT_EMAIL}} · {{WEBSITE_LABEL}}
+
+{{TXT_FOOTER_NOTE}}
+© {{YEAR}} {{BRAND}} · {{TXT_RIGHTS}}

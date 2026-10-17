@@ -1,0 +1,7 @@
+# local configuration and runtime data never go to git
+config/config.php
+storage/
+vendor/
+node_modules/
+.DS_Store
+*.log

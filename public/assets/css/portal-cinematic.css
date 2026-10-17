@@ -1,0 +1,74 @@
+/* SK Arabians Management System — "Cinematic Dark" (the default theme): the same night navy, glass and gold as the website.
+   Loaded after portal.css with media set by the server from the sk_theme cookie (theme_media(): "screen" = dark,
+   "not all" = light, "screen and (prefers-color-scheme: dark)" = system) and switched live by portal.js (cross-faded
+   with the View Transitions API where available). Screen only: printouts always use the light paper rules.
+   It only redefines portal.css's semantic variables (brand family from tokens.css, glass from brand.css) and adds the
+   few things that differ in shape. Surfaces: night (page, with its soft light) → navy-ink glass (cards) → navy (raised)
+   → navy-2 (lines). Text: white / soft on these surfaces stays above 4.5:1; status text uses the light tones below. */
+
+:root {
+  --bg: var(--c-navy-deep); --card: var(--c-navy-ink); --raise: var(--c-navy); --hover: color-mix(in srgb, var(--c-navy) 70%, var(--c-navy-ink)); --sunk: var(--c-navy-deep); --field: color-mix(in srgb, var(--c-navy-deep) 70%, var(--c-navy-ink));
+  --line: color-mix(in srgb, var(--c-navy-2) 80%, var(--c-navy-ink)); --line-2: var(--c-navy); --line-strong: color-mix(in srgb, var(--c-navy-2) 60%, var(--p-icon));
+  --ink: var(--c-white); --ink-2: var(--c-soft); --muted: var(--p-icon); --title: var(--c-white); --faint: color-mix(in srgb, var(--p-icon) 60%, var(--c-navy-deep));
+  --link: var(--c-gold-2); --link-hover: var(--c-gold-soft);
+  --accent: var(--c-gold-2); --accent-hover: var(--c-gold-soft); --accent-ink: var(--c-navy-deep);
+  --strong: var(--c-white); --strong-ink: var(--c-navy-deep);
+  --mark: var(--c-gold-2);
+  --select: var(--c-navy);
+  --toggle-on: var(--c-gold-2);
+  --btn-bg: transparent;
+  --chrome: var(--c-navy-ink); --chrome-line: var(--c-navy); --chrome-hover: var(--c-navy); --chrome-active: var(--c-navy);
+  --topbar-bg: color-mix(in srgb, var(--c-navy-ink) 66%, transparent);
+  --backdrop: color-mix(in srgb, var(--c-navy-deep) 72%, transparent);
+  /* status: dark-mode tones of the same hues (text ≥ 4.5:1 on navy-ink) */
+  --ok-t: color-mix(in srgb, var(--c-ok) 38%, var(--c-ok-bg)); --ok-s: color-mix(in srgb, var(--c-ok) 20%, transparent); --ok-e: color-mix(in srgb, var(--c-ok) 55%, transparent);
+  --warn-t: color-mix(in srgb, var(--c-warn) 30%, var(--c-warn-bg)); --warn-s: color-mix(in srgb, var(--c-warn) 24%, transparent); --warn-e: color-mix(in srgb, var(--c-gold-2) 55%, transparent);
+  --bad-t: var(--c-bad-light); --bad-s: color-mix(in srgb, var(--c-bad) 22%, transparent); --bad-e: color-mix(in srgb, var(--c-bad) 60%, transparent);
+  --info-t: var(--c-soft); --info-s: color-mix(in srgb, var(--c-navy-2) 45%, transparent); --info-e: var(--c-navy-2);
+  --gold-t: var(--c-gold-2); --gold-s: color-mix(in srgb, var(--c-gold-2) 18%, transparent); --gold-e: color-mix(in srgb, var(--c-gold-2) 55%, transparent);
+  --neutral-t: var(--p-icon); --neutral-s: transparent; --neutral-e: var(--c-navy-2);
+  --chart-a: var(--c-gold-2); --chart-b: var(--c-soft); --chart-grid: var(--c-navy); --chart-text: var(--p-icon);
+  --ped-sire: var(--c-soft);
+  --shadow: none; --pop: var(--elev-4);
+  --sd-surface: var(--c-navy-deep);
+  /* glass back to brand.css's dark values; cards are navy-ink glass with a lit top edge */
+  --glass-bg: color-mix(in srgb, var(--c-ivory) 7%, transparent);
+  --glass-bg-strong: color-mix(in srgb, var(--c-navy-ink) 70%, transparent);
+  --glass-solid: var(--c-navy-ink);
+  --glass-edge: color-mix(in srgb, var(--c-gold-soft) 16%, transparent);
+  --glass-edge-hot: color-mix(in srgb, var(--c-gold-2) 70%, transparent);
+  --glass-highlight: inset 0 1px 0 color-mix(in srgb, var(--c-white) 8%, transparent);
+  --glass-shadow: 0 30px 70px -30px color-mix(in srgb, var(--c-navy-deep) 90%, transparent);
+  --card-fill: linear-gradient(180deg, color-mix(in srgb, var(--c-navy) 55%, var(--c-navy-ink)) 0%, color-mix(in srgb, var(--c-navy-ink) 92%, transparent) 60%);
+  --card-edge: color-mix(in srgb, var(--c-gold-soft) 12%, var(--c-navy));
+  --card-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-white) 7%, transparent), 0 24px 50px -30px color-mix(in srgb, var(--c-navy-deep) 95%, transparent);
+  --page-glow: radial-gradient(55% 45% at 100% 0%, color-mix(in srgb, var(--c-navy-2) 50%, transparent), transparent 70%),
+    radial-gradient(40% 40% at 0% 100%, color-mix(in srgb, var(--c-gold) 12%, transparent), transparent 70%);
+  --spot: color-mix(in srgb, var(--c-gold-soft) 12%, transparent);
+  --row-edge: var(--c-gold-2);
+  --ctl-xs: 28px;
+  color-scheme: dark;
+}
+
+/* the logo that suits the surface: white mark on dark */
+.only-dark { display: revert; }
+.only-light { display: none; }
+
+.side-brand img { background: var(--c-navy); }
+.badge-count, .dot-count { background: var(--c-gold-2); color: var(--c-navy-deep); box-shadow: 0 0 0 2px var(--c-navy-ink); }
+.global-search { background: color-mix(in srgb, var(--c-navy-deep) 60%, transparent); }
+.stat.dark { background: var(--c-navy); }
+a.stat.dark:hover { background: color-mix(in srgb, var(--c-navy) 85%, var(--c-gold-2)); }
+.tooltip, .chart-tip { background: var(--c-ivory); color: var(--c-navy-deep); }
+.bulk-bar { background: var(--c-navy); }
+/* a missing picture shows the white SK mark */
+.thumb, td.is-thumb > .muted, .file-item img, .my-horse img, .horse-photo { background-image: url("../img/sk-mark-white.png"); }
+img[src$="horse-placeholder.svg"] { content: url("../img/sk-mark-white.png"); object-fit: contain; padding: 24%; box-sizing: border-box; background: var(--c-navy); }
+.captcha img { border-color: var(--c-navy-2); }
+::-webkit-calendar-picker-indicator { filter: invert(72%) sepia(26%) saturate(560%) hue-rotate(357deg) brightness(95%); cursor: pointer; }
+.sidebar .side-scroll::-webkit-scrollbar, .scroll-list::-webkit-scrollbar { width: 8px; }
+.sidebar .side-scroll::-webkit-scrollbar-thumb, .scroll-list::-webkit-scrollbar-thumb { background: var(--c-navy); border-radius: 8px; }
+/* the table header strip: navy glass */
+.table-wrap.fits .table thead th { background: color-mix(in srgb, var(--c-navy-ink) 78%, transparent); }
+.table th { background: transparent; }
+.table-wrap:not(.fits) .table thead th { background: color-mix(in srgb, var(--c-navy) 30%, var(--c-navy-ink)); }

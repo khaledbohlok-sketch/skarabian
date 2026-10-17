@@ -1,0 +1,12 @@
+{{# The plain-text copy of frame.html (sent with it as multipart/alternative). Notes between these marks are not sent. #}}
+{{TITLE}}
+
+{{BODY_TEXT}}
+
+--
+{{BRAND}}
+{{CONTACT_ADDRESS}}
+{{CONTACT_PHONE}} · {{CONTACT_EMAIL}} · {{WEBSITE_LABEL}}
+
+{{TXT_FOOTER_NOTE}}
+© {{YEAR}} {{BRAND}} · {{TXT_RIGHTS}}

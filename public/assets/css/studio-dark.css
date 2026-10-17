@@ -1,0 +1,237 @@
+/* SK Arabian Studio — Cinematic Dark layer for the Studio screens (editor, home, print several horses).
+   Loaded after portal-cinematic.css with the same theme media (dark / system), only on /portal/studio pages.
+   The A4 paper itself is never themed: documents always print on white with the official letterhead. */
+/* ---- generated: Studio editor light surfaces → dark (editor only; the A4 paper is untouched) ---- */
+body.portal .studio-ed .brand .chip { background: var(--sd-surface); }
+body.portal .studio-ed .tab[aria-selected="true"] { background: var(--sd-surface); color: #fff; }
+body.portal .studio-ed .btn { border: 1px solid #2a3f6e; background: var(--sd-surface); color: #fff; }
+body.portal .studio-ed .editor { background: var(--sd-surface); }
+body.portal .studio-ed .ed-h h2 { color: #fff; }
+body.portal .studio-ed .sec { border-top: 1px solid #2a3f6e; }
+body.portal .studio-ed .lng { color: #fff; background: var(--sd-surface); }
+body.portal .studio-ed .lng.ar { background: var(--sd-surface); }
+body.portal .studio-ed .f input, body.portal .studio-ed .f select, body.portal .studio-ed .f textarea { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .f input:focus, body.portal .studio-ed .f select:focus, body.portal .studio-ed .f textarea:focus, body.portal .studio-ed .lt input:focus, body.portal .studio-ed .lt select:focus, body.portal .studio-ed #recName:focus { background: var(--sd-surface); }
+body.portal .studio-ed .seg { border: 1px solid #2a3f6e; }
+body.portal .studio-ed .seg button { background: var(--sd-surface); }
+body.portal .studio-ed .lt-wrap { border: 1px solid #2a3f6e; }
+body.portal .studio-ed .lt th { background: var(--sd-surface); border-bottom: 1px solid #2a3f6e; }
+body.portal .studio-ed .lt td { border-bottom: 1px solid #2a3f6e; }
+body.portal .studio-ed .lt input:hover, body.portal .studio-ed .lt select:hover { border-color: #2a3f6e; }
+body.portal .studio-ed .lt input:focus, body.portal .studio-ed .lt select:focus { background: var(--sd-surface); }
+body.portal .studio-ed .lt td.lt-total { color: #fff; }
+body.portal .studio-ed .lt tfoot td { border-top: 2px solid #2a3f6e; }
+body.portal .studio-ed .lt tr.lt-grand td { background: var(--sd-surface); }
+body.portal .studio-ed .lt tr.lt-grand td.lt-total { color: #fff; }
+body.portal .studio-ed .ico:hover { color: #fff; background: var(--sd-surface); }
+body.portal .studio-ed .card { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .card-h { color: #fff; }
+body.portal .studio-ed .sum b { color: #fff; }
+body.portal .studio-ed .fin-toolbar select { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .fin-lt tr.is-overdue td { background: var(--sd-surface); }
+body.portal .studio-ed .fin-lt tr.is-cancelled td { background: var(--sd-surface); }
+body.portal .studio-ed .sec.saved { background: var(--sd-surface); border: 1px solid #2a3f6e; }
+body.portal .studio-ed .srow select, body.portal .studio-ed .quick select { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .chipx { background: var(--sd-surface); border: 1px solid #2a3f6e; }
+body.portal .studio-ed .fx.armed, body.portal .studio-ed .fchip.on .fx.armed { background: var(--sd-surface); }
+body.portal .studio-ed .btn.armed { background: var(--sd-surface); border-color: #2a3f6e; }
+body.portal .studio-ed .fchip { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .quick input { border: 1px solid #2a3f6e; }
+body.portal .studio-ed .mrow { border-bottom: 1px solid #2a3f6e; }
+body.portal .studio-ed .zoombar { background: var(--sd-surface); border: 1px solid #2a3f6e; }
+body.portal .studio-ed .zoombar button { background: var(--sd-surface); }
+body.portal .studio-ed .regrow { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .regrow b { color: #fff; }
+body.portal .studio-ed .upc div { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .st.over { background: var(--sd-surface); }
+body.portal .studio-ed .st.soon { background: var(--sd-surface); }
+body.portal .studio-ed .st.ok { background: var(--sd-surface); }
+body.portal .studio-ed .chks label { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .calc { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .calc div.t { border-top: 1px solid #2a3f6e; color: #fff; }
+body.portal .studio-ed .remrow { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .remrow b { color: #fff; }
+body.portal .studio-ed .sec.ai h3 { color: #fff; }
+body.portal .studio-ed .ai textarea { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .aiset { background: var(--sd-surface); }
+body.portal .studio-ed #recName { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .mini-pop { background: var(--sd-surface); border: 1px solid #2a3f6e; }
+body.portal .studio-ed .mini-pop .btn:hover { background: var(--sd-surface); }
+body.portal .studio-ed .ai>summary b { color: #fff; }
+body.portal .studio-ed .ai[open]>summary { border-bottom: 1px solid #2a3f6e; }
+body.portal .studio-ed .sec>h3.tog:hover { color: #fff; }
+body.portal .studio-ed .sec>h3.tog:focus-visible { background: var(--sd-surface); }
+body.portal .studio-ed .secsum { color: #fff; }
+body.portal .studio-ed .linkbtn { color: #fff; }
+body.portal .studio-ed .missing { background: var(--sd-surface); }
+body.portal .studio-ed .filebar { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .filebar #recName { color: #fff; }
+body.portal .studio-ed .filebar #recName:hover { border-color: #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .filebar #recName:focus { background: var(--sd-surface); }
+body.portal .studio-ed .fb-n { background: var(--sd-surface); color: #fff; }
+body.portal .studio-ed .fpanel { border-top: 1px solid #2a3f6e; }
+body.portal .studio-ed .fp-head input { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .fp-head .btn { color: #fff; }
+body.portal .studio-ed .fp-row:hover { background: var(--sd-surface); }
+body.portal .studio-ed .fp-row.cur { background: var(--sd-surface); }
+body.portal .studio-ed .fp-open b { color: #fff; }
+body.portal .studio-ed .fp-ico:hover { background: var(--sd-surface); color: #fff; }
+body.portal .studio-ed .fp-ico.armed { background: var(--sd-surface); }
+body.portal .studio-ed .plist-head input { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .plist { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .pl-row:hover { background: var(--sd-surface); }
+body.portal .studio-ed .pl-row.cur { background: var(--sd-surface); }
+body.portal .studio-ed .pl-row b { color: #fff; }
+body.portal .studio-ed .rec-card { background: var(--sd-surface); }
+body.portal .studio-ed .rec-title { color: #fff; }
+body.portal .studio-ed .ph-thumb { border: 1px solid #2a3f6e; }
+body.portal .studio-ed .ph-empty { background: var(--sd-surface); }
+body.portal .studio-ed .idrow { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .idrow.on { background: var(--sd-surface); }
+body.portal .studio-ed .idchk img, body.portal .studio-ed .idnoph { background: var(--sd-surface); }
+body.portal .studio-ed .crrow { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .crrow input[type=date] { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .crrow input[data-c="title"] { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+body.portal .studio-ed .allbar-opt { color: #fff; }
+body.portal .studio-ed .fp-warn { background: var(--sd-surface); }
+body.portal .studio-ed .dupe { background: var(--sd-surface); }
+body.portal .studio-ed .dbst.ok { background: var(--sd-surface); }
+body.portal .studio-ed .dbst.wait { background: var(--sd-surface); color: #fff; }
+body.portal .studio-ed .dbst.local { background: var(--sd-surface); }
+body.portal .studio-ed .dbst.err { background: var(--sd-surface); }
+body.portal .studio-ed .more-pop { background: var(--sd-surface); border: 1px solid #2a3f6e; }
+@media (max-width:900px) {
+  body.portal .studio-ed .editor { border-bottom: 1px solid #2a3f6e; }
+  body.portal .studio-ed .docsel { color: #fff; background: var(--sd-surface); }
+  body.portal .studio-ed .more-pop { background: var(--sd-surface); border: 1px solid #2a3f6e; }
+  body.portal .studio-ed .mbar { background: var(--sd-surface); border-top: 1px solid #2a3f6e; }
+  body.portal .studio-ed .mseg { background: var(--sd-surface); }
+  body.portal .studio-ed .mseg button[aria-pressed="true"] { background: var(--sd-surface); color: #fff; }
+}
+@container ed (max-width:660px) {
+  body.portal .lt.cardable tr { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+  body.portal .lt.cardable input, body.portal .lt.cardable select { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+  body.portal .lt.cardable .ico { border: 1px solid #2a3f6e; background: var(--sd-surface); }
+}
+body.portal .studio-new { gap: 20px; align-items: start; }
+body.portal .studio-types { gap: 10px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+body.portal .studio-type { min-height: 50px; padding: 0 16px; gap: 12px; background: var(--sunk); border: 1px solid var(--line-2); border-radius: 14px; color: #fff; font-weight: 500; transition: border-color .15s, background .15s; }
+body.portal .studio-type:hover { background: var(--raise); border-color: var(--gold-2); color: #fff; }
+body.portal .studio-type svg { color: var(--gold-2); }
+body.portal .studio-card { background: var(--card); border: 1px solid var(--line-2); border-radius: 18px; color: #fff; }
+body.portal .studio-card:hover { border-color: var(--gold-2); background: var(--card); }
+body.portal .studio-card strong { color: #fff; }
+body.portal .studio-card small { color: var(--muted); }
+/* Studio → print several horses */
+body.portal .profiles-batch .pb-horse { min-height: 54px; padding: 8px 12px; gap: 12px; background: var(--sunk); border: 1px solid var(--line-2); border-radius: 14px; color: #fff; }
+body.portal .profiles-batch .pb-horse:hover { border-color: var(--line); }
+body.portal .profiles-batch .pb-horse.on { background: rgba(196,162,108,.10); border-color: rgba(196,162,108,.65); }
+body.portal .profiles-batch .pb-name b { color: #fff; }
+body.portal .profiles-batch .pb-name small { color: var(--muted); }
+body.portal .profiles-batch .pb-horse img, body.portal .profiles-batch .pb-noph { width: 38px; height: 38px; border-radius: 10px; background: var(--raise) url("../img/sk-mark-white.png") center / 18px no-repeat; }
+/* ---------- 20. Studio editor: dark chrome and form column; the A4 paper stays exactly as it prints ---------- */
+body.portal .studio-page .canvas, body.portal .doc-preview { background: var(--sunk) !important; background-image: radial-gradient(circle at 50% 0%, rgba(42,63,110,.35), transparent 60%) !important; }
+body.portal .studio-page .pages .page { box-shadow: 0 30px 70px rgba(0,0,0,.5); }
+body.portal .studio-bar { background: var(--card); border-bottom: 1px solid var(--line-2); padding: 16px 24px; gap: 14px 20px; }
+body.portal .studio-bar h1 { font-size: 24px; color: #fff; }
+body.portal .studio-bar .sb-record label, body.portal .studio-bar .sb-lh span, body.portal .studio-bar .muted { color: var(--muted); }
+body.portal .studio-ed .editor { background: var(--card); border-inline-end: 1px solid var(--line-2); color: #fff; }
+body.portal .studio-ed .ed-h h2 { font-family: var(--display); font-weight: 400; font-size: 24px; color: #fff; }
+body.portal .studio-ed .hint { color: var(--muted); }
+body.portal .studio-ed .sec { border-top-color: var(--line-2); }
+body.portal .studio-ed .sec > h3 { color: var(--gold-2); }
+body.portal .studio-ed .f label { color: var(--ink-2); }
+body.portal .studio-ed .lng { background: var(--raise); color: var(--ink-2); }
+body.portal .studio-ed .lng.ar { background: rgba(196,162,108,.16); color: var(--gold-soft); }
+body.portal .studio-ed .f input, body.portal .studio-ed .f select, body.portal .studio-ed .f textarea,
+body.portal .studio-ed .srow select, body.portal .studio-ed .quick select, body.portal .studio-ed .quick input, body.portal .studio-ed .fin-toolbar select, body.portal .studio-ed #recName {
+  min-height: var(--ctl); background-color: var(--sunk) !important; border: 1px solid var(--line); border-radius: 12px; color: #fff; padding: 9px 14px; font-size: 14px;
+}
+body.portal .studio-ed .f input:focus, body.portal .studio-ed .f select:focus, body.portal .studio-ed .f textarea:focus { border-color: var(--gold-2); box-shadow: 0 0 0 3px rgba(196,162,108,.16); background: var(--sunk); }
+body.portal .studio-ed .f input::placeholder, body.portal .studio-ed .f textarea::placeholder { color: var(--muted); }
+body.portal .studio-ed .seg { border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; background: transparent; flex-wrap: wrap; }
+body.portal .studio-ed .seg button { background: transparent; color: var(--ink-2); border-radius: 999px; padding: 0 16px; min-height: 34px; }
+body.portal .studio-ed .seg button:hover { color: #fff; }
+body.portal .studio-ed .seg button[aria-pressed="true"] { background: #fff; color: #0f1a33; font-weight: 600; }
+body.portal .studio-ed .lt-wrap { border-color: var(--line-2); border-radius: 14px; }
+body.portal .studio-ed .lt th { background: var(--sunk); color: var(--muted); border-bottom-color: var(--line-2); }
+body.portal .studio-ed .lt td { border-bottom-color: var(--line-2); }
+body.portal .studio-ed .lt input, body.portal .studio-ed .lt select { color: #fff; background: transparent; }
+body.portal .studio-ed .lt input:hover, body.portal .studio-ed .lt select:hover { border-color: var(--line); }
+body.portal .studio-ed .lt input:focus, body.portal .studio-ed .lt select:focus { border-color: var(--gold-2); background: var(--sunk); }
+body.portal .studio-ed .lt td.lt-total, body.portal .studio-ed .lt tr.lt-grand td.lt-total { color: var(--gold-2); }
+body.portal .studio-ed .lt tr.lt-grand td { background: var(--sunk); }
+body.portal .studio-ed .lt tfoot td { border-top-color: var(--line); }
+body.portal .studio-ed .ico { color: var(--muted); }
+body.portal .studio-ed .ico:hover { color: #fff; background: var(--raise); }
+body.portal .studio-ed .ico.del:hover { color: var(--bad-t); }
+body.portal .studio-ed .card { background: var(--sunk); border: 1px solid var(--line-2); border-radius: 14px; padding: 14px; }
+body.portal .studio-ed .card-h { color: #fff; }
+body.portal .studio-ed .sum { color: var(--muted); }
+body.portal .studio-ed .sum b { color: #fff; }
+body.portal .studio-ed .btn, body.portal .studio-page .btn { min-height: var(--ctl); padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: #fff; font-size: 14px; }
+body.portal .studio-ed .btn:hover, body.portal .studio-page .btn:hover { background: var(--raise); border-color: rgba(196,162,108,.7); }
+body.portal .studio-ed .btn.small { min-height: var(--ctl-sm); padding: 0 14px; font-size: 13px; }
+body.portal .studio-ed .btn.primary, body.portal .studio-ed .btn.dark, body.portal .studio-page .btn.btn-primary { background: var(--gold-2); border-color: var(--gold-2); color: #0f1a33; font-weight: 600; }
+body.portal .studio-ed .btn.primary:hover, body.portal .studio-ed .btn.dark:hover, body.portal .studio-page .btn.btn-primary:hover { background: var(--gold-soft); border-color: var(--gold-soft); color: #0f1a33; }
+body.portal .studio-page .btn.btn-danger, body.portal .studio-ed .btn.btn-danger { background: transparent; color: var(--bad-t); border-color: var(--bad-e); }
+body.portal .studio-page .btn.btn-danger:hover { background: var(--bad-s); color: #fff; }
+body.portal .studio-ed .btn.armed, body.portal .studio-ed .fx.armed { background: #b02a2a; border-color: #b02a2a; color: #fff; }
+body.portal .studio-ed .fchip, body.portal .studio-ed .chipx { background: transparent; border: 1px solid var(--line); color: var(--ink-2); }
+body.portal .studio-ed .fchip:hover { border-color: var(--gold-2); color: #fff; }
+body.portal .studio-ed .fchip.on { background: #fff; border-color: #fff; color: #0f1a33; }
+body.portal .studio-ed .sec.saved { background: rgba(196,162,108,.07); border: 1px solid rgba(196,162,108,.4); border-radius: 16px; }
+body.portal .studio-ed .manual-tag, body.portal .studio-ed .fin-lt .pill { background: rgba(196,162,108,.16); color: var(--gold-soft); }
+body.portal .studio-ed .fin-lt tr.is-overdue td { background: rgba(176,42,42,.12); }
+body.portal .studio-ed .fin-lt tr.is-cancelled td { background: transparent; color: var(--muted); }
+body.portal .studio-ed .fin-lt small { color: var(--muted); }
+body.portal .studio-ed .fin-empty { color: var(--muted) !important; }
+body.portal .studio-ed .regrow, body.portal .studio-ed .upc div { background: var(--sunk); border: 1px solid var(--line-2); border-radius: 12px; color: #fff; }
+body.portal .studio-ed .regrow b { color: #fff; }
+body.portal .studio-ed .regrow small { color: var(--muted); }
+body.portal .studio-ed .mrow { border-bottom-color: var(--line-2); color: var(--ink-2); }
+body.portal .studio-ed .st.over { background: var(--bad-s); color: var(--bad-t); }
+body.portal .studio-ed .st.soon { background: var(--warn-s); color: var(--warn-t); }
+body.portal .studio-ed .st.ok { background: var(--ok-s); color: var(--ok-t); }
+body.portal .studio-ed .zoombar { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+body.portal .studio-ed .zoombar button { background: transparent; color: #fff; border-radius: 999px; }
+body.portal .studio-ed .zoombar button:hover { background: var(--raise); }
+body.portal .studio-ed .zoombar span { color: var(--ink-2); }
+body.portal .studio-ed .mng summary { color: var(--muted); }
+body.portal .studio-ed .pf-parts .chk { color: var(--ink-2); }
+body.portal .studio-side { color: #fff; }
+body.portal .studio-side dt { color: var(--muted); }
+
+body.portal .studio-ed .editor, body.portal .studio-bar { --line: #2a3f6e; --line2: #2a3f6e; --soft: #0f1a33; --field: #0f1a33; --panel: #14213f; --ink: #fff; --muted: #8f9bb8; }
+body.portal .studio-ed .seg { border: 0; padding: 0; gap: 8px; }
+body.portal .studio-ed .seg button { border: 1px solid var(--line); min-height: var(--ctl-sm); }
+body.portal .studio-ed .seg button[aria-pressed="true"] { border-color: #fff; }
+body.portal .studio-ed .lt.cardable tr { background: var(--sunk); border-color: var(--line-2); }
+body.portal .studio-ed .lt.cardable td::before { color: var(--muted); }
+body.portal .studio-ed .lt.cardable .ico { background: transparent; color: var(--muted); }
+body.portal .studio-ed .idrow { background: var(--sunk); border-color: var(--line-2); color: #fff; }
+body.portal .studio-ed .idrow.on { background: rgba(196,162,108,.10); border-color: rgba(196,162,108,.6); }
+body.portal .studio-ed .idrow b, body.portal .studio-ed .idrow strong { color: #fff; }
+body.portal .studio-ed .alert:where(:not(.page *)), body.portal .studio-note.alert { border-color: var(--line); }
+
+/* ---------- UI polish (2026-10): Studio home gallery, preview tools and toast — dark ---------- */
+body.portal .sg-head h2 { color: #fff; }
+body.portal .sg-search input { background: var(--sunk); border-color: var(--line); color: #fff; }
+body.portal .sg-search input::placeholder { color: var(--muted); }
+body.portal .sg-search input:focus-visible { border-color: var(--gold-2); }
+body.portal .sg-chip { background: transparent; border-color: var(--line); color: var(--ink-2); }
+body.portal .sg-chip:hover { border-color: var(--gold-2); color: #fff; }
+body.portal .sg-chip[aria-pressed="true"] { background: #fff; border-color: #fff; color: #0f1a33; }
+body.portal .sg-gtitle { color: var(--gold-2); }
+body.portal .sg-card { background: var(--card); border-color: var(--line-2); color: #fff; }
+body.portal .sg-card:hover, body.portal .sg-card:focus-visible { border-color: var(--gold-2); background: var(--raise); box-shadow: 0 18px 40px rgba(0,0,0,.35); }
+body.portal .sg-ico { background: rgba(196,162,108,.14); color: var(--gold-2); }
+body.portal .sg-name { color: #fff; }
+body.portal .sg-desc { color: var(--muted); }
+body.portal .sg-lang { background: var(--sunk); color: var(--ink-2); border: 1px solid var(--line-2); }
+body.portal .sg-empty { color: var(--muted); }
+body.portal .sg-empty .icon { color: var(--gold-2); }
+body.portal .studio-ed .pv-loading { background: rgba(16,26,51,.6); border-color: var(--line); color: var(--ink-2); }
+body.portal .studio-ed .zoombar button { color: #fff; }
+body.portal .studio-ed .f label { color: var(--ink-2); }
+body.portal .studio-ed .ico:focus-visible { outline-color: var(--gold-2); }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}" dir="{{DIR}}" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+{{#
+  SK Arabian: the frame around every system email (notifications, login codes, the daily summary, password resets,
+  Inbox replies). Filled by App\Services\EmailLook::frame(); the plain-text copy is frame.txt. Notes between these marks
+  are not sent. BODY_HTML is the email's own content, built by the system (anything people typed is escaped there);
+  every other value is HTML-escaped. Same design and colours as document.html (the website's palette).
+#}}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light only">
+<title>{{TITLE}}</title>
+<!--[if mso]>
+<noscript><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+<![endif]-->
+<style>
+  :root { color-scheme: light only; supported-color-schemes: light only; }
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+  a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
+  #MessageViewBody a { color: inherit; text-decoration: none; }
+  .sk-body p, .sk-body li, .sk-body td, .sk-body th, .sk-body div, .sk-body span, .sk-body blockquote { font-family: {{FONT}}; }
+  .sk-body h2, .sk-body h3 { font-family: {{FONT_HEAD}}; font-weight: {{HEAD_WEIGHT}}; color: #13213f; }
+  .sk-body a { color: #213562; }
+  @media only screen and (max-width: 620px) {
+    .sk-outer { padding: 12px 8px 28px !important; }
+    .sk-pad { padding-left: 22px !important; padding-right: 22px !important; }
+    .sk-head { padding-top: 30px !important; }
+    .sk-h1 { font-size: 22px !important; line-height: 30px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;width:100%;background-color:#f8f5ef;">
+<div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">{{TXT_PREHEADER}}&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f8f5ef" style="background-color:#f8f5ef;">
+  <tr>
+    <td align="center" class="sk-outer" style="padding:32px 12px 40px;">
+      <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center"><tr><td><![endif]-->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="{{DIR}}" style="max-width:600px;margin:0 auto;">
+
+        {{# Header: the SK mark, the name, the subject #}}
+        <tr>
+          <td align="center" bgcolor="#0f1a33" class="sk-pad sk-head" style="background-color:#0f1a33;border-radius:16px 16px 0 0;padding:34px 40px 32px;text-align:center;">
+            <img src="{{LOGO_URL}}" width="48" height="48" alt="SK Arabian" style="display:block;margin:0 auto;width:48px;height:48px;border:0;color:#ffffff;font-family:Georgia,serif;font-size:14px;">
+            <p style="margin:12px 0 0;font-family:Georgia,Times New Roman,serif;font-size:12px;line-height:16px;letter-spacing:5px;color:#ffffff;">SK&nbsp;ARABIAN</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:18px auto 20px;">
+              <tr><td width="44" height="1" bgcolor="#c9a46a" style="width:44px;height:1px;line-height:1px;font-size:1px;background-color:#c9a46a;">&nbsp;</td></tr>
+            </table>
+            <h1 class="sk-h1" style="margin:0;font-family:{{FONT_HEAD}};font-size:24px;line-height:32px;font-weight:{{HEAD_WEIGHT}};color:#ffffff;">{{TITLE}}</h1>
+          </td>
+        </tr>
+        <tr><td height="3" bgcolor="#c9a46a" style="height:3px;line-height:3px;font-size:3px;background-color:#c9a46a;">&nbsp;</td></tr>
+
+        {{# The email's own content #}}
+        <tr>
+          <td bgcolor="#ffffff" class="sk-pad sk-body" dir="{{DIR}}" style="background-color:#ffffff;padding:32px 40px 24px;text-align:{{ALIGN}};font-family:{{FONT}};font-size:15px;line-height:24px;color:#13213f;">
+            {{BODY_HTML}}
+          </td>
+        </tr>
+
+        {{# Contact details #}}
+        <tr>
+          <td bgcolor="#ffffff" class="sk-pad" style="background-color:#ffffff;border-radius:0 0 16px 16px;padding:0 40px 30px;text-align:{{ALIGN}};">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="border-top:1px solid #e8dfcd;padding-top:20px;font-family:{{FONT}};font-size:13px;line-height:21px;color:#5c6782;text-align:{{ALIGN}};">
+                  <strong style="color:#13213f;">{{BRAND}}</strong><br>
+                  {{CONTACT_ADDRESS}}<br>
+                  <a href="tel:{{CONTACT_PHONE_LINK}}" dir="ltr" style="color:#5c6782;text-decoration:none;white-space:nowrap;">{{CONTACT_PHONE}}</a> &nbsp;&middot;&nbsp; <a href="mailto:{{CONTACT_EMAIL}}" dir="ltr" style="color:#213562;text-decoration:none;white-space:nowrap;">{{CONTACT_EMAIL}}</a> &nbsp;&middot;&nbsp; <a href="{{WEBSITE_URL}}" target="_blank" dir="ltr" style="color:#213562;text-decoration:none;white-space:nowrap;">{{WEBSITE_LABEL}}</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="{{DIR}}" style="max-width:600px;margin:0 auto;">
+        <tr>
+          <td class="sk-pad" style="padding:20px 40px 0;font-family:{{FONT}};font-size:12px;line-height:18px;color:#5c6782;text-align:center;">{{TXT_FOOTER_NOTE}}<br>&copy; {{YEAR}} {{BRAND}} &middot; {{TXT_RIGHTS}}</td>
+        </tr>
+      </table>
+      <!--[if mso]></td></tr></table><![endif]-->
+    </td>
+  </tr>
+</table>
+</body>
+</html>

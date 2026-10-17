@@ -1,0 +1,81 @@
+/* SK Arabians website: the "Ask about our horses" chat box (ai-chat.js), in the website's tokens (tokens.css).
+   The launcher is a small round button in the corner, above the WhatsApp one (so neither covers the page's text); on a
+   computer its name ("Ask about our horses") shows beside it on hover or keyboard focus. */
+.skc-launch { position: fixed; z-index: var(--z-sticky); bottom: calc(var(--space-5) + 52px + var(--space-3) + env(safe-area-inset-bottom)); inset-inline-end: calc(var(--space-5) + env(safe-area-inset-right));
+  display: grid; place-items: center; width: 52px; height: 52px; padding: 0; border: 1px solid var(--c-gold-2); border-radius: 50%; background: var(--c-navy-ink); color: var(--c-ivory);
+  font: inherit; cursor: pointer; box-shadow: var(--elev-4);
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out), opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+.skc-launch:hover { background: var(--c-gold-2); color: var(--c-navy-deep); }
+.skc-launch:focus-visible { outline: 3px solid var(--c-gold-soft); outline-offset: 3px; }
+.skc-launch svg { width: 22px; height: 22px; color: var(--c-gold-2); }
+.skc-launch:hover svg { color: var(--c-navy-deep); }
+.skc-launch.no-wa { bottom: calc(var(--space-5) + env(safe-area-inset-bottom)); }
+.skc-launch[hidden] { display: none; }
+.skc-launch span { position: absolute; top: 50%; inset-inline-end: calc(100% + 10px); transform: translateY(-50%); white-space: nowrap; padding: 7px 14px;
+  border: 1px solid var(--c-navy-2); border-radius: var(--radius-full); background: var(--c-navy-ink); color: var(--c-ivory); font-size: var(--fs-14); font-weight: var(--fw-medium); line-height: 1.25;
+  box-shadow: var(--elev-3); opacity: 0; pointer-events: none; transition: opacity var(--dur) var(--ease-out); }
+@media (hover: hover) { .skc-launch:hover span, .skc-launch:focus-visible span { opacity: 1; } }
+@media (hover: none) { .skc-launch span { width: 1px; height: 1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); } }
+@media (max-width: 639px) {
+  /* phones: a little smaller; it steps aside over the homepage counters, like WhatsApp */
+  .skc-launch { bottom: calc(var(--space-4) + 48px + var(--space-3) + env(safe-area-inset-bottom)); inset-inline-end: var(--space-4); width: 48px; height: 48px; }
+  .skc-launch.no-wa { bottom: calc(var(--space-4) + env(safe-area-inset-bottom)); }
+  .skc-launch.over-stats { opacity: 0; transform: scale(.6); pointer-events: none; }
+}
+body.menu-open .skc-launch, body.lb-open .skc-launch { visibility: hidden; }
+
+.skc-panel { position: fixed; z-index: var(--z-popover); bottom: var(--space-4); inset-inline-end: var(--space-4); width: 390px; max-width: calc(100vw - 2 * var(--space-4)); height: min(620px, calc(100svh - 110px));
+  display: flex; flex-direction: column; overflow: hidden; background: var(--c-navy-ink); color: var(--c-ivory); border: 1px solid var(--c-navy-2); border-radius: var(--radius-xl); box-shadow: var(--elev-4);
+  font-family: var(--font-text); }
+.skc-panel[hidden] { display: none; }
+@media (max-width: 639px) {
+  .skc-panel { inset: auto 0 0 0; width: 100%; max-width: none; height: min(88svh, 680px); border-radius: var(--radius-xl) var(--radius-xl) 0 0; border-inline: 0; border-bottom: 0; padding-bottom: env(safe-area-inset-bottom); }
+}
+.skc-head { display: flex; align-items: center; gap: 6px; padding-block: 14px; padding-inline: 18px 12px; background: var(--c-navy-deep); border-bottom: 1px solid var(--c-navy); }
+.skc-head div { flex: 1; min-width: 0; }
+.skc-head h2 { margin: 0; font-family: var(--font-display); font-weight: var(--fw-regular); font-size: var(--fs-18); line-height: 1.3; color: var(--c-ivory); letter-spacing: 0; }
+html[dir="rtl"] .skc-head h2 { font-weight: var(--fw-bold); }
+.skc-head p { margin: 2px 0 0; font-size: 13px; color: var(--c-soft); }
+.skc-head button { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--c-soft); cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out); }
+.skc-head button:hover { background: var(--c-navy); color: var(--c-ivory); }
+.skc-head button:focus-visible { outline: 2px solid var(--c-gold-2); outline-offset: 1px; }
+.skc-head svg { width: 20px; height: 20px; }
+
+.skc-log { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: var(--space-4) 14px var(--space-2); display: flex; flex-direction: column; gap: 10px; }
+.skc-msg { max-width: 88%; padding: 10px 14px; border-radius: var(--radius-lg); font-size: 15px; line-height: 1.55; white-space: pre-line; overflow-wrap: anywhere; }
+.skc-bot { align-self: flex-start; background: var(--c-navy); color: var(--c-ivory); border-end-start-radius: 4px; }
+.skc-me { align-self: flex-end; background: var(--c-gold-2); color: var(--c-navy-deep); border-end-end-radius: 4px; }
+.skc-msg.skc-err { background: color-mix(in srgb, var(--c-bad) 18%, var(--c-navy-ink)); border: 1px solid color-mix(in srgb, var(--c-bad) 55%, transparent); }
+.skc-extra { align-self: flex-start; max-width: 92%; display: flex; flex-wrap: wrap; gap: 6px; margin-top: -2px; }
+.skc-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 13px; border: 1px solid var(--c-navy-2); border-radius: var(--radius-full); background: transparent;
+  color: var(--c-gold-soft); font: inherit; font-size: 13px; line-height: 1.3; text-decoration: none; text-align: start; cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out); }
+.skc-chip:hover { background: var(--c-navy); border-color: var(--c-gold-2); color: var(--c-ivory); }
+.skc-chip:focus-visible { outline: 2px solid var(--c-gold-2); outline-offset: 2px; }
+.skc-chip.skc-wa { border-color: var(--c-gold-2); color: var(--c-ivory); }
+.skc-chip.skc-wa:hover { background: var(--c-navy); }
+.skc-chip.skc-go { background: var(--c-gold-2); border-color: var(--c-gold-2); color: var(--c-navy-deep); font-weight: var(--fw-semibold); }
+.skc-chip.skc-go:hover { background: var(--c-gold-soft); border-color: var(--c-gold-soft); }
+.skc-chip svg { width: 16px; height: 16px; flex: none; }
+.skc-typing { align-self: flex-start; display: inline-flex; gap: 5px; padding: 14px 16px; border-radius: var(--radius-lg); background: var(--c-navy); }
+.skc-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--c-soft); animation: skc-dot 1.2s infinite ease-in-out; }
+.skc-typing i:nth-child(2) { animation-delay: .15s; }
+.skc-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes skc-dot { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .skc-typing i { animation: none; opacity: .7; } .skc-launch, .skc-chip { transition: none; } }
+
+.skc-form { display: flex; align-items: flex-end; gap: var(--space-2); padding: 10px 12px 6px; border-top: 1px solid var(--c-navy); }
+.skc-form textarea { flex: 1; min-width: 0; resize: none; max-height: 120px; min-height: 44px; padding: 11px 14px; border: 1px solid var(--c-navy-2); border-radius: var(--radius-md);
+  background: var(--c-navy-deep); color: var(--c-ivory); font: inherit; font-size: var(--fs-16); line-height: 1.4; }
+.skc-form textarea::placeholder { color: var(--c-soft); opacity: .75; }
+.skc-form textarea:focus { outline: 0; border-color: var(--c-gold-2); box-shadow: var(--focus-ring); }
+.skc-send { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--c-gold-2); color: var(--c-navy-deep); cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out); }
+.skc-send:hover { background: var(--c-gold-soft); }
+.skc-send:disabled { opacity: .5; cursor: progress; }
+.skc-send:focus-visible { outline: 2px solid var(--c-gold-soft); outline-offset: 2px; }
+.skc-send svg { width: 20px; height: 20px; }
+html[dir="rtl"] .skc-send svg { transform: scaleX(-1); }
+.skc-note { margin: 0; padding: 4px var(--space-4) var(--space-3); font-size: var(--fs-12); line-height: 1.45; color: var(--c-soft); opacity: .85; }
+.skc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
