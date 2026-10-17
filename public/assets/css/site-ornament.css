@@ -199,8 +199,9 @@ html[dir="rtl"] .cabinet-item span { text-transform: none; letter-spacing: 0; fo
 .hero-frame rect { fill: none; stroke: color-mix(in srgb, var(--c-gold-soft) 55%, transparent); stroke-width: 1; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.8s var(--ease-out-expo) .6s forwards; }
 html.intro .hero-frame rect { animation-delay: 1.9s; }
 @media (min-width: 900px) { .hero-frame { display: block; } .hero-inner { padding-inline: calc(var(--gutter) + 28px); } .hero-foot { margin-inline: 0; } }
-.hero-veil { background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--c-navy-deep) 60%, transparent) 30%, transparent 58%), linear-gradient(to right, color-mix(in srgb, var(--c-navy-deep) 42%, transparent), transparent 55%), radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--c-navy-deep) 70%, transparent) 100%); }
-html[dir="rtl"] .hero-veil { background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--c-navy-deep) 60%, transparent) 30%, transparent 58%), linear-gradient(to left, color-mix(in srgb, var(--c-navy-deep) 42%, transparent), transparent 55%), radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--c-navy-deep) 70%, transparent) 100%); }
+.hero-veil { background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--c-navy-deep) 60%, transparent) 30%, transparent 58%), linear-gradient(to right, color-mix(in srgb, var(--c-navy-deep) 42%, transparent), transparent 55%), linear-gradient(to bottom, color-mix(in srgb, var(--c-navy-deep) 55%, transparent), transparent 26%), radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--c-navy-deep) 70%, transparent) 100%); }
+html[dir="rtl"] .hero-veil { background: linear-gradient(to top, color-mix(in srgb, var(--c-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--c-navy-deep) 60%, transparent) 30%, transparent 58%), linear-gradient(to left, color-mix(in srgb, var(--c-navy-deep) 42%, transparent), transparent 55%), linear-gradient(to bottom, color-mix(in srgb, var(--c-navy-deep) 55%, transparent), transparent 26%), radial-gradient(120% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--c-navy-deep) 70%, transparent) 100%); }
+.hero-folio, .hero-copy .eyebrow { text-shadow: 0 1px 12px color-mix(in srgb, var(--c-navy-deep) 80%, transparent); }
 html.intro .hero-media { animation: hero-settle 2.6s cubic-bezier(.2, .8, .2, 1) 1.2s both; }
 @keyframes hero-settle { from { transform: scale(1.12); } to { transform: scale(1.04); } }
 .hero-sink { position: absolute; inset: 0; z-index: 2; background: var(--c-navy-deep); opacity: 0; pointer-events: none; }
@@ -234,6 +235,8 @@ html.intro .hero-media { animation: hero-settle 2.6s cubic-bezier(.2, .8, .2, 1)
   .hero-light { inset: auto -10% 0 -10%; height: 60%; }
   .hero-inner { grid-row: 2; padding-top: 0; margin-top: -1.15em; padding-bottom: var(--s-6); }
   .hero-copy .eyebrow { display: none; }
+  .hero-arabic { position: relative; width: max-content; max-width: 100%; padding-inline-end: .4em; background: var(--c-navy-deep); }
+  html[dir="rtl"] .hero-arabic { padding-inline: 0 .4em; }
   .hero-copy h1 { font-size: clamp(2.6rem, 2rem + 4vw, 3.5rem); margin-bottom: var(--s-4); }
   .hero-copy .accent { font-size: 1.25rem; margin-bottom: var(--s-5); }
   .hero-foot { padding-top: var(--s-4); }
@@ -259,7 +262,8 @@ html.intro-out .preloader-leaf.end { transform: translateX(101%); }
 .feature-ghost { position: absolute; z-index: 0; inset-inline-end: -.1em; top: -.42em; font-family: var(--font-display); font-size: clamp(6rem, 4rem + 9vw, 16rem); line-height: 1; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--c-gold-2) 20%, transparent); pointer-events: none; user-select: none; }
 html[dir="rtl"] .feature-ghost { font-weight: var(--fw-bold); }
 .feature-text > * { position: relative; z-index: 1; }
-.feature-text > .feature-ghost { z-index: 0; }
+.feature-text > .feature-ghost { position: absolute; z-index: 0; }
+.feature > * { min-width: 0; }
 .chapter { overflow: clip; }
 
 /* ---- Scenes without scripts: the scorecard's bars follow one another; medals are struck as their row arrives; the
@@ -267,7 +271,7 @@ html[dir="rtl"] .feature-ghost { font-weight: var(--fw-bold); }
 .sc-bar i { transition-delay: calc(var(--i, 0) * 120ms + 150ms); }
 .reveal-pre.stagger > li .medal, .reveal-pre .cabinet-item svg { transform: scale(1.6); opacity: 0; }
 .reveal-pre.stagger.in > li .medal, .reveal-pre.in .cabinet-item svg { transform: none; opacity: 1; transition: transform 700ms var(--ease-spring) calc(var(--i, 0) * 70ms + 250ms), opacity 400ms var(--ease-out) calc(var(--i, 0) * 70ms + 250ms); }
-.line-tree path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.line-tree path { stroke-dasharray: 1400; stroke-dashoffset: 1400; }
 .in .line-tree path, html.no-js .line-tree path, html.reduce .line-tree path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s var(--ease-out-expo) 200ms; }
 .reveal-pre .ped-box { opacity: 0; transform: translateX(-14px); }
 html[dir="rtl"] .reveal-pre .ped-box { transform: translateX(14px); }
@@ -308,6 +312,7 @@ html[dir="rtl"] .cursor-label { left: auto; right: 50%; translate: -20px 18px; t
 /* ---- The chapter rail (computers): 01–10 in the left gutter, the current chapter in gold ---- */
 .chapter-rail { position: fixed; z-index: var(--z-sticky); inset-inline-start: 14px; top: 50%; transform: translateY(-50%); display: none; gap: 6px; list-style: none; margin: 0; padding: 0; }
 @media (min-width: 1360px) { .chapter-rail { display: grid; } }
+@media (min-width: 1360px) and (max-width: 1599px) { .chapter-rail { inset-inline-start: 6px; gap: 5px; } .chapter-rail a { font-size: .72rem; gap: 5px; } .chapter-rail a::before { width: 6px; } .chapter-rail a.on::before { width: 12px; } }
 .chapter-rail a { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; color: color-mix(in srgb, var(--c-slate) 70%, transparent); font-family: var(--font-accent); font-style: italic; font-size: .9rem; text-decoration: none; transition: color var(--dur) var(--ease-out); }
 .chapter-rail a::before { content: ""; width: 10px; height: 1px; background: currentColor; transition: width var(--dur-md) var(--ease-out-expo); }
 .chapter-rail a:hover, .chapter-rail a.on { color: var(--c-gold); }
@@ -745,4 +750,21 @@ html[dir="rtl"] .ped-root-text small { letter-spacing: 0; text-transform: none; 
   .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-name { font-size: var(--t-h4); padding: 0; background: none; max-width: none; }
   .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-medals { inset-inline-end: auto; inset-inline-start: 50%; top: 0; translate: -50% -50%; }
   .horse-groups.filtered .hgrid.editorial > .hcard:first-child .hcard-body::before { display: block; }
+}
+
+/* ---- Review fixes ---- */
+/* the profile column never grows past its container (the thumbnail strip scrolls inside it) */
+.profile { grid-template-columns: minmax(0, 1fr); }
+.profile > * { min-width: 0; }
+/* the footer's last link clears the WhatsApp button on computers */
+@media (min-width: 900px) { .footer-bottom { padding-inline-end: 84px; } }
+/* the pinned film strip: a tile's frame takes its width from the tile, never from the row height */
+.film .gallery { align-items: flex-start; }
+.film .gallery a { height: auto; width: 100%; }
+/* the gallery grid: a trailing pair of photographs fills its row instead of leaving a hole */
+@media (min-width: 720px) {
+  .gallery > li:nth-child(6n + 1):nth-last-child(2) { grid-row: auto; }
+  .gallery > li:nth-child(6n + 1):nth-last-child(2) a { aspect-ratio: 2 / 1; }
+  .gallery > li:nth-child(6n + 2):last-child { grid-column: span 2; }
+  .gallery > li:nth-child(6n + 2):last-child a { aspect-ratio: 2 / 1; }
 }

@@ -237,7 +237,7 @@ case 'bloodlines': if (!$bloodlines) { break; } ?>
         $tree = 'M50 0 V10 M' . $xs[0] . ' 10 H' . end($xs) . implode('', array_map(fn ($x) => ' M' . $x . ' 10 V22', $xs)); ?>
         <article class="line">
           <header class="line-head"><h3><?= e(bloodline_label($bl['name'])) ?></h3><span class="line-n"><b><?= (int) $bl['count'] ?></b> <?= e(__('site.c_horses')) ?></span></header>
-          <svg class="line-tree" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true"><path d="<?= $tree ?>" pathLength="1"/></svg>
+          <svg class="line-tree" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true"><path d="<?= $tree ?>"/></svg>
           <ul class="line-horses" style="--n:<?= $cnt ?>">
             <?php foreach ($bl['horses'] as $h): ?>
               <li><a href="<?= e(site_url('horses/' . $h['slug'])) ?>">

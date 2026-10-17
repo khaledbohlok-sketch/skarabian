@@ -160,7 +160,10 @@
     var top = document.querySelector('.hero, .page-hero'), topGone = !top, overEnd = false;
     var show = function () { dock.classList.toggle('on', topGone && !overEnd); };
     if (top) new IntersectionObserver(function (en) { topGone = !en[0].isIntersecting && en[0].boundingClientRect.bottom < 0; show(); }, { threshold: 0 }).observe(top);
-    var dockSeen = 0, eio = new IntersectionObserver(function (en) { en.forEach(function (x) { dockSeen += x.isIntersecting ? 1 : -1; }); overEnd = dockSeen > 0; show(); }, { threshold: .05 });
+    var dockSeen = [], eio = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { var i = dockSeen.indexOf(x.target); if (x.isIntersecting && i < 0) dockSeen.push(x.target); else if (!x.isIntersecting && i >= 0) dockSeen.splice(i, 1); });
+      overEnd = dockSeen.length > 0; show();
+    }, { threshold: .05 });
     each('.contact-form, .cta-band, .site-footer, #inquire', function (el) { eio.observe(el); });
   }
 
@@ -245,13 +248,24 @@
     Array.prototype.forEach.call(g.children, function (c, i) { if (!c.style.getPropertyValue('--i')) c.style.setProperty('--i', String(Math.min(i, 12))); });
   });
   if ('IntersectionObserver' in window && !reduce && !navigator.webdriver) {
+    var proxied = []; // [watched element, the wiped elements it stands for]
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in');
+        proxied.forEach(function (p) { if (p[0] === en.target) p[1].forEach(function (w) { w.classList.add('in'); }); });
+        io.unobserve(en.target);
+      });
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     var vh = window.innerHeight;
     each('.reveal, .split:not(.split-now), .wipe', function (el) {
-      if (el.getBoundingClientRect().top > vh) { if (el.classList.contains('reveal')) el.classList.add('reveal-pre'); io.observe(el); }
-      else el.classList.add('in');
+      if (el.getBoundingClientRect().top <= vh) { el.classList.add('in'); return; }
+      if (el.classList.contains('reveal')) el.classList.add('reveal-pre');
+      if (el.classList.contains('wipe') && el.parentElement) {
+        // clip-path: inset(0 0 100%) leaves the element with no visible box, so the observer watches its parent
+        var host = el.parentElement, rec = proxied.filter(function (p) { return p[0] === host; })[0];
+        if (rec) rec[1].push(el); else { proxied.push([host, [el]]); io.observe(host); }
+      } else io.observe(el);
     });
   } else {
     each('.reveal, .split:not(.split-now), .wipe', function (el) { el.classList.add('in'); });
