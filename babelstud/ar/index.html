@@ -22,6 +22,7 @@
   <symbol id="corner" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M2 62V22C2 11 11 2 22 2h40"/><path opacity=".55" d="M8 62V26c0-10 8-18 18-18h36"/><path d="M14 42c0-11 8-18 19-18M9 46c-4-11 2-21 11-25M30 12c-6 2-10 6-12 12"/><circle cx="20" cy="20" r="1.8" fill="currentColor"/></g></symbol>
   <symbol id="medal" viewBox="0 0 64 88"><path fill="currentColor" opacity=".28" d="M20 0h24l-6 30H26z"/><path fill="currentColor" opacity=".16" d="M14 0h12l6 30-8 6z"/><path fill="currentColor" opacity=".16" d="M38 0h12l-10 36-8-6z"/><circle cx="32" cy="58" r="27" fill="currentColor" opacity=".22"/><circle cx="32" cy="58" r="27" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="32" cy="58" r="21" fill="none" stroke="currentColor" stroke-width="1" opacity=".7"/><path fill="currentColor" d="M32 42.5 35 51l9-3-6 7.5 6 7.5-9-3-3 8.5-3-8.5-9 3 6-7.5-6-7.5 9 3z"/></symbol>
   <symbol id="seal" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" stroke-width=".8"/><circle cx="50" cy="50" r="37.5" fill="none" stroke="currentColor" stroke-width=".5" opacity=".8"/><path id="seal-arc" d="M50 50m-43 0a43 43 0 1 1 86 0a43 43 0 1 1-86 0" fill="none"/><text font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="6" letter-spacing="2" fill="currentColor"><textPath href="#seal-arc">BABEL STUD · AMMAN · JORDAN · ARABIAN HORSES ·</textPath></text></symbol>
+  <symbol id="pylon" viewBox="0 0 40 280"><g fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"><path d="M4 280V12h6V4h6v8h8V4h6v8h6v268" pathLength="1"/><path d="M12 280V30M28 280V30" pathLength="1" opacity=".55"/><path d="M4 28h32M4 46h32" pathLength="1"/><circle cx="12" cy="37" r="2.2"/><circle cx="20" cy="37" r="2.2"/><circle cx="28" cy="37" r="2.2"/></g></symbol>
   <symbol id="ziggurat" viewBox="0 0 64 40"><g fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="miter"><path d="M2 38h60M8 30h48M14 22h36M20 14h24M26 6h12"/><path d="M8 38V30h6v-8h6v-8h6V6h12v8h6v8h6v8h6v8"/><circle cx="32" cy="2.5" r="1.4" fill="currentColor" stroke="none"/></g></symbol>
   <clipPath id="arch-clip" clipPathUnits="objectBoundingBox"><path d="M0 1V0.26C0 0.12 0.18 0.03 0.5 0C0.82 0.03 1 0.12 1 0.26V1Z"/></clipPath>
 </svg><header class="top" data-header>
@@ -48,15 +49,18 @@
   <div class="hero-media" aria-hidden="true">
     <img class="hero-img" src="../assets/img/photos/mayyaset-trot.jpg" alt="" width="1440" height="1439" fetchpriority="high" decoding="async">
   </div>
+  <div class="hero-sun" aria-hidden="true" data-sun></div>
   <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-dusk" aria-hidden="true" data-dusk></div>
   <div class="hero-grain" aria-hidden="true"></div>
-  <svg class="hero-frame" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><rect x=".5" y=".5" width="99" height="99" pathLength="1" vector-effect="non-scaling-stroke"/></svg>
   <span class="hero-folio start" aria-hidden="true">عمّان · الأردن · 31.95° N</span>
   <span class="hero-folio end" aria-hidden="true" lang="en">Babel Stud</span>
   <div class="wrap hero-inner" data-hero-parallax>
     <div class="hero-copy">
+      <svg class="pylon start" aria-hidden="true" viewBox="0 0 40 280" preserveAspectRatio="none"><use href="#pylon"></use></svg>
+      <svg class="pylon end" aria-hidden="true" viewBox="0 0 40 280" preserveAspectRatio="none"><use href="#pylon"></use></svg>
       <span class="k hero-in" style="--d:0">مركز تدريب الخيل العربية الأصيلة · الأردن</span>
-      <h1 id="hero-title" class="split split-now cover"><span class="w"><span style="--i:0">حيث</span></span> <span class="w"><span style="--i:1">يبدأ</span></span> <span class="w"><span style="--i:2">تميّز</span></span> <span class="w"><span style="--i:3">الخيل</span></span> <span class="w"><span style="--i:4">العربية</span></span> <span class="w w-key"><span class="foil" style="--i:5;--chars:7">الأصيلة</span></span></h1>
+      <h1 id="hero-title" class="split split-now cover"><span class="w"><span style="--i:0">حيث</span></span> <span class="w"><span style="--i:1">يبدأ</span></span> <span class="w w-key"><span class="foil" style="--i:2;--chars:5">تميّز</span></span> <span class="w"><span style="--i:3">الخيل</span></span> <span class="w"><span style="--i:4">العربية</span></span> <span class="w"><span style="--i:5">الأصيلة</span></span></h1>
       <p class="accent hero-in" style="--d:3">تربية وتدريب احترافي للجمال، وإعداد ولياقة بمعايير عالمية، ورعاية استثنائية — نُعدّ أبطال جمال الخيل العربية للمنصّات العالمية.</p>
       <div class="actions hero-in" style="--d:4">
         <a class="btn btn-gold btn-lg" href="#competition" data-magnetic>البطولات</a>
@@ -65,7 +69,7 @@
     </div>
     <div class="hero-foot hero-in" style="--d:5">
       <a class="hero-caption" href="#horses"><span class="hero-caption-k">الخيل المميز</span><strong>مياسة العز</strong></a>
-      <span class="hero-credit">تصوير: @arsan.fersan</span>
+      <span class="hero-credit">تصوير: <bdi dir="ltr">@arsan.fersan</bdi></span>
     </div>
   </div>
   <a class="hero-scroll seal" href="#competition" aria-label="انزل"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#seal"></use></svg><img src="../assets/img/emblem.jpg?v=1" alt="" width="28" height="28"></a>
@@ -83,7 +87,7 @@
     </div>
   </div>
 </section><section class="chapter about" id="about" aria-labelledby="h-about">
-  <span class="threshold" aria-hidden="true"><svg class="orn " aria-hidden="true"><use href="#rosette"></use></svg></span>
+  <span class="threshold" aria-hidden="true"><svg class="orn orn-zig" aria-hidden="true"><use href="#ziggurat"></use></svg></span>
   <div class="wrap">
     <div class="about-grid">
       <div class="about-text" data-ghost="About Babel Stud">
@@ -100,31 +104,31 @@
       <div class="manifesto-item"><span class="k">الرسالة</span><h3>صناعة الأبطال</h3><p>صناعة وتطوير أبطال عالميين في بطولات الجمال من خلال برامج تربية مدروسة وتدريب احترافي رفيع المستوى ورعاية استثنائية.</p></div>
     </div>
   </div>
-</section><section class="chapter facilities" id="facilities" aria-labelledby="h-fac">
-  <span class="threshold" aria-hidden="true"><svg class="orn " aria-hidden="true"><use href="#rosette"></use></svg></span>
+</section><section class="chapter facilities lapis" id="facilities" aria-labelledby="h-fac">
+  <span class="threshold" aria-hidden="true"><svg class="orn orn-zig" aria-hidden="true"><use href="#ziggurat"></use></svg></span>
   <div class="wrap">
     <div class="chapter-head split-head reveal" data-ghost="Facilities">
       <div><span class="index"><b>02</b> مرافق بمستوى عالمي</span><h2 id="h-fac" class="split"><span class="w"><span style="--i:0">مصممة</span></span> <span class="w"><span style="--i:1">لأعلى</span></span> <span class="w"><span style="--i:2">مستويات</span></span> <span class="w"><span style="--i:3">اللياقة</span></span> <span class="w"><span style="--i:4">والرعاية</span></span> <span class="w w-it"><span style="--i:5">والجمال</span></span></h2></div>
       <p class="lead">يجمع مربط بابل بين مساحات التدريب المتخصصة وتقنيات اللياقة المتقدمة والرعاية البيطرية.</p>
     </div>
-    <ol class="plates stagger reveal"><li class="plate" style="--i:0"><span class="plate-n">01</span><h3>6 ميادين تدريب مجهزة</h3><p>مساحات تدريب مجهزة لدعم برامج الإعداد واللياقة الاحترافية.</p></li><li class="plate" style="--i:1"><span class="plate-n">02</span><h3>جهاز تدريب آلي للخيل</h3><p>نظام حديث للتدريب اليومي المنتظم ورفع مستوى اللياقة.</p></li><li class="plate" style="--i:2"><span class="plate-n">03</span><h3>أول جهاز مشي كهربائي للخيل في الأردن</h3><p>تقنية متقدمة لرفع كفاءة برامج اللياقة والأداء.</p></li><li class="plate" style="--i:3"><span class="plate-n">04</span><h3>عيادة بيطرية متكاملة</h3><p>عيادة مجهزة لدعم الرعاية الصحية والوقائية والعلاجية.</p></li></ol>
+    <ol class="plates stagger reveal"><li class="plate" style="--i:0"><span class="plate-n">I</span><h3>6 ميادين تدريب مجهزة</h3><p>مساحات تدريب مجهزة لدعم برامج الإعداد واللياقة الاحترافية.</p></li><li class="plate" style="--i:1"><span class="plate-n">II</span><h3>جهاز تدريب آلي للخيل</h3><p>نظام حديث للتدريب اليومي المنتظم ورفع مستوى اللياقة.</p></li><li class="plate" style="--i:2"><span class="plate-n">III</span><h3>أول جهاز مشي كهربائي للخيل في الأردن</h3><p>تقنية متقدمة لرفع كفاءة برامج اللياقة والأداء.</p></li><li class="plate" style="--i:3"><span class="plate-n">IV</span><h3>عيادة بيطرية متكاملة</h3><p>عيادة مجهزة لدعم الرعاية الصحية والوقائية والعلاجية.</p></li></ol>
   </div>
 </section><section class="chapter achievements night" id="achievements" aria-labelledby="h-ach">
-  <span class="threshold" aria-hidden="true"><svg class="orn " aria-hidden="true"><use href="#rosette"></use></svg></span>
+  <span class="threshold" aria-hidden="true"><svg class="orn orn-zig" aria-hidden="true"><use href="#ziggurat"></use></svg></span>
   <div class="wrap">
     <div class="chapter-head split-head reveal" data-ghost="Achievements">
       <div><span class="index"><b>03</b> إنجازات مربط بابل</span><h2 id="h-ach" class="split"><span class="w"><span style="--i:0">إنجازات</span></span> <span class="w"><span style="--i:1">تتوّج</span></span> <span class="w"><span style="--i:2">مسيرة</span></span> <span class="w w-it"><span style="--i:3">التميز</span></span></h2></div>
       <p class="lead">حقق مربط بابل ألقاباً ذهبية وفضية في عدد من أبرز بطولات جمال الخيل العربية الأصيلة في السعودية وقطر والإمارات.</p>
     </div>
     <div class="cabinet stagger reveal">
-      <div class="cabinet-item gold" style="--i:0"><svg viewBox="0 0 64 88" aria-hidden="true"><use href="#medal"></use></svg><b data-count="4">4</b><span>ذهبية</span></div>
-      <div class="cabinet-item silver" style="--i:1"><svg viewBox="0 0 64 88" aria-hidden="true"><use href="#medal"></use></svg><b data-count="2">2</b><span>فضية</span></div>
+      <div class="cabinet-item gold" style="--i:0"><span class="disc" aria-hidden="true"></span><b data-count="4">4</b><span>ذهبية</span></div>
+      <div class="cabinet-item silver" style="--i:1"><span class="disc" aria-hidden="true"></span><b data-count="2">2</b><span>فضية</span></div>
       <div class="cabinet-item circuit" style="--i:2"><svg class="orn" viewBox="0 0 48 48" aria-hidden="true"><use href="#rosette"></use></svg><b>3</b><span>ثلاث دول</span></div>
     </div>
     <ol class="honours stagger reveal"><li class="honour gold" style="--i:0"><span class="medal gold" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span class="honour-text"><strong>بطولة مكة المكرمة الدولية لجمال الجواد العربي</strong><small>مكة المكرمة · السعودية</small></span><i class="leader" aria-hidden="true"></i><span class="honour-title">ذهبية</span></li><li class="honour gold" style="--i:1"><span class="medal gold" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span class="honour-text"><strong>بطولة ديراب لجمال الخيل العربية الأصيلة</strong><small>الرياض · السعودية</small></span><i class="leader" aria-hidden="true"></i><span class="honour-title">ذهبية</span></li><li class="honour gold" style="--i:2"><span class="medal gold" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span class="honour-text"><strong>بطولة كتارا</strong><small>الدوحة · قطر</small></span><i class="leader" aria-hidden="true"></i><span class="honour-title">ذهبية</span></li><li class="honour silver" style="--i:3"><span class="medal silver" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span class="honour-text"><strong>بطولة كتارا</strong><small>الدوحة · قطر</small></span><i class="leader" aria-hidden="true"></i><span class="honour-title">فضية</span></li><li class="honour gold" style="--i:4"><span class="medal gold" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span class="honour-text"><strong>بطولة كلباء</strong><small>كلباء · الشارقة</small></span><i class="leader" aria-hidden="true"></i><span class="honour-title">ذهبية</span></li><li class="honour silver" style="--i:5"><span class="medal silver" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span class="honour-text"><strong>بطولة الشارقة</strong><small>الشارقة · الإمارات</small></span><i class="leader" aria-hidden="true"></i><span class="honour-title">فضية</span></li></ol>
   </div>
 </section><section class="chapter horse night" id="horses" aria-labelledby="h-horse">
-  <span class="threshold" aria-hidden="true"><svg class="orn " aria-hidden="true"><use href="#rosette"></use></svg></span>
+  <span class="threshold" aria-hidden="true"><svg class="orn orn-zig" aria-hidden="true"><use href="#ziggurat"></use></svg></span>
   <div class="wrap">
     <div class="chapter-head chapter-head-row reveal" data-ghost="Featured horse">
       <div><span class="index"><b>04</b> الخيل المميز</span><h2 id="h-horse" class="split"><span class="w"><span style="--i:0">الخيل</span></span></h2></div>
@@ -144,15 +148,15 @@
       <ul class="titles"><li><span class="medal sm gold" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span>البطل الذهبي · بطولة الأردن الوطنية</span></li><li><span class="medal sm silver" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span>البطل الفضي · بطولة الشرق الأوسط</span></li></ul>
       <p class="muted">من نخبة الخيل العربية الأصيلة المملوكة لمربط بابل. مملوكة بكل فخر لمربط بابل.</p>
       <div class="actions"><a class="btn btn-line" href="#gallery">المعرض</a><a class="link-arrow" href="https://www.instagram.com/babel_stud/" target="_blank" rel="noopener">@babel_stud <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
-      <small class="credit">تصوير: @arsan.fersan</small>
+      <small class="credit">تصوير: <bdi dir="ltr">@arsan.fersan</bdi></small>
     </div>
   </article>
 </section><section class="chapter gallery" id="gallery" aria-labelledby="h-gal" data-film>
-  <span class="threshold" aria-hidden="true"><svg class="orn " aria-hidden="true"><use href="#rosette"></use></svg></span>
+  <span class="threshold" aria-hidden="true"><svg class="orn orn-zig" aria-hidden="true"><use href="#ziggurat"></use></svg></span>
   <div class="wrap">
     <div class="chapter-head chapter-head-row reveal" data-ghost="Gallery">
       <div><span class="index"><b>05</b> المعرض</span><h2 id="h-gal" class="split"><span class="w"><span style="--i:0">مياسة</span></span> <span class="w"><span style="--i:1">العز</span></span> <span class="w"><span style="--i:2">·</span></span> <span class="w"><span style="--i:3">معرض</span></span> <span class="w w-it"><span style="--i:4">الصور</span></span></h2></div>
-      <p class="lead">صور رسمية من مربط بابل. · تصوير: @arsan.fersan</p>
+      <p class="lead">صور رسمية من مربط بابل. · تصوير: <bdi dir="ltr">@arsan.fersan</bdi></p>
     </div>
     <ul class="sheet stagger reveal" data-lb-group><li style="--i:0"><a class="framed" href="../assets/img/photos/mayyaset-trot-2.jpg" data-lb="../assets/img/photos/mayyaset-trot-2.jpg" data-caption="مربط بابل · تصوير: @arsan.fersan"><img src="../assets/img/photos/mayyaset-trot-2-thumb.jpg" alt="" loading="lazy" decoding="async" width="720" height="719"><span class="cap" aria-hidden="true">مربط بابل</span></a></li><li style="--i:1"><a class="" href="../assets/img/photos/mayyaset-head.jpg" data-lb="../assets/img/photos/mayyaset-head.jpg" data-caption="مربط بابل · تصوير: @arsan.fersan"><img src="../assets/img/photos/mayyaset-head-thumb.jpg" alt="" loading="lazy" decoding="async" width="720" height="720"><span class="cap" aria-hidden="true">مربط بابل</span></a></li><li style="--i:2"><a class="" href="../assets/img/photos/mayyaset-handler-2.jpg" data-lb="../assets/img/photos/mayyaset-handler-2.jpg" data-caption="مربط بابل · تصوير: @arsan.fersan"><img src="../assets/img/photos/mayyaset-handler-2-thumb.jpg" alt="" loading="lazy" decoding="async" width="720" height="720"><span class="cap" aria-hidden="true">مربط بابل</span></a></li><li style="--i:3"><a class="framed" href="../assets/img/photos/chestnut-show.jpg" data-lb="../assets/img/photos/chestnut-show.jpg" data-caption="مربط بابل · تصوير: @arsan.fersan"><img src="../assets/img/photos/chestnut-show-thumb.jpg" alt="" loading="lazy" decoding="async" width="720" height="404"><span class="cap" aria-hidden="true">مربط بابل</span></a></li><li style="--i:4"><a class="" href="../assets/img/photos/grey-lawn.jpg" data-lb="../assets/img/photos/grey-lawn.jpg" data-caption="مربط بابل · تصوير: @arsan.fersan"><img src="../assets/img/photos/grey-lawn-thumb.jpg" alt="" loading="lazy" decoding="async" width="720" height="404"><span class="cap" aria-hidden="true">مربط بابل</span></a></li><li style="--i:5"><a class="" href="../assets/img/photos/mayyaset-trot.jpg" data-lb="../assets/img/photos/mayyaset-trot.jpg" data-caption="مربط بابل · تصوير: @arsan.fersan"><img src="../assets/img/photos/mayyaset-trot-thumb.jpg" alt="" loading="lazy" decoding="async" width="720" height="719"><span class="cap" aria-hidden="true">مربط بابل</span></a></li></ul>
     <div class="row-foot" aria-hidden="true"><span class="row-progress"><i></i></span><span class="row-n" dir="ltr"><b>1</b> / 6</span></div>
@@ -164,13 +168,13 @@
     <a class="btn btn-gold btn-lg" href="https://www.instagram.com/babel_stud/" target="_blank" rel="noopener">فتح إنستغرام</a>
   </div>
 </section><section class="chapter contact night" id="contact" aria-labelledby="h-contact">
-  <span class="threshold" aria-hidden="true"><svg class="orn " aria-hidden="true"><use href="#rosette"></use></svg></span>
+  <span class="threshold" aria-hidden="true"><svg class="orn orn-zig" aria-hidden="true"><use href="#ziggurat"></use></svg></span>
   <div class="wrap contact-grid">
     <div class="contact-text reveal" data-ghost="Contact">
       <span class="index"><b>06</b> تواصل معنا</span>
       <h2 id="h-contact" class="split"><span class="w"><span style="--i:0">تواصلوا</span></span> <span class="w"><span style="--i:1">مع</span></span> <span class="w"><span style="--i:2">مربط</span></span> <span class="w w-it"><span style="--i:3">بابل</span></span></h2>
       <p class="lead">للاستفسار عن مربط بابل وخيولنا والبطولات، يمكنكم التواصل معنا مباشرة أو متابعة صفحتنا الرسمية على إنستغرام.</p>
-      <div class="actions"><a class="btn btn-gold btn-lg" href="tel:+962792500005">+962 79 250 0005</a><a class="btn btn-line btn-lg" href="https://wa.me/962792500005" target="_blank" rel="noopener">WhatsApp</a></div>
+      <div class="actions"><a class="btn btn-gold btn-lg" href="tel:+962792500005"><bdi dir="ltr">+962 79 250 0005</bdi></a><a class="btn btn-line btn-lg" href="https://wa.me/962792500005" target="_blank" rel="noopener">WhatsApp</a></div>
     </div>
     <dl class="card reveal">
       <div><dt>الهاتف</dt><dd><a href="tel:+962792500005" dir="ltr">+962 79 250 0005</a></dd></div>
@@ -183,7 +187,8 @@
 </main>
 <footer class="foot">
   <div class="wrap">
-    <div class="foot-seal seal" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#seal"></use></svg><img src="../assets/img/emblem.jpg?v=1" alt="" width="36" height="36" loading="lazy"></div>
+    <div class="foot-gate" aria-hidden="true"><svg class="pylon" viewBox="0 0 40 280"><use href="#pylon"></use></svg><div class="foot-seal seal"><svg viewBox="0 0 100 100"><use href="#seal"></use></svg><img src="../assets/img/emblem.jpg?v=1" alt="" width="36" height="36" loading="lazy"></div><svg class="pylon" viewBox="0 0 40 280"><use href="#pylon"></use></svg></div>
+    <div class="foot-seal seal" hidden aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#seal"></use></svg><img src="../assets/img/emblem.jpg?v=1" alt="" width="36" height="36" loading="lazy"></div>
     <p class="wordmark" aria-hidden="true"><span class="wm-foil">مربط بابل</span></p>
     <p class="wordmark-other" lang="en" dir="ltr" aria-hidden="true">Babel Stud</p>
     <div class="foot-bottom"><span>© 2026 مربط بابل · الأردن</span><a href="https://www.instagram.com/babel_stud/" target="_blank" rel="noopener">إنستغرام @babel_stud</a></div>

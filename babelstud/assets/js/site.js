@@ -99,6 +99,14 @@
     });
   }
 
+  // ---- The sun sinks and the dusk falls with the first screen of scroll (engines without scroll-driven animations)
+  var sun = document.querySelector('[data-sun]'), dusk = document.querySelector('[data-dusk]');
+  if (sun && !reduce && !(window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()'))) {
+    var sunTick = false;
+    var sunStep = function () { var p = Math.min(1, window.scrollY / Math.max(1, window.innerHeight)); sun.style.setProperty('--sun-y', (p * 60) + 'vh'); sun.style.opacity = String(.85 - p * .45); if (dusk) dusk.style.setProperty('--dusk', String(p * .9)); sunTick = false; };
+    window.addEventListener('scroll', function () { if (!sunTick) { sunTick = true; requestAnimationFrame(sunStep); } }, { passive: true });
+  }
+
   // ---- The gallery viewer: one photograph at a time, arrows, swipe, Escape
   var lb = null, items = [], cur = 0;
   var viewer = function () {

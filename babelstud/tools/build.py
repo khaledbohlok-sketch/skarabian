@@ -16,6 +16,12 @@ STR = json.load(open(os.path.join(ROOT, 'content', 'strings.json'), encoding='ut
 VERSION = '1'
 
 
+def credit(p) -> str:
+    """Render a credit line whose @handle keeps its LTR order in RTL text."""
+    txt = e(p.t('horse.credit'))
+    return re.sub(r'(@[\w.]+)', r'<bdi dir="ltr">\1</bdi>', txt)
+
+
 def e(s) -> str:
     return html.escape(str(s), quote=True)
 
@@ -46,14 +52,16 @@ class Page:
         return f'{self.root}assets/{path}?v={VERSION}'
 
     # a headline ready for its entrance: every word in a mask, optionally the last word in gold foil / one word italic
-    def split(self, text: str, gold: bool = True, italic=None, cover: bool = False) -> str:
+    def split(self, text: str, gold: bool = True, italic=None, cover: bool = False, key=None) -> str:
         words = text.split()
         last = len(words) - 1
         if italic is not None and italic < 0:
             italic = len(words) + italic
+        if key is None:
+            key = last
         out = []
         for i, w in enumerate(words):
-            is_gold = gold and i == last and last > 0
+            is_gold = gold and i == key and last > 0
             is_it = (not is_gold) and italic is not None and i == italic and last > 0
             cls = 'w' + (' w-key' if is_gold and cover else '') + (' w-it' if is_it else '')
             style = f'--i:{i}' + (f';--chars:{len(w)}' if is_gold and cover else '')
@@ -123,15 +131,18 @@ def hero(p: Page) -> str:
   <div class="hero-media" aria-hidden="true">
     <img class="hero-img" src="{p.root}assets/img/photos/mayyaset-trot.jpg" alt="" width="1440" height="1439" fetchpriority="high" decoding="async">
   </div>
+  <div class="hero-sun" aria-hidden="true" data-sun></div>
   <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-dusk" aria-hidden="true" data-dusk></div>
   <div class="hero-grain" aria-hidden="true"></div>
-  <svg class="hero-frame" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><rect x=".5" y=".5" width="99" height="99" pathLength="1" vector-effect="non-scaling-stroke"/></svg>
   <span class="hero-folio start" aria-hidden="true">{'Amman · Jordan · 31.95° N' if not p.rtl else 'عمّان · الأردن · 31.95° N'}</span>
   <span class="hero-folio end" aria-hidden="true" lang="{p.other}">{e(p.o('brand'))}</span>
   <div class="wrap hero-inner" data-hero-parallax>
     <div class="hero-copy">
+      <svg class="pylon start" aria-hidden="true" viewBox="0 0 40 280" preserveAspectRatio="none"><use href="#pylon"></use></svg>
+      <svg class="pylon end" aria-hidden="true" viewBox="0 0 40 280" preserveAspectRatio="none"><use href="#pylon"></use></svg>
       <span class="k hero-in" style="--d:0">{e(p.t('kicker'))}</span>
-      <h1 id="hero-title" class="split split-now cover">{p.split(p.t('hero.title'), True, None, True)}</h1>
+      <h1 id="hero-title" class="split split-now cover">{p.split(p.t('hero.title'), True, 3 if not p.rtl else None, True, 2)}</h1>
       <p class="accent hero-in" style="--d:3">{e(p.t('hero.text'))}</p>
       <div class="actions hero-in" style="--d:4">
         <a class="btn btn-gold btn-lg" href="#competition" data-magnetic>{e(p.t('hero.cta1'))}</a>
@@ -140,7 +151,7 @@ def hero(p: Page) -> str:
     </div>
     <div class="hero-foot hero-in" style="--d:5">
       <a class="hero-caption" href="#horses"><span class="hero-caption-k">{e(p.t('horse.kicker'))}</span><strong>{e(p.t('horse.name'))}</strong></a>
-      <span class="hero-credit">{e(p.t('horse.credit'))}</span>
+      <span class="hero-credit">{credit(p)}</span>
     </div>
   </div>
   <a class="hero-scroll seal" href="#competition" aria-label="{'Scroll' if not p.rtl else 'انزل'}"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#seal"></use></svg><img src="{p.asset('img/emblem.jpg')}" alt="" width="28" height="28"></a>
@@ -170,7 +181,7 @@ def index(p: Page, n: int, label: str) -> str:
 
 def about(p: Page) -> str:
     return f'''<section class="chapter about" id="about" aria-labelledby="h-about">
-  <span class="threshold" aria-hidden="true">{p.orn('rosette')}</span>
+  <span class="threshold" aria-hidden="true">{p.orn('ziggurat', 'orn-zig')}</span>
   <div class="wrap">
     <div class="about-grid">
       <div class="about-text" data-ghost="{e(p.o('about.kicker'))}">
@@ -191,9 +202,9 @@ def about(p: Page) -> str:
 
 
 def facilities(p: Page) -> str:
-    items = ''.join(f'''<li class="plate" style="--i:{i}"><span class="plate-n">0{i + 1}</span><h3>{e(it['title'][p.lang])}</h3><p>{e(it['text'][p.lang])}</p></li>''' for i, it in enumerate(STR['facilities']['items']))
-    return f'''<section class="chapter facilities" id="facilities" aria-labelledby="h-fac">
-  <span class="threshold" aria-hidden="true">{p.orn('rosette')}</span>
+    items = ''.join(f'''<li class="plate" style="--i:{i}"><span class="plate-n">{['I', 'II', 'III', 'IV'][i]}</span><h3>{e(it['title'][p.lang])}</h3><p>{e(it['text'][p.lang])}</p></li>''' for i, it in enumerate(STR['facilities']['items']))
+    return f'''<section class="chapter facilities lapis" id="facilities" aria-labelledby="h-fac">
+  <span class="threshold" aria-hidden="true">{p.orn('ziggurat', 'orn-zig')}</span>
   <div class="wrap">
     <div class="chapter-head split-head reveal" data-ghost="{e(p.o('nav.facilities'))}">
       <div>{index(p, 2, p.t('facilities.kicker'))}<h2 id="h-fac" class="split">{p.split(p.t('facilities.title'), False, 3 if not p.rtl else -1)}</h2></div>
@@ -210,15 +221,15 @@ def achievements(p: Page) -> str:
     rows = ''.join(f'''<li class="honour {it['medal']}" style="--i:{i}"><span class="medal {it['medal']}" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span class="honour-text"><strong>{e(it['show'][p.lang])}</strong><small>{e(it['place'][p.lang])}</small></span><i class="leader" aria-hidden="true"></i><span class="honour-title">{e(p.t('achievements.' + it['medal']))}</span></li>''' for i, it in enumerate(STR['achievements']['items']))
     countries = 'three countries' if not p.rtl else 'ثلاث دول'
     return f'''<section class="chapter achievements night" id="achievements" aria-labelledby="h-ach">
-  <span class="threshold" aria-hidden="true">{p.orn('rosette')}</span>
+  <span class="threshold" aria-hidden="true">{p.orn('ziggurat', 'orn-zig')}</span>
   <div class="wrap">
     <div class="chapter-head split-head reveal" data-ghost="{e(p.o('nav.achievements'))}">
       <div>{index(p, 3, p.t('achievements.kicker'))}<h2 id="h-ach" class="split">{p.split(p.t('achievements.title'), False, 1 if not p.rtl else -1)}</h2></div>
       <p class="lead">{e(p.t('achievements.text'))}</p>
     </div>
     <div class="cabinet stagger reveal">
-      <div class="cabinet-item gold" style="--i:0"><svg viewBox="0 0 64 88" aria-hidden="true"><use href="#medal"></use></svg><b data-count="{len(gold)}">{len(gold)}</b><span>{e(p.t('achievements.gold'))}</span></div>
-      <div class="cabinet-item silver" style="--i:1"><svg viewBox="0 0 64 88" aria-hidden="true"><use href="#medal"></use></svg><b data-count="{len(silver)}">{len(silver)}</b><span>{e(p.t('achievements.silver'))}</span></div>
+      <div class="cabinet-item gold" style="--i:0"><span class="disc" aria-hidden="true"></span><b data-count="{len(gold)}">{len(gold)}</b><span>{e(p.t('achievements.gold'))}</span></div>
+      <div class="cabinet-item silver" style="--i:1"><span class="disc" aria-hidden="true"></span><b data-count="{len(silver)}">{len(silver)}</b><span>{e(p.t('achievements.silver'))}</span></div>
       <div class="cabinet-item circuit" style="--i:2"><svg class="orn" viewBox="0 0 48 48" aria-hidden="true"><use href="#rosette"></use></svg><b>3</b><span>{countries}</span></div>
     </div>
     <ol class="honours stagger reveal">{rows}</ol>
@@ -230,7 +241,7 @@ def horse(p: Page) -> str:
     h = STR['horse']
     titles = ''.join(f'''<li><span class="medal sm {t['medal']}" aria-hidden="true"><svg viewBox="0 0 64 88"><use href="#medal"></use></svg></span><span>{e(t[p.lang])}</span></li>''' for t in h['titles'])
     return f'''<section class="chapter horse night" id="horses" aria-labelledby="h-horse">
-  <span class="threshold" aria-hidden="true">{p.orn('rosette')}</span>
+  <span class="threshold" aria-hidden="true">{p.orn('ziggurat', 'orn-zig')}</span>
   <div class="wrap">
     <div class="chapter-head chapter-head-row reveal" data-ghost="{e(p.o('horse.kicker'))}">
       <div>{index(p, 4, p.t('horse.kicker'))}<h2 id="h-horse" class="split">{p.split(p.t('nav.horses'), False)}</h2></div>
@@ -250,7 +261,7 @@ def horse(p: Page) -> str:
       <ul class="titles">{titles}</ul>
       <p class="muted">{e(p.t('horse.text'))} {e(p.t('horse.owned'))}</p>
       <div class="actions"><a class="btn btn-line" href="#gallery">{e(p.t('gallery.kicker'))}</a><a class="link-arrow" href="{e(STR['instagram']['url'])}" target="_blank" rel="noopener">{e(STR['instagram']['handle'])} <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
-      <small class="credit">{e(p.t('horse.credit'))}</small>
+      <small class="credit">{credit(p)}</small>
     </div>
   </article>
 </section>'''
@@ -262,11 +273,11 @@ GALLERY = [('mayyaset-trot-2', 1440, 1439), ('mayyaset-head', 1440, 1440), ('may
 def gallery(p: Page) -> str:
     items = ''.join(f'''<li style="--i:{i}"><a class="{'framed' if i in (0, 3) else ''}" href="{p.root}assets/img/photos/{n}.jpg" data-lb="{p.root}assets/img/photos/{n}.jpg" data-caption="{e(p.t('brand'))} · {e(p.t('horse.credit'))}"><img src="{p.root}assets/img/photos/{n}-thumb.jpg" alt="" loading="lazy" decoding="async" width="720" height="{int(720 * hh / w)}"><span class="cap" aria-hidden="true">{e(p.t('brand'))}</span></a></li>''' for i, (n, w, hh) in enumerate(GALLERY))
     return f'''<section class="chapter gallery" id="gallery" aria-labelledby="h-gal" data-film>
-  <span class="threshold" aria-hidden="true">{p.orn('rosette')}</span>
+  <span class="threshold" aria-hidden="true">{p.orn('ziggurat', 'orn-zig')}</span>
   <div class="wrap">
     <div class="chapter-head chapter-head-row reveal" data-ghost="{e(p.o('gallery.kicker'))}">
       <div>{index(p, 5, p.t('gallery.kicker'))}<h2 id="h-gal" class="split">{p.split(p.t('gallery.title'), False, -1)}</h2></div>
-      <p class="lead">{e(p.t('gallery.text'))} · {e(p.t('horse.credit'))}</p>
+      <p class="lead">{e(p.t('gallery.text'))} · {credit(p)}</p>
     </div>
     <ul class="sheet stagger reveal" data-lb-group>{items}</ul>
     <div class="row-foot" aria-hidden="true"><span class="row-progress"><i></i></span><span class="row-n" dir="ltr"><b>1</b> / {len(GALLERY)}</span></div>
@@ -284,13 +295,13 @@ def contact(p: Page) -> str:
     c = STR['contact']
     L = lambda k: e(c['labels'][k][p.lang])
     return f'''<section class="chapter contact night" id="contact" aria-labelledby="h-contact">
-  <span class="threshold" aria-hidden="true">{p.orn('rosette')}</span>
+  <span class="threshold" aria-hidden="true">{p.orn('ziggurat', 'orn-zig')}</span>
   <div class="wrap contact-grid">
     <div class="contact-text reveal" data-ghost="{e(p.o('contact.kicker'))}">
       {index(p, 6, p.t('contact.kicker'))}
       <h2 id="h-contact" class="split">{p.split(p.t('contact.title'), False, -1)}</h2>
       <p class="lead">{e(p.t('contact.text'))}</p>
-      <div class="actions"><a class="btn btn-gold btn-lg" href="tel:{e(c['tel'])}">{e(c['phone'])}</a><a class="btn btn-line btn-lg" href="https://wa.me/{e(c['tel'].lstrip('+'))}" target="_blank" rel="noopener">WhatsApp</a></div>
+      <div class="actions"><a class="btn btn-gold btn-lg" href="tel:{e(c['tel'])}"><bdi dir="ltr">{e(c['phone'])}</bdi></a><a class="btn btn-line btn-lg" href="https://wa.me/{e(c['tel'].lstrip('+'))}" target="_blank" rel="noopener">WhatsApp</a></div>
     </div>
     <dl class="card reveal">
       <div><dt>{L('phone')}</dt><dd><a href="tel:{e(c['tel'])}" dir="ltr">{e(c['phone'])}</a></dd></div>
@@ -305,7 +316,8 @@ def contact(p: Page) -> str:
 def footer(p: Page) -> str:
     return f'''<footer class="foot">
   <div class="wrap">
-    <div class="foot-seal seal" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#seal"></use></svg><img src="{p.asset('img/emblem.jpg')}" alt="" width="36" height="36" loading="lazy"></div>
+    <div class="foot-gate" aria-hidden="true"><svg class="pylon" viewBox="0 0 40 280"><use href="#pylon"></use></svg><div class="foot-seal seal"><svg viewBox="0 0 100 100"><use href="#seal"></use></svg><img src="{p.asset('img/emblem.jpg')}" alt="" width="36" height="36" loading="lazy"></div><svg class="pylon" viewBox="0 0 40 280"><use href="#pylon"></use></svg></div>
+    <div class="foot-seal seal" hidden aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#seal"></use></svg><img src="{p.asset('img/emblem.jpg')}" alt="" width="36" height="36" loading="lazy"></div>
     <p class="wordmark" aria-hidden="true"><span class="wm-foil">{e(p.t('brand').split()[0]) if not p.rtl else e(p.t('brand'))}</span>{'' if p.rtl else ' <span class="wm-line">' + e(' '.join(p.t('brand').split()[1:])) + '</span>'}</p>
     <p class="wordmark-other" lang="{p.other}" dir="{'ltr' if p.rtl else 'rtl'}" aria-hidden="true">{e(p.o('brand'))}</p>
     <div class="foot-bottom"><span>{e(p.t('footer.copy'))}</span><a href="{e(STR['instagram']['url'])}" target="_blank" rel="noopener">{e(p.t('contact.labels.instagram'))} {e(STR['instagram']['handle'])}</a></div>
@@ -324,6 +336,7 @@ def sprite(p: Page) -> str:
   <symbol id="corner" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M2 62V22C2 11 11 2 22 2h40"/><path opacity=".55" d="M8 62V26c0-10 8-18 18-18h36"/><path d="M14 42c0-11 8-18 19-18M9 46c-4-11 2-21 11-25M30 12c-6 2-10 6-12 12"/><circle cx="20" cy="20" r="1.8" fill="currentColor"/></g></symbol>
   <symbol id="medal" viewBox="0 0 64 88"><path fill="currentColor" opacity=".28" d="M20 0h24l-6 30H26z"/><path fill="currentColor" opacity=".16" d="M14 0h12l6 30-8 6z"/><path fill="currentColor" opacity=".16" d="M38 0h12l-10 36-8-6z"/><circle cx="32" cy="58" r="27" fill="currentColor" opacity=".22"/><circle cx="32" cy="58" r="27" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="32" cy="58" r="21" fill="none" stroke="currentColor" stroke-width="1" opacity=".7"/><path fill="currentColor" d="M32 42.5 35 51l9-3-6 7.5 6 7.5-9-3-3 8.5-3-8.5-9 3 6-7.5-6-7.5 9 3z"/></symbol>
   <symbol id="seal" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" stroke-width=".8"/><circle cx="50" cy="50" r="37.5" fill="none" stroke="currentColor" stroke-width=".5" opacity=".8"/><path id="seal-arc" d="M50 50m-43 0a43 43 0 1 1 86 0a43 43 0 1 1-86 0" fill="none"/><text font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="6" letter-spacing="2" fill="currentColor"><textPath href="#seal-arc">BABEL STUD · AMMAN · JORDAN · ARABIAN HORSES ·</textPath></text></symbol>
+  <symbol id="pylon" viewBox="0 0 40 280"><g fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"><path d="M4 280V12h6V4h6v8h8V4h6v8h6v268" pathLength="1"/><path d="M12 280V30M28 280V30" pathLength="1" opacity=".55"/><path d="M4 28h32M4 46h32" pathLength="1"/><circle cx="12" cy="37" r="2.2"/><circle cx="20" cy="37" r="2.2"/><circle cx="28" cy="37" r="2.2"/></g></symbol>
   <symbol id="ziggurat" viewBox="0 0 64 40"><g fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="miter"><path d="M2 38h60M8 30h48M14 22h36M20 14h24M26 6h12"/><path d="M8 38V30h6v-8h6v-8h6V6h12v8h6v8h6v8h6v8"/><circle cx="32" cy="2.5" r="1.4" fill="currentColor" stroke="none"/></g></symbol>
   <clipPath id="arch-clip" clipPathUnits="objectBoundingBox"><path d="M0 1V0.26C0 0.12 0.18 0.03 0.5 0C0.82 0.03 1 0.12 1 0.26V1Z"/></clipPath>
 </svg>'''
