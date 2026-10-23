@@ -494,6 +494,10 @@ html[dir="rtl"] .hero-copy h1 .w:not(.w-key):not(.w-it) > span { font-size: .62e
 .lapis .plate::before { border-color: color-mix(in srgb, var(--c-gold-2) 30%, transparent); }
 .lapis .plate p { color: var(--c-lapis-soft); }
 .lapis .plate-n { color: var(--c-gold-2); font-size: 2.2rem; letter-spacing: .06em; }
+/* Blueprint drawings on the plates: hairline gold geometry that draws itself in on arrival */
+.plate .bp { width: 56px; height: 56px; margin-block: var(--s-2) var(--s-1); fill: none; stroke: var(--c-gold-2); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
+.plate .bp * { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s var(--ease-out-expo) calc(var(--i, 0) * 140ms + .2s); }
+.in .plate .bp *, html.no-js .plate .bp *, html.reduce .plate .bp * { stroke-dashoffset: 0; }
 .chapter.lapis { background: radial-gradient(90% 60% at 50% -10%, var(--c-lapis-2) 0%, var(--c-lapis) 45%, var(--c-lapis-ink) 100%); color: var(--c-ivory); isolation: isolate; }
 .chapter.lapis::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; -webkit-mask: var(--pattern) center / 120px 120px; mask: var(--pattern) center / 120px 120px; background: var(--c-gold-2); opacity: .07; }
 .chapter.lapis .lead { color: var(--c-lapis-soft); }

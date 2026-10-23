@@ -202,7 +202,14 @@ def about(p: Page) -> str:
 
 
 def facilities(p: Page) -> str:
-    items = ''.join(f'''<li class="plate" style="--i:{i}"><span class="plate-n">{['I', 'II', 'III', 'IV'][i]}</span><h3>{e(it['title'][p.lang])}</h3><p>{e(it['text'][p.lang])}</p></li>''' for i, it in enumerate(STR['facilities']['items']))
+    # Blueprint drawings: an arena oval, a six-arm walker, a treadmill belt, a clinic cross. Geometry only, never filled.
+    icons = [
+        '<ellipse cx="32" cy="32" rx="28" ry="15" pathLength="1"/><ellipse cx="32" cy="32" rx="17" ry="7" pathLength="1"/><path d="M32 17v-4M32 51v-4" pathLength="1"/>',
+        '<circle cx="32" cy="32" r="26" pathLength="1"/><circle cx="32" cy="32" r="3.5" pathLength="1"/><path d="M32 8v48M11.2 20l41.6 24M11.2 44l41.6-24" pathLength="1"/>',
+        '<rect x="5" y="23" width="54" height="18" rx="9" pathLength="1"/><circle cx="15" cy="32" r="4.5" pathLength="1"/><circle cx="49" cy="32" r="4.5" pathLength="1"/><path d="M19.5 32h25M8 48h48" pathLength="1"/>',
+        '<rect x="9" y="9" width="46" height="46" rx="1.5" pathLength="1"/><path d="M32 21v22M21 32h22" pathLength="1"/><path d="M15 15h6M43 15h6M15 49h6M43 49h6" pathLength="1"/>',
+    ]
+    items = ''.join(f'''<li class="plate" style="--i:{i}"><span class="plate-n">{['I', 'II', 'III', 'IV'][i]}</span><svg class="bp" viewBox="0 0 64 64" aria-hidden="true">{icons[i]}</svg><h3>{e(it['title'][p.lang])}</h3><p>{e(it['text'][p.lang])}</p></li>''' for i, it in enumerate(STR['facilities']['items']))
     return f'''<section class="chapter facilities lapis" id="facilities" aria-labelledby="h-fac">
   <span class="threshold" aria-hidden="true">{p.orn('ziggurat', 'orn-zig')}</span>
   <div class="wrap">
